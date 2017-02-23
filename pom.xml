@@ -6,7 +6,13 @@
 
     <groupId>com.cx.sdk</groupId>
     <artifactId>checkmarx-sdk</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>CX-SDK-Application</module>
+        <module>CX-SDK-Domain</module>
+        <module>CX-SDK-Infrastructure</module>
+    </modules>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
