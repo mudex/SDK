@@ -11,9 +11,6 @@
 
     <artifactId>CX-SDK-Application</artifactId>
     <packaging>pom</packaging>
-    <modules>
-        <module>../CX-SDK-API</module>
-    </modules>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
