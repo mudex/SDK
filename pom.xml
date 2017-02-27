@@ -12,6 +12,7 @@
         <module>CX-SDK-Application</module>
         <module>CX-SDK-Domain</module>
         <module>CX-SDK-Infrastructure</module>
+        <module>CX-SDK-Application-Contracts</module>
     </modules>
     <dependencies>
         <dependency>

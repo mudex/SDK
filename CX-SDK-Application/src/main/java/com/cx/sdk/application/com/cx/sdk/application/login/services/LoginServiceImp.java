@@ -1,20 +1,23 @@
 package com.cx.sdk.application.com.cx.sdk.application.login.services;
 
-import com.cx.sdk.login.Authentication;
+import com.cx.sdk.providers.Session;
+import com.cx.sdk.providers.CredentialsValidator;
 
 /**
  * Created by ehuds on 2/22/2017.
  */
 public class LoginServiceImp implements LoginService {
+    LoginProvider loginProvider;
+    CredentialsValidator credentialsValidator;
 
-    @Override
-    public Authentication login(String userName, String password) {
-        validateInput(userName, password);
-        return new Authentication();
+    public LoginServiceImp(LoginProvider loginProvider, CredentialsValidator credentialsValidator) {
+        this.loginProvider = loginProvider;
+        this.credentialsValidator = credentialsValidator;
     }
 
-    private void validateInput(String userName, String password) {
-        if (userName.isEmpty() || password.isEmpty())
-            throw new IllegalArgumentException();
+    @Override
+    public Session login(String userName, String password) {
+        credentialsValidator.validate(userName, password);
+        return loginProvider.login(userName, password);
     }
 }
