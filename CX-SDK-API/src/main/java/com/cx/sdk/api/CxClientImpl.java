@@ -1,6 +1,6 @@
 package com.cx.sdk.api;
 
-import com.cx.sdk.api.DTOs.SessionDTO;
+import com.cx.sdk.api.dtos.SessionDTO;
 import com.cx.sdk.application.services.LoginService;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.exceptions.SdkException;
