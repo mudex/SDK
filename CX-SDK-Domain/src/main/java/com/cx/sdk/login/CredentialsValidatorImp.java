@@ -1,5 +1,7 @@
 package com.cx.sdk.providers;
 
+import com.cx.sdk.providers.CredentialsValidator;
+
 /**
  * Created by ehuds on 2/26/2017.
  */
