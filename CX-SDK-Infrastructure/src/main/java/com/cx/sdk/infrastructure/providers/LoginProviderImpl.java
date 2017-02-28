@@ -22,6 +22,7 @@ public class LoginProviderImpl implements LoginProvider {
         cxSoapClient = new CxSoapClient(sdkConfigurationProvider);
     }
 
+    @Override
     public Session login(String userName, String password) throws SdkException {
         return new Session(cxSoapClient.login(userName, password),
                             cxRestClient.login(userName, password));

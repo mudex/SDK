@@ -26,7 +26,7 @@ public class CxRestClient {
     public Map<String, String> login(String userName, String password) throws SdkException {
 
             WebResource webResource = client
-                    .resource(restResourcesURIBuilder.BuildLoginURL(sdkConfigurationProvider.getCxServerUrl()).toString());
+                    .resource(restResourcesURIBuilder.buildLoginURL(sdkConfigurationProvider.getCxServerUrl()).toString());
 
             HashMap<String, String> params = new HashMap();
             params.put("username", userName);

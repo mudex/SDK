@@ -4,7 +4,7 @@ import com.cx.sdk.application.contracts.providers.LoginProvider;
 import com.cx.sdk.application.services.LoginService;
 import com.cx.sdk.application.services.LoginServiceImpl;
 import com.cx.sdk.domain.CredentialsValidator;
-import com.cx.sdk.domain.validators.CredentialsValidatorImp;
+import com.cx.sdk.domain.validators.CredentialsValidatorImpl;
 import com.cx.sdk.infrastructure.providers.LoginProviderImpl;
 import com.google.inject.AbstractModule;
 
@@ -37,7 +37,7 @@ public class Bootstrapper extends AbstractModule {
     }
 
     private void registerDomainDependencies() {
-        bind(CredentialsValidator.class).to(CredentialsValidatorImp.class);
+        bind(CredentialsValidator.class).to(CredentialsValidatorImpl.class);
     }
 
     private void registerInfrastructureDependencies() {
