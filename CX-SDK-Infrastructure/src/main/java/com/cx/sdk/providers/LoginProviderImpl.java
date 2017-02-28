@@ -16,7 +16,7 @@ public class LoginProviderImpl implements LoginProvider {
 
     public LoginProviderImpl(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
-        cxRestClient = new CxRestClient();
+        cxRestClient = new CxRestClient(sdkConfigurationProvider);
         cxSoapClient = new CxSoapClient(sdkConfigurationProvider);
     }
 
