@@ -14,7 +14,6 @@ import java.util.Map;
 @Ignore
 public class CxSoapClientTests {
     @Test
-    @Ignore
     public void login_validCredentails_cxCooliesWhereReturned() throws MalformedURLException {
         // Arrange
         URL serverUrl = new URL("http://10.31.2.118");
