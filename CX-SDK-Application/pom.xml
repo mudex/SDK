@@ -10,20 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>CX-SDK-Application</artifactId>
-    <packaging>pom</packaging>
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>com.cx.sdk</groupId>
             <artifactId>CX-SDK-Domain</artifactId>
@@ -35,6 +22,4 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
-
 </project>

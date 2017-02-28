@@ -1,4 +1,4 @@
-package com.cx.sdk.IntegrationTests;
+package com.cx.sdk;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;

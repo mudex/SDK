@@ -2,8 +2,8 @@ package com.cx.sdk.api;
 
 import com.cx.sdk.application.login.services.LoginService;
 import com.cx.sdk.application.login.services.LoginServiceImp;
-import com.cx.sdk.providers.CredentialsValidator;
-import com.cx.sdk.providers.CredentialsValidatorImp;
+import com.cx.sdk.login.CredentialsValidator;
+import com.cx.sdk.login.CredentialsValidatorImp;
 import com.google.inject.AbstractModule;
 
 /**

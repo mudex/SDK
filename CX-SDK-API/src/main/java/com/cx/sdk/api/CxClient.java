@@ -1,6 +1,6 @@
-package com.cx.sdk.IntegrationTests.api;
+package com.cx.sdk.api;
 
-import com.cx.sdk.IntegrationTests.DTOs.SessionDTO;
+import com.cx.sdk.DTOs.SessionDTO;
 
 /**
  * Created by ehuds on 2/22/2017.

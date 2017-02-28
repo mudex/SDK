@@ -1,12 +1,14 @@
 package com.cx.sdk.IntegrationTests;
 
+import com.cx.sdk.CxSoapClient;
+import com.cx.sdk.SDKConfigurationProvider;
+import com.cx.sdk.SDKConfigurationProviderFactory;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
 
 /**
  * Created by ehuds on 2/28/2017.

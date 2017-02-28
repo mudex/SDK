@@ -1,4 +1,4 @@
-package com.cx.sdk.IntegrationTests;
+package com.cx.sdk;
 
 import java.net.URL;
 

@@ -1,5 +1,8 @@
 package com.cx.sdk.IntegrationTests;
 
+import com.cx.sdk.CxRestClient;
+import com.cx.sdk.SDKConfigurationProvider;
+import com.cx.sdk.SDKConfigurationProviderFactory;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

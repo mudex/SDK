@@ -1,9 +1,9 @@
-package com.cx.sdk.IntegrationTests.providers;
+package com.cx.sdk.providers;
 
-import com.cx.sdk.IntegrationTests.CxRestClient;
-import com.cx.sdk.IntegrationTests.CxSoapClient;
-import com.cx.sdk.IntegrationTests.SDKConfigurationProvider;
-import com.cx.sdk.IntegrationTests.login.Session;
+import com.cx.sdk.CxRestClient;
+import com.cx.sdk.CxSoapClient;
+import com.cx.sdk.SDKConfigurationProvider;
+import com.cx.sdk.login.Session;
 
 /**
  * Created by ehuds on 2/25/2017.

@@ -1,4 +1,4 @@
-package com.cx.sdk.IntegrationTests;
+package com.cx.sdk;
 
 import com.sun.jersey.core.impl.provider.entity.XMLJAXBElementProvider;
 

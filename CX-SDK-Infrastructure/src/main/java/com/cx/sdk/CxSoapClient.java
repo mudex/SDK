@@ -1,4 +1,4 @@
-package com.cx.sdk.IntegrationTests;
+package com.cx.sdk;
 
 import com.checkmarx.v7.Credentials;
 import com.checkmarx.v7.CxSDKWebService;

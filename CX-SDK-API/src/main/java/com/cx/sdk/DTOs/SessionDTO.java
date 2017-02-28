@@ -1,4 +1,4 @@
-package com.cx.sdk.IntegrationTests.DTOs;
+package com.cx.sdk.DTOs;
 
 /**
  * Created by ehuds on 2/23/2017.

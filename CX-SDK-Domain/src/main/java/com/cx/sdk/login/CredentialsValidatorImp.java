@@ -1,6 +1,4 @@
-package com.cx.sdk.IntegrationTests.login;
-
-import com.cx.sdk.providers.CredentialsValidator;
+package com.cx.sdk.login;
 
 /**
  * Created by ehuds on 2/26/2017.
