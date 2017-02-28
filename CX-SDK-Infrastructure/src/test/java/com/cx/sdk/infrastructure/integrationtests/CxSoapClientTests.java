@@ -20,7 +20,7 @@ public class CxSoapClientTests {
     public void login_validCredentails_cxCooliesWhereReturned() throws SdkException, MalformedURLException {
         // Arrange
         URL serverUrl = new URL("http://10.31.2.118");
-        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().Create(serverUrl);
+        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl);
         CxSoapClient cxSoapClient = new CxSoapClient(sdkConfigurationProvider);
         String userName = "admin@cx";
         String password = "Cx123456!";
@@ -36,7 +36,7 @@ public class CxSoapClientTests {
     public void login_invalidCredentails_cxCooliesWhereReturned() throws MalformedURLException, SdkException {
         // Arrange
         URL serverUrl = new URL("http://10.31.2.118");
-        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().Create(serverUrl);
+        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl);
         CxSoapClient cxSoapClient = new CxSoapClient(sdkConfigurationProvider);
         String userName = "adminasds@cx";
         String password = "Cx123456!";

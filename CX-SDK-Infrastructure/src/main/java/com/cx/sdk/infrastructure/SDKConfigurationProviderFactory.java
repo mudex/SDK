@@ -8,7 +8,7 @@ import java.net.URL;
  * Created by ehuds on 2/28/2017.
  */
 public class SDKConfigurationProviderFactory {
-    public SDKConfigurationProvider Create(URL serverUrl) {
+    public SDKConfigurationProvider create(URL serverUrl) {
      return initSdkConfigurationProvider(serverUrl);
     }
 
