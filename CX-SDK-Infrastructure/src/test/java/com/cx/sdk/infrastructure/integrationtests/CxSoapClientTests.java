@@ -3,6 +3,7 @@ package com.cx.sdk.infrastructure.integrationtests;
 import com.cx.sdk.Infrastructure.CxSoapClient;
 import com.cx.sdk.application.contracts.SDKConfigurationProvider;
 import com.cx.sdk.Infrastructure.SDKConfigurationProviderFactory;
+import com.cx.sdk.domain.exceptions.SdkException;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,7 +17,7 @@ import java.net.URL;
 @Ignore
 public class CxSoapClientTests {
     @Test
-    public void login_validCredentails_cxCooliesWhereReturned() throws MalformedURLException {
+    public void login_validCredentails_cxCooliesWhereReturned() throws SdkException, MalformedURLException {
         // Arrange
         URL serverUrl = new URL("http://10.31.2.118");
         SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().Create(serverUrl);
@@ -32,7 +33,7 @@ public class CxSoapClientTests {
     }
 
     @Test(expected = RuntimeException.class)
-    public void login_invalidCredentails_cxCooliesWhereReturned() throws MalformedURLException {
+    public void login_invalidCredentails_cxCooliesWhereReturned() throws MalformedURLException, SdkException {
         // Arrange
         URL serverUrl = new URL("http://10.31.2.118");
         SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().Create(serverUrl);
