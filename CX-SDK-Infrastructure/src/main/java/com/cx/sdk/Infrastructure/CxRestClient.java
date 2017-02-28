@@ -1,6 +1,7 @@
 package com.cx.sdk.Infrastructure;
 
 import com.cx.sdk.application.contracts.SDKConfigurationProvider;
+import com.cx.sdk.domain.exceptions.SdkException;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -22,7 +23,7 @@ public class CxRestClient {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
     }
 
-    public Map<String, String> login(String userName, String password) {
+    public Map<String, String> login(String userName, String password) throws SdkException {
 
             WebResource webResource = client
                     .resource(restResourcesURIBuilder.BuildLoginURL(sdkConfigurationProvider.getCxServerUrl()).toString());
@@ -40,9 +41,9 @@ public class CxRestClient {
             return coockies;
     }
 
-    private void validateResponse(ClientResponse response) {
+    private void validateResponse(ClientResponse response) throws SdkException {
         if (response.getStatus() >= 400) {
-            throw new RuntimeException("Failed : HTTP error code : "
+            throw new SdkException("Failed : HTTP error code : "
                     + response.getStatus());
         }
     }

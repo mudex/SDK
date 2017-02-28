@@ -5,6 +5,7 @@ import com.checkmarx.v7.CxSDKWebService;
 import com.checkmarx.v7.CxSDKWebServiceSoap;
 import com.checkmarx.v7.CxWSResponseLoginData;
 import com.cx.sdk.application.contracts.SDKConfigurationProvider;
+import com.cx.sdk.domain.exceptions.SdkException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,7 +20,7 @@ public class CxSoapClient {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
     }
 
-    public String login(String userName, String password) {
+    public String login(String userName, String password) throws SdkException {
         URL wsdlUrl = getWsdlUrl(sdkConfigurationProvider.getCxServerUrl());
         CxSDKWebService cxSDKWebService = new CxSDKWebService(wsdlUrl);
         CxSDKWebServiceSoap cxSDKWebServiceSoap = cxSDKWebService.getCxSDKWebServiceSoap();
@@ -44,8 +45,8 @@ public class CxSoapClient {
         }
     }
 
-    private void validateResponse(CxWSResponseLoginData responseLoginData) {
+    private void validateResponse(CxWSResponseLoginData responseLoginData) throws SdkException {
         if (responseLoginData == null || !responseLoginData.isIsSuccesfull())
-            throw new RuntimeException("Login Failed");
+            throw new SdkException("Login Failed");
     }
 }

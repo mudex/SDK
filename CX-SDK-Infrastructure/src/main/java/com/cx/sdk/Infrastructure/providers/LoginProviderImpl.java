@@ -5,6 +5,7 @@ import com.cx.sdk.Infrastructure.CxSoapClient;
 import com.cx.sdk.application.contracts.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.providers.LoginProvider;
 import com.cx.sdk.domain.Session;
+import com.cx.sdk.domain.exceptions.SdkException;
 
 /**
  * Created by ehuds on 2/25/2017.
@@ -21,7 +22,7 @@ public class LoginProviderImpl implements LoginProvider {
         cxSoapClient = new CxSoapClient(sdkConfigurationProvider);
     }
 
-    public Session login(String userName, String password) {
+    public Session login(String userName, String password) throws SdkException {
         return new Session(cxSoapClient.login(userName, password),
                             cxRestClient.login(userName, password));
     }
