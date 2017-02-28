@@ -1,9 +1,11 @@
 package com.cx.sdk.api;
 
-import com.cx.sdk.application.login.services.LoginService;
-import com.cx.sdk.application.login.services.LoginServiceImp;
-import com.cx.sdk.login.CredentialsValidator;
-import com.cx.sdk.login.CredentialsValidatorImp;
+import com.cx.sdk.application.contracts.providers.LoginProvider;
+import com.cx.sdk.application.services.LoginService;
+import com.cx.sdk.application.services.LoginServiceImpl;
+import com.cx.sdk.domain.CredentialsValidator;
+import com.cx.sdk.domain.validators.CredentialsValidatorImp;
+import com.cx.sdk.Infrastructure.providers.LoginProviderImpl;
 import com.google.inject.AbstractModule;
 
 /**
@@ -27,11 +29,11 @@ public class Bootstrapper extends AbstractModule {
     }
 
     private void registerApiDependencies() {
-        bind(CxClient.class).to(CxClientImp.class);
+        bind(CxClient.class).to(CxClientImpl.class);
     }
 
     private void registerApplicationDependencies() {
-        bind(LoginService.class).to(LoginServiceImp.class);
+        bind(LoginService.class).to(LoginServiceImpl.class);
     }
 
     private void registerDomainDependencies() {
@@ -39,6 +41,6 @@ public class Bootstrapper extends AbstractModule {
     }
 
     private void registerInfrastructureDependencies() {
-        //TODO: register loginProvider
+        bind(LoginProvider.class).to(LoginProviderImpl.class);
     }
 }
