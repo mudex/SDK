@@ -1,4 +1,4 @@
-package com.cx.sdk.application.com.cx.sdk.application.login.services;
+package com.cx.sdk.application.login.services;
 
 import org.junit.Test;
 

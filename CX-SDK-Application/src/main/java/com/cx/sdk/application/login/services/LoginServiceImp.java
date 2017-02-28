@@ -1,7 +1,8 @@
-package com.cx.sdk.application.com.cx.sdk.application.login.services;
+package com.cx.sdk.application.login.services;
 
-import com.cx.sdk.providers.Session;
+import com.cx.sdk.login.Session;
 import com.cx.sdk.providers.CredentialsValidator;
+import com.cx.sdk.providers.LoginProvider;
 
 /**
  * Created by ehuds on 2/22/2017.

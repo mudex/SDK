@@ -1,6 +1,6 @@
-package com.cx.sdk.application.com.cx.sdk.application.login.services;
+package com.cx.sdk.application.login.services;
 
-import com.cx.sdk.providers.Session;
+import com.cx.sdk.login.Session;
 
 /**
  * Created by ehuds on 2/22/2017.
