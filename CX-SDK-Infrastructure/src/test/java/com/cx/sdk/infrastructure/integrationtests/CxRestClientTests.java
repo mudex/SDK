@@ -34,7 +34,7 @@ public class CxRestClientTests {
         Assert.assertEquals(2, cookies.size());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = SdkException.class)
     public void login_invalidCredentails_cxCooliesWhereReturned() throws MalformedURLException, SdkException {
         // Arrange
         URL serverUrl = new URL("http://10.31.2.118");

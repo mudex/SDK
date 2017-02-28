@@ -12,7 +12,7 @@ public class RestResourcesURIBuilder {
     final static String applicationName = "CxRestApi";
     URL BuildLoginURL(URL serverUrl) {
         try {
-            return new URL(serverUrl, applicationName + "/auth/domain");
+            return new URL(serverUrl, applicationName + "/auth/login");
         } catch (MalformedURLException e) {
             return serverUrl;
         }
