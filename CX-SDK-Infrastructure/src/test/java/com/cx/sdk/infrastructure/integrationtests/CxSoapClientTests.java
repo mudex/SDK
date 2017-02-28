@@ -1,8 +1,8 @@
 package com.cx.sdk.infrastructure.integrationtests;
 
-import com.cx.sdk.Infrastructure.CxSoapClient;
+import com.cx.sdk.infrastructure.CxSoapClient;
 import com.cx.sdk.application.contracts.SDKConfigurationProvider;
-import com.cx.sdk.Infrastructure.SDKConfigurationProviderFactory;
+import com.cx.sdk.infrastructure.SDKConfigurationProviderFactory;
 import com.cx.sdk.domain.exceptions.SdkException;
 import org.junit.Assert;
 import org.junit.Ignore;

@@ -1,4 +1,4 @@
-package com.cx.sdk.Infrastructure;
+package com.cx.sdk.infrastructure;
 
 import com.checkmarx.v7.Credentials;
 import com.checkmarx.v7.CxSDKWebService;

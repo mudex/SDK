@@ -1,4 +1,4 @@
-package com.cx.sdk.Infrastructure;
+package com.cx.sdk.infrastructure;
 
 import com.cx.sdk.application.contracts.SDKConfigurationProvider;
 

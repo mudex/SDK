@@ -1,6 +1,4 @@
-package com.cx.sdk.Infrastructure;
-
-import com.sun.jersey.core.impl.provider.entity.XMLJAXBElementProvider;
+package com.cx.sdk.infrastructure;
 
 import java.net.MalformedURLException;
 import java.net.URL;

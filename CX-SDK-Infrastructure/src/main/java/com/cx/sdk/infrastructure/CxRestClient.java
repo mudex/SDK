@@ -1,4 +1,4 @@
-package com.cx.sdk.Infrastructure;
+package com.cx.sdk.infrastructure;
 
 import com.cx.sdk.application.contracts.SDKConfigurationProvider;
 import com.cx.sdk.domain.exceptions.SdkException;
@@ -37,8 +37,7 @@ public class CxRestClient {
 
         validateResponse(response);
 
-        Map<String, String> coockies = extractCxCookies(response);
-            return coockies;
+        return extractCxCookies(response);
     }
 
     private void validateResponse(ClientResponse response) throws SdkException {
