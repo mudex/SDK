@@ -7,7 +7,7 @@ import java.net.URL;
  * Created by ehuds on 2/28/2017.
  */
 public class RestResourcesURIBuilder {
-    final static String APPLICATION_NAME = "CxRestApi";
+    private static final String APPLICATION_NAME = "CxRestApi";
 
     protected URL buildLoginURL(URL serverUrl) {
         try {
