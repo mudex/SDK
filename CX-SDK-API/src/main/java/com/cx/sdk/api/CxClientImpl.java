@@ -6,14 +6,17 @@ import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.exceptions.SdkException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.modelmapper.ModelMapper;
 
 import javax.inject.Inject;
+import javax.management.modelmbean.ModelMBean;
 
 /**
  * Created by ehuds on 2/22/2017.
  */
 public class CxClientImpl implements CxClient {
     private LoginService loginService;
+    ModelMapper modelMapper = new ModelMapper();
 
     public static CxClient createNewInstance(SdkConfiguration configuration) {
         Injector injector = Guice.createInjector(new Bootstrapper(configuration));
@@ -28,6 +31,6 @@ public class CxClientImpl implements CxClient {
 
     public SessionDTO login(String userName, String password) throws SdkException {
         Session session = loginService.login(userName, password);
-        return new SessionDTO();
+        return modelMapper.map(session, SessionDTO.class);
     }
 }

@@ -12,7 +12,8 @@ public class Session {
         this.sessionId = sessionId;
         this.coockies = coockies;
     }
-    String getSessionId() {
+    public String getSessionId() {
         return sessionId;
     }
+    public Map<String, String> getCoockies() { return coockies; }
 }
