@@ -1,12 +1,15 @@
 package com.cx.sdk.api;
 
+import com.cx.sdk.application.contracts.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.providers.LoginProvider;
 import com.cx.sdk.application.services.LoginService;
 import com.cx.sdk.application.services.LoginServiceImpl;
 import com.cx.sdk.domain.CredentialsValidator;
 import com.cx.sdk.domain.validators.CredentialsValidatorImpl;
+import com.cx.sdk.infrastructure.SDKConfigurationProviderFactory;
 import com.cx.sdk.infrastructure.providers.LoginProviderImpl;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 
 /**
  * Created by victork on 28/02/2017.
@@ -26,6 +29,11 @@ public class Bootstrapper extends AbstractModule {
         registerApplicationDependencies();
         registerDomainDependencies();
         registerInfrastructureDependencies();
+    }
+
+    @Provides
+    SDKConfigurationProvider provideSDKConfigurationProvider() {
+        return new SDKConfigurationProviderFactory().create(configuration.getCxServerUrl(), configuration.getOriginName());
     }
 
     private void registerApiDependencies() {

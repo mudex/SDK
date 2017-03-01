@@ -7,6 +7,8 @@ import com.cx.sdk.application.contracts.providers.LoginProvider;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.exceptions.SdkException;
 
+import javax.inject.Inject;
+
 /**
  * Created by ehuds on 2/25/2017.
  */
@@ -16,6 +18,8 @@ public class LoginProviderImpl implements LoginProvider {
     CxRestClient cxRestClient;
     CxSoapClient cxSoapClient;
 
+
+    @Inject
     public LoginProviderImpl(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
         cxRestClient = new CxRestClient(sdkConfigurationProvider);

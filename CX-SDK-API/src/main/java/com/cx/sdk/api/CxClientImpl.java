@@ -7,6 +7,8 @@ import com.cx.sdk.domain.exceptions.SdkException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import javax.inject.Inject;
+
 /**
  * Created by ehuds on 2/22/2017.
  */
@@ -19,6 +21,7 @@ public class CxClientImpl implements CxClient {
         return client;
     }
 
+    @Inject
     public CxClientImpl(LoginService loginService) {
         this.loginService = loginService;
     }

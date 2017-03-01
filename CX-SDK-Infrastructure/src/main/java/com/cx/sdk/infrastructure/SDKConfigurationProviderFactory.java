@@ -9,19 +9,17 @@ import java.net.URL;
  */
 public class SDKConfigurationProviderFactory {
     public SDKConfigurationProvider create(URL serverUrl) {
-     return initSdkConfigurationProvider(serverUrl);
+        return initSdkConfigurationProvider(serverUrl, null);
+    }
+    public SDKConfigurationProvider create(URL serverUrl, String cxOrigin) {
+     return initSdkConfigurationProvider(serverUrl, cxOrigin);
     }
 
-    private SDKConfigurationProvider initSdkConfigurationProvider(URL serverUrl) {
+    private SDKConfigurationProvider initSdkConfigurationProvider(URL serverUrl, String cxOrigin) {
         return new SDKConfigurationProvider() {
             @Override
-            public String getOriginName() {
-                return null;
-            }
-
-            @Override
-            public void setOriginName(String originName) {
-
+            public String getCxOriginName() {
+                return cxOrigin;
             }
 
             @Override

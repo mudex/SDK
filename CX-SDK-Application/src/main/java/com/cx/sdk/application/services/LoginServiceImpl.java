@@ -4,14 +4,21 @@ import com.cx.sdk.application.contracts.providers.LoginProvider;
 import com.cx.sdk.domain.CredentialsValidator;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.exceptions.SdkException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
 
 /**
  * Created by ehuds on 2/22/2017.
  */
 public class LoginServiceImpl implements LoginService {
+
     LoginProvider loginProvider;
     CredentialsValidator credentialsValidator;
+    Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
 
+    @Inject
     public LoginServiceImpl(LoginProvider loginProvider, CredentialsValidator credentialsValidator) {
         this.loginProvider = loginProvider;
         this.credentialsValidator = credentialsValidator;
@@ -24,12 +31,12 @@ public class LoginServiceImpl implements LoginService {
             return loginProvider.login(userName, password);
         }
         catch(SdkException sdkException) {
-            //TODO: log exception
+            logger.info("Failed to login", sdkException);
             throw sdkException;
         }
-        catch (Exception ex) {
-            //TODO: log exception
-            throw new SdkException("");
+        catch (Exception exception) {
+            logger.info("Failed to login", exception);
+            throw new SdkException("Failed to login", exception);
         }
     }
 }

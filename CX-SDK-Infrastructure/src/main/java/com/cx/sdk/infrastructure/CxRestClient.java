@@ -32,7 +32,7 @@ public class CxRestClient {
             params.put("username", userName);
             params.put("password", password);
 
-            ClientResponse response = webResource.type("application/json")
+            ClientResponse response = webResource.type("application/json").header("CxOrigin",sdkConfigurationProvider.getCxOriginName())
                     .post(ClientResponse.class, new JSONObject(params).toString());
 
         validateResponse(response);
