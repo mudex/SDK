@@ -14,9 +14,10 @@ import javax.inject.Inject;
  */
 public class LoginServiceImpl implements LoginService {
 
-    LoginProvider loginProvider;
-    CredentialsValidator credentialsValidator;
-    Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
+
+    private final LoginProvider loginProvider;
+    private final CredentialsValidator credentialsValidator;
 
     @Inject
     public LoginServiceImpl(LoginProvider loginProvider, CredentialsValidator credentialsValidator) {
@@ -26,9 +27,10 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Session login(String userName, String password) throws SdkException {
+        Session session;
         try {
             credentialsValidator.validate(userName, password);
-            return loginProvider.login(userName, password);
+            session = loginProvider.login(userName, password);
         }
         catch(SdkException sdkException) {
             logger.info("Failed to login", sdkException);
@@ -38,5 +40,6 @@ public class LoginServiceImpl implements LoginService {
             logger.info("Failed to login", exception);
             throw new SdkException("Failed to login", exception);
         }
+        return session;
     }
 }
