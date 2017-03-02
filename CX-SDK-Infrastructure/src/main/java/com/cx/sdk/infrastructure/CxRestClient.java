@@ -1,6 +1,6 @@
 package com.cx.sdk.infrastructure;
 
-import com.cx.sdk.application.contracts.SDKConfigurationProvider;
+import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.domain.exceptions.SdkException;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;

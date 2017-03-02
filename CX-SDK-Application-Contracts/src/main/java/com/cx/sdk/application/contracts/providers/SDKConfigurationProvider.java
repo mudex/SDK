@@ -1,4 +1,4 @@
-package com.cx.sdk.application.contracts;
+package com.cx.sdk.application.contracts.providers;
 
 import java.net.URL;
 

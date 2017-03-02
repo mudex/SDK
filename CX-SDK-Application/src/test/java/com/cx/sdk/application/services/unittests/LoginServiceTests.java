@@ -1,20 +1,15 @@
 package com.cx.sdk.application.services.unittests;
 
-import com.cx.sdk.application.contracts.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.providers.LoginProvider;
 import com.cx.sdk.application.services.LoginService;
 import com.cx.sdk.application.services.LoginServiceImpl;
 import com.cx.sdk.domain.CredentialsValidator;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.exceptions.SdkException;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 import static junit.framework.TestCase.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 /**
@@ -30,9 +25,6 @@ public class LoginServiceTests {
     private LoginService createService() {
         return new LoginServiceImpl(loginProvider, credentialsValidator);
     }
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void login_validUserPassword_credentialsValidationExecuted() throws SdkException {

@@ -1,7 +1,7 @@
 package com.cx.sdk.infrastructure.integrationtests;
 
 import com.cx.sdk.infrastructure.CxRestClient;
-import com.cx.sdk.application.contracts.SDKConfigurationProvider;
+import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.infrastructure.SDKConfigurationProviderFactory;
 import com.cx.sdk.domain.exceptions.SdkException;
 import org.junit.Assert;

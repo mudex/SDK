@@ -6,14 +6,15 @@ import java.util.Map;
  * Created by ehuds on 2/23/2017.
  */
 public class Session {
-    String sessionId;
-    Map<String, String> coockies;
-    public Session(String sessionId, Map<String, String> coockies) {
+    private String sessionId;
+    private Map<String, String> cookies;
+
+    public Session(String sessionId, Map<String, String> cookies) {
         this.sessionId = sessionId;
-        this.coockies = coockies;
+        this.cookies = cookies;
     }
     public String getSessionId() {
         return sessionId;
     }
-    public Map<String, String> getCoockies() { return coockies; }
+    public Map<String, String> getCookies() { return cookies; }
 }

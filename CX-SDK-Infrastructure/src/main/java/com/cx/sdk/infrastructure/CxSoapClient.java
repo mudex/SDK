@@ -4,7 +4,7 @@ import com.checkmarx.v7.Credentials;
 import com.checkmarx.v7.CxSDKWebService;
 import com.checkmarx.v7.CxSDKWebServiceSoap;
 import com.checkmarx.v7.CxWSResponseLoginData;
-import com.cx.sdk.application.contracts.SDKConfigurationProvider;
+import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.domain.exceptions.SdkException;
 
 import java.net.MalformedURLException;

@@ -8,13 +8,15 @@ import java.net.URL;
 public class SdkConfiguration {
     private final URL cxServerUrl;
     private final String cxOrigin;
+
     public SdkConfiguration(URL cxServerUrl, String cxOrigin)
     {
         this.cxServerUrl = cxServerUrl;
         this.cxOrigin = cxOrigin;
     }
-    String getOriginName() { return cxOrigin; }
-    URL getCxServerUrl() {
+
+    public String getOriginName() { return cxOrigin; }
+    public URL getCxServerUrl() {
         return cxServerUrl;
     }
 }

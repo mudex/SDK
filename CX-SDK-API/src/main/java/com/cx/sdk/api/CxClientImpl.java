@@ -13,8 +13,9 @@ import javax.inject.Inject;
  * Created by ehuds on 2/22/2017.
  */
 public class CxClientImpl implements CxClient {
-    private LoginService loginService;
-    ModelMapper modelMapper = new ModelMapper();
+    private static final ModelMapper modelMapper = new ModelMapper();
+
+    private final LoginService loginService;
 
     public static CxClient createNewInstance(SdkConfiguration configuration) {
         Injector injector = Guice.createInjector(new Bootstrapper(configuration));
@@ -30,6 +31,7 @@ public class CxClientImpl implements CxClient {
     @Override
     public SessionDTO login(String userName, String password) throws SdkException {
         Session session = loginService.login(userName, password);
-        return modelMapper.map(session, SessionDTO.class);
+        SessionDTO dto = modelMapper.map(session, SessionDTO.class);
+        return dto;
     }
 }

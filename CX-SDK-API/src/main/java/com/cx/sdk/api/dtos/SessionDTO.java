@@ -6,6 +6,22 @@ import java.util.Map;
  * Created by ehuds on 2/23/2017.
  */
 public class SessionDTO {
-    public String sessionId;
-    public Map<String, String> coockies;
+    private String sessionId;
+    private Map<String, String> cookies;
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public Map<String, String> getCookies() {
+        return cookies;
+    }
+
+    public void setCookies(Map<String, String> cookies) {
+        this.cookies = cookies;
+    }
 }

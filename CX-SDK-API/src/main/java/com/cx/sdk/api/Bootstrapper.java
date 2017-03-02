@@ -1,6 +1,6 @@
 package com.cx.sdk.api;
 
-import com.cx.sdk.application.contracts.SDKConfigurationProvider;
+import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.providers.LoginProvider;
 import com.cx.sdk.application.services.LoginService;
 import com.cx.sdk.application.services.LoginServiceImpl;

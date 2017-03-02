@@ -2,7 +2,7 @@ package com.cx.sdk.infrastructure.providers;
 
 import com.cx.sdk.infrastructure.CxRestClient;
 import com.cx.sdk.infrastructure.CxSoapClient;
-import com.cx.sdk.application.contracts.SDKConfigurationProvider;
+import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.providers.LoginProvider;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.exceptions.SdkException;
