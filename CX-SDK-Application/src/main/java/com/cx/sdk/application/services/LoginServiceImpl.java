@@ -36,10 +36,6 @@ public class LoginServiceImpl implements LoginService {
             logger.info("Failed to login", sdkException);
             throw sdkException;
         }
-        catch (Exception exception) {
-            logger.info("Failed to login", exception);
-            throw new SdkException("Failed to login", exception);
-        }
         return session;
     }
 }
