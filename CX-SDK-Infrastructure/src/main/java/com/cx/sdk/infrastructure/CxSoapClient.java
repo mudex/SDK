@@ -15,7 +15,8 @@ import java.net.URL;
  * Created by ehuds on 2/28/2017.
  */
 public class CxSoapClient {
-    SDKConfigurationProvider sdkConfigurationProvider;
+    private final SDKConfigurationProvider sdkConfigurationProvider;
+
     public CxSoapClient(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
     }

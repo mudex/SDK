@@ -15,9 +15,9 @@ import java.util.Map;
  * Created by ehuds on 2/28/2017.
  */
 public class CxRestClient {
-    SDKConfigurationProvider sdkConfigurationProvider;
-    RestResourcesURIBuilder restResourcesURIBuilder = new RestResourcesURIBuilder();
-    Client client = Client.create();
+    private final SDKConfigurationProvider sdkConfigurationProvider;
+    private final RestResourcesURIBuilder restResourcesURIBuilder = new RestResourcesURIBuilder();
+    private final Client client = Client.create();
 
     public CxRestClient(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
@@ -49,9 +49,9 @@ public class CxRestClient {
 
     private Map<String, String> extractCxCookies(ClientResponse response) {
         HashMap<String, String> coockies = new HashMap<>();
-        for (NewCookie coockie : response.getCookies()) {
-            if ("cxCookie".equals(coockie.getName()) || "CXCSRFToken".equals(coockie.getName()))
-                coockies.put(coockie.getName(), coockie.getValue());
+        for (NewCookie cookie : response.getCookies()) {
+            if ("cxCookie".equals(cookie.getName()) || "CXCSRFToken".equals(cookie.getName()))
+                coockies.put(cookie.getName(), cookie.getValue());
         }
 
         return coockies;

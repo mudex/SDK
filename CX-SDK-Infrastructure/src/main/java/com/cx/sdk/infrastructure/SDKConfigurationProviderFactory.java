@@ -11,8 +11,9 @@ public class SDKConfigurationProviderFactory {
     public SDKConfigurationProvider create(URL serverUrl) {
         return initSdkConfigurationProvider(serverUrl, null);
     }
+
     public SDKConfigurationProvider create(URL serverUrl, String cxOrigin) {
-     return initSdkConfigurationProvider(serverUrl, cxOrigin);
+        return initSdkConfigurationProvider(serverUrl, cxOrigin);
     }
 
     private SDKConfigurationProvider initSdkConfigurationProvider(URL serverUrl, String cxOrigin) {
