@@ -14,6 +14,8 @@
         <module>CX-SDK-Domain</module>
         <module>CX-SDK-Infrastructure</module>
         <module>CX-SDK-Application-Contracts</module>
+        <module>CX-SDK-API-Stub</module>
+        <module>CX-SDK-API-Stub-Faker</module>
     </modules>
     <dependencies>
         <dependency>
