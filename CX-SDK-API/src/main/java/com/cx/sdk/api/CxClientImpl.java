@@ -24,7 +24,7 @@ public class CxClientImpl implements CxClient {
     }
 
     @Inject
-    public CxClientImpl(LoginService loginService) {
+    private CxClientImpl(LoginService loginService) {
         this.loginService = loginService;
     }
 

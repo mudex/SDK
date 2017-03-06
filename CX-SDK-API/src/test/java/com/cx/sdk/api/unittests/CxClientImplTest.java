@@ -8,7 +8,10 @@ import com.cx.sdk.application.services.LoginService;
 import com.cx.sdk.domain.Session;
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -24,8 +27,11 @@ public class CxClientImplTest {
 
     private static final LoginService loginService = mock(LoginService.class);
 
-    private CxClient createClient() {
-        return new CxClientImpl(loginService);
+    private CxClient createClient() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Constructor<?>[] constructors = CxClientImpl.class.getDeclaredConstructors();
+        constructors[0].setAccessible(true);
+        CxClient clientImp = (CxClientImpl)constructors[0].newInstance(loginService);
+        return clientImp;
     }
 
     @Test
