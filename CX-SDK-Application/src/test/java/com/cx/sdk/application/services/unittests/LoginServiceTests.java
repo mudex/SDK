@@ -3,7 +3,7 @@ package com.cx.sdk.application.services.unittests;
 import com.cx.sdk.application.contracts.providers.LoginProvider;
 import com.cx.sdk.application.services.LoginService;
 import com.cx.sdk.application.services.LoginServiceImpl;
-import com.cx.sdk.domain.CredentialsValidator;
+import com.cx.sdk.domain.CredentialsInputValidator;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.exceptions.SdkException;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class LoginServiceTests {
     private static final String PASSWORD = "pass";
 
     private final LoginProvider loginProvider = Mockito.mock(LoginProvider.class);
-    private final CredentialsValidator credentialsValidator = Mockito.mock(CredentialsValidator.class);
+    private final CredentialsInputValidator credentialsValidator = Mockito.mock(CredentialsInputValidator.class);
 
     private LoginService createService() {
         return new LoginServiceImpl(loginProvider, credentialsValidator);

@@ -17,7 +17,7 @@ import java.net.URL;
 @Ignore
 public class CxSoapClientTests {
     @Test
-    public void login_validCredentails_cxCooliesWhereReturned() throws SdkException, MalformedURLException {
+    public void login_validCredentails_sessionGeneratedSuccessfully() throws SdkException, MalformedURLException {
         // Arrange
         URL serverUrl = new URL("http://10.31.2.118");
         SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl);
@@ -33,7 +33,7 @@ public class CxSoapClientTests {
     }
 
     @Test(expected = SdkException.class)
-    public void login_invalidCredentails_cxCooliesWhereReturned() throws MalformedURLException, SdkException {
+    public void login_invalidCredentails_throwException() throws MalformedURLException, SdkException {
         // Arrange
         URL serverUrl = new URL("http://10.31.2.118");
         SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl);
@@ -43,5 +43,19 @@ public class CxSoapClientTests {
 
         // Act
         cxSoapClient.login(userName, password);
+    }
+
+    @Test
+    public void ssoLogin_validCredentails_sessionGeneratedSuccessfully() throws SdkException, MalformedURLException {
+        // Arrange
+        URL serverUrl = new URL("http://10.31.2.118");
+        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl);
+        CxSoapClient cxSoapClient = new CxSoapClient(sdkConfigurationProvider);
+
+        // Act
+        String session = cxSoapClient.ssoLogin();
+
+        // Assert
+        Assert.assertNotNull(session);
     }
 }

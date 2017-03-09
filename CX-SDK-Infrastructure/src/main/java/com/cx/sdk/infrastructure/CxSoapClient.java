@@ -34,6 +34,16 @@ public class CxSoapClient {
         return responseLoginData.getSessionId();
     }
 
+    public String ssoLogin() throws SdkException {
+        URL wsdlUrl = getWsdlUrl(sdkConfigurationProvider.getCxServerUrl());
+        CxSDKWebService cxSDKWebService = new CxSDKWebService(wsdlUrl);
+        CxSDKWebServiceSoap cxSDKWebServiceSoap = cxSDKWebService.getCxSDKWebServiceSoap();
+
+        CxWSResponseLoginData responseLoginData = cxSDKWebServiceSoap.ssoLogin(new Credentials(), 1033);
+        validateResponse(responseLoginData);
+        return responseLoginData.getSessionId();
+    }
+
     private URL getWsdlUrl(URL cxServerUrl) {
         if (cxServerUrl.toString().endsWith("wsdl")) {
             return cxServerUrl;

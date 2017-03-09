@@ -1,7 +1,7 @@
 package com.cx.sdk.application.services;
 
 import com.cx.sdk.application.contracts.providers.LoginProvider;
-import com.cx.sdk.domain.CredentialsValidator;
+import com.cx.sdk.domain.CredentialsInputValidator;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.exceptions.SdkException;
 import org.slf4j.Logger;
@@ -17,10 +17,10 @@ public class LoginServiceImpl implements LoginService {
     private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
 
     private final LoginProvider loginProvider;
-    private final CredentialsValidator credentialsValidator;
+    private final CredentialsInputValidator credentialsValidator;
 
     @Inject
-    public LoginServiceImpl(LoginProvider loginProvider, CredentialsValidator credentialsValidator) {
+    public LoginServiceImpl(LoginProvider loginProvider, CredentialsInputValidator credentialsValidator) {
         this.loginProvider = loginProvider;
         this.credentialsValidator = credentialsValidator;
     }
@@ -28,6 +28,8 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public Session login(String userName, String password) throws SdkException {
         Session session;
+
+
         try {
             credentialsValidator.validate(userName, password);
             session = loginProvider.login(userName, password);

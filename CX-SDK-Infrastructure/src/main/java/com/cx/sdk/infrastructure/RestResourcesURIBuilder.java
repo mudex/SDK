@@ -16,4 +16,12 @@ public class RestResourcesURIBuilder {
             return serverUrl;
         }
     }
+
+    protected URL buildSsoLoginURL(URL serverUrl) {
+        try {
+            return new URL(serverUrl, APPLICATION_NAME + "/auth/ssologin");
+        } catch (MalformedURLException e) {
+            return serverUrl;
+        }
+    }
 }

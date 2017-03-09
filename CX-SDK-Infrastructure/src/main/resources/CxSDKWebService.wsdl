@@ -727,6 +727,21 @@
           </s:extension>
         </s:complexContent>
       </s:complexType>
+      <s:element name="SsoLogin">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="encryptedCredentials" type="tns:Credentials" />
+            <s:element minOccurs="1" maxOccurs="1" name="lcid" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SsoLoginResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SsoLoginResult" type="tns:CxWSResponseLoginData" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="LoginWithToken">
         <s:complexType>
           <s:sequence>
@@ -1438,6 +1453,12 @@
   <wsdl:message name="LoginSoapOut">
     <wsdl:part name="parameters" element="tns:LoginResponse" />
   </wsdl:message>
+  <wsdl:message name="SsoLoginSoapIn">
+    <wsdl:part name="parameters" element="tns:SsoLogin" />
+  </wsdl:message>
+  <wsdl:message name="SsoLoginSoapOut">
+    <wsdl:part name="parameters" element="tns:SsoLoginResponse" />
+  </wsdl:message>
   <wsdl:message name="LoginWithTokenSoapIn">
     <wsdl:part name="parameters" element="tns:LoginWithToken" />
   </wsdl:message>
@@ -1598,6 +1619,10 @@
     <wsdl:operation name="Login">
       <wsdl:input message="tns:LoginSoapIn" />
       <wsdl:output message="tns:LoginSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SsoLogin">
+      <wsdl:input message="tns:SsoLoginSoapIn" />
+      <wsdl:output message="tns:SsoLoginSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="LoginWithToken">
       <wsdl:input message="tns:LoginWithTokenSoapIn" />
@@ -1803,6 +1828,15 @@
     </wsdl:operation>
     <wsdl:operation name="Login">
       <soap:operation soapAction="http://Checkmarx.com/v7/Login" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SsoLogin">
+      <soap:operation soapAction="http://Checkmarx.com/v7/SsoLogin" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -2101,6 +2135,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="SsoLogin">
+      <soap12:operation soapAction="http://Checkmarx.com/v7/SsoLogin" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="LoginWithToken">
       <soap12:operation soapAction="http://Checkmarx.com/v7/LoginWithToken" style="document" />
       <wsdl:input>
@@ -2248,10 +2291,10 @@
   </wsdl:binding>
   <wsdl:service name="CxSDKWebService">
     <wsdl:port name="CxSDKWebServiceSoap" binding="tns:CxSDKWebServiceSoap">
-      <soap:address location="http://10.31.2.118/CxWebInterface/SDK/CxSDKWebService.asmx" />
+      <soap:address location="http://localhost:1515/Cxwebinterface/SDK/cxsdkwebservice.asmx" />
     </wsdl:port>
     <wsdl:port name="CxSDKWebServiceSoap12" binding="tns:CxSDKWebServiceSoap12">
-      <soap12:address location="http://10.31.2.118/CxWebInterface/SDK/CxSDKWebService.asmx" />
+      <soap12:address location="http://localhost:1515/Cxwebinterface/SDK/cxsdkwebservice.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

@@ -47,5 +47,19 @@ public class CxRestClientTests {
         cxRestClient.login(userName, password);
     }
 
+    @Test
+    public void ssoLogin_validCredentails_cxCooliesWhereReturned() throws MalformedURLException, SdkException {
+        // Arrange
+        URL serverUrl = new URL("http://10.31.2.118");
+        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl);
+        CxRestClient cxRestClient = new CxRestClient(sdkConfigurationProvider);
+
+        // Act
+        Map<String, String> cookies = cxRestClient.ssoLogin();
+
+        // Assert
+        Assert.assertEquals(2, cookies.size());
+    }
+
 
 }

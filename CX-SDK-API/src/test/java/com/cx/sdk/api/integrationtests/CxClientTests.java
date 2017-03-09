@@ -23,4 +23,9 @@ public class CxClientTests {
         SessionDTO session = cxClient.login("admin@cx", "Cx123456!");
         Assert.assertNotNull(session);
     }
+
+    @Test
+    public void createNewInstancee() throws SdkException, MalformedURLException {
+
+    }
 }
