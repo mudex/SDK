@@ -28,8 +28,6 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public Session login(String userName, String password) throws SdkException {
         Session session;
-
-
         try {
             credentialsValidator.validate(userName, password);
             session = loginProvider.login(userName, password);
