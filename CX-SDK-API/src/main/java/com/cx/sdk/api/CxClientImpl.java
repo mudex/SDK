@@ -34,4 +34,11 @@ public class CxClientImpl implements CxClient {
         SessionDTO dto = modelMapper.map(session, SessionDTO.class);
         return dto;
     }
+
+    @Override
+    public SessionDTO ssoLogin() throws SdkException {
+        Session session = loginService.ssoLogin();
+        SessionDTO dto = modelMapper.map(session, SessionDTO.class);
+        return dto;
+    }
 }

@@ -26,6 +26,8 @@ public class CxClientTests {
 
     @Test
     public void createNewInstancee() throws SdkException, MalformedURLException {
-
+        CxClient cxClient = CxClientImpl.createNewInstance(new SdkConfiguration(new URL("http://10.31.2.118"), "Intelij"));
+        SessionDTO session = cxClient.ssoLogin();
+        Assert.assertNotNull(session);
     }
 }

@@ -38,4 +38,17 @@ public class LoginServiceImpl implements LoginService {
         }
         return session;
     }
+
+    @Override
+    public Session ssoLogin() throws SdkException {
+        Session session;
+        try {
+            session = loginProvider.ssoLogin();
+        }
+        catch(SdkException sdkException) {
+            logger.info("Failed to login", sdkException);
+            throw sdkException;
+        }
+        return session;
+    }
 }
