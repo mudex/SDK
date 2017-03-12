@@ -3,19 +3,18 @@ package com.cx.sdk.infrastructure.providers;
 import com.checkmarx.plugin.common.api.CxSamlClient;
 import com.checkmarx.plugin.common.api.CxSamlClientImpl;
 import com.checkmarx.plugin.common.webbrowsering.SAMLLoginData;
-import com.cx.sdk.infrastructure.CxRestClient;
-import com.cx.sdk.infrastructure.CxSoapClient;
-import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.providers.LoginProvider;
+import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.exceptions.SdkException;
+import com.cx.sdk.infrastructure.CxRestClient;
+import com.cx.sdk.infrastructure.CxSoapClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringJoiner;
 
 /**
  * Created by ehuds on 2/25/2017.
@@ -37,9 +36,6 @@ public class LoginProviderImpl implements LoginProvider {
 
     @Override
     public Session login(String userName, String password) throws SdkException {
-        String a = null;
-        a.toString();
-        // Hello
         return new Session(cxSoapClient.login(userName, password),
                             cxRestClient.login(userName, password));
     }

@@ -1,7 +1,6 @@
 package com.cx.sdk.domain.validators;
 
 import com.cx.sdk.domain.CredentialsInputValidator;
-import com.cx.sdk.domain.exceptions.SdkException;
 
 /**
  * Created by ehuds on 2/26/2017.

@@ -7,7 +7,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import org.json.JSONObject;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +29,7 @@ public class CxRestClient {
                     .resource(restResourcesURIBuilder.buildSsoLoginURL(sdkConfigurationProvider.getCxServerUrl()).toString());
 
             ClientResponse response = webResource.header("CxOrigin",sdkConfigurationProvider.getCxOriginName())
-                    .post(ClientResponse.class, "");
+                    .post(ClientResponse.class, " ");
 
         validateResponse(response);
 

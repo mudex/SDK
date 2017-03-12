@@ -17,35 +17,31 @@ public class CxClientImpl implements CxClient {
 
     private final LoginService loginService;
 
-    public static CxClient createNewInstance(SdkConfiguration configuration) {
-        Injector injector = Guice.createInjector(new Bootstrapper(configuration));
-        CxClient client = injector.getInstance(CxClient.class);
-        return client;
-    }
-
     @Inject
     private CxClientImpl(LoginService loginService) {
         this.loginService = loginService;
     }
 
+    public static CxClient createNewInstance(SdkConfiguration configuration) {
+        Injector injector = Guice.createInjector(new Bootstrapper(configuration));
+        return injector.getInstance(CxClient.class);
+    }
+
     @Override
     public SessionDTO login(String userName, String password) throws SdkException {
         Session session = loginService.login(userName, password);
-        SessionDTO dto = modelMapper.map(session, SessionDTO.class);
-        return dto;
+        return modelMapper.map(session, SessionDTO.class);
     }
 
     @Override
     public SessionDTO ssoLogin() throws SdkException {
         Session session = loginService.ssoLogin();
-        SessionDTO dto = modelMapper.map(session, SessionDTO.class);
-        return dto;
+        return modelMapper.map(session, SessionDTO.class);
     }
 
     @Override
     public SessionDTO samlLogin() throws SdkException {
         Session session = loginService.samlLogin();
-        SessionDTO dto = modelMapper.map(session, SessionDTO.class);
-        return dto;
+        return modelMapper.map(session, SessionDTO.class);
     }
 }
