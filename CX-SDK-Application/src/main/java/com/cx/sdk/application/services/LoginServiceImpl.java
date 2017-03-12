@@ -51,4 +51,17 @@ public class LoginServiceImpl implements LoginService {
         }
         return session;
     }
+
+    @Override
+    public Session samlLogin() throws SdkException {
+        Session session;
+        try {
+            session = loginProvider.samlLogin();
+        }
+        catch(SdkException sdkException) {
+            logger.info("Failed to login", sdkException);
+            throw sdkException;
+        }
+        return session;
+    }
 }

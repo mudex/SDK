@@ -9,4 +9,5 @@ import com.cx.sdk.domain.exceptions.SdkException;
 public interface CxClient {
     SessionDTO login(String userName, String password) throws SdkException;
     SessionDTO ssoLogin() throws SdkException;
+    SessionDTO samlLogin() throws SdkException;
 }
