@@ -28,6 +28,8 @@ public class LoginProviderImpl implements LoginProvider {
 
     @Override
     public Session login(String userName, String password) throws SdkException {
+        String a = null;
+        a.toString();
         return new Session(cxSoapClient.login(userName, password),
                             cxRestClient.login(userName, password));
     }
