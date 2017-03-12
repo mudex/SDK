@@ -15,6 +15,7 @@ import javax.inject.Inject;
 public class LoginServiceImpl implements LoginService {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
+    public static final String FAILED_TO_LOGIN = "Failed to login";
 
     private final LoginProvider loginProvider;
     private final CredentialsInputValidator credentialsValidator;
@@ -33,7 +34,7 @@ public class LoginServiceImpl implements LoginService {
             session = loginProvider.login(userName, password);
         }
         catch(SdkException sdkException) {
-            logger.info("Failed to login", sdkException);
+            logger.info(FAILED_TO_LOGIN, sdkException);
             throw sdkException;
         }
         return session;
@@ -46,7 +47,7 @@ public class LoginServiceImpl implements LoginService {
             session = loginProvider.ssoLogin();
         }
         catch(SdkException sdkException) {
-            logger.info("Failed to login", sdkException);
+            logger.info(FAILED_TO_LOGIN, sdkException);
             throw sdkException;
         }
         return session;
@@ -59,7 +60,7 @@ public class LoginServiceImpl implements LoginService {
             session = loginProvider.samlLogin();
         }
         catch(SdkException sdkException) {
-            logger.info("Failed to login", sdkException);
+            logger.info(FAILED_TO_LOGIN, sdkException);
             throw sdkException;
         }
         return session;

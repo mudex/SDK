@@ -2,9 +2,7 @@ package com.cx.sdk.infrastructure;
 
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.domain.exceptions.SdkException;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.*;
 import org.json.JSONObject;
 
 import javax.ws.rs.core.NewCookie;
