@@ -49,6 +49,13 @@ public class CxSoapClient {
         return response;
     }
 
+    public CxWSResponseGroupList getTeams(Session session) throws Exception {
+        CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy();
+        CxWSResponseGroupList response = cxSDKWebServiceSoap.getAssociatedGroupsList(session.getSessionId());
+        validateResponse(response, "Failed to get teams");
+        return response;
+    }
+
     private URL getWsdlUrl(URL cxServerUrl) {
         if (cxServerUrl.toString().endsWith("wsdl")) {
             return cxServerUrl;

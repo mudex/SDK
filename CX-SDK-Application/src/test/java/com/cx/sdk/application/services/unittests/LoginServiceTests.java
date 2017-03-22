@@ -46,13 +46,13 @@ public class LoginServiceTests {
     public void login_invalidUserPassword_shouldThrow() throws SdkException {
         // Arrange
         LoginService loginService = createService();
-        Mockito.doThrow(new SdkException("OMG! credentials are not valid!!!")).when(credentialsValidator).validate(USERNAME, PASSWORD);
+        Mockito.doThrow(new IllegalArgumentException("OMG! credentials are not in a valid format!!!")).when(credentialsValidator).validate(USERNAME, PASSWORD);
         Session result = null;
 
         // Act
         try {
             result = loginService.login(USERNAME, PASSWORD);
-        } catch (SdkException e) {}
+        } catch (IllegalArgumentException e) {}
 
         // Assert
         verify(loginProvider, never()).login(USERNAME, PASSWORD);

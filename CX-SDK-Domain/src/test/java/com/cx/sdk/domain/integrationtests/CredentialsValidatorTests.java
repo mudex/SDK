@@ -15,25 +15,25 @@ public class CredentialsValidatorTests {
         credentialsValidator.validate("user", "pass");
     }
 
-    @Test(expected = SdkException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void validate_nullUsername_exceptionIsThrown() throws SdkException {
         CredentialsInputValidator credentialsValidator = new CredentialsInputValidatorImpl();
         credentialsValidator.validate(null, "pass");
     }
 
-    @Test(expected = SdkException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void validate_emptyUsername_exceptionIsThrown() throws SdkException {
         CredentialsInputValidator credentialsValidator = new CredentialsInputValidatorImpl();
         credentialsValidator.validate("", "pass");
     }
 
-    @Test(expected = SdkException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void validate_nullPassword_exceptionIsThrown() throws SdkException {
         CredentialsInputValidator credentialsValidator = new CredentialsInputValidatorImpl();
         credentialsValidator.validate("user", null);
     }
 
-    @Test(expected = SdkException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void validate_emptyPassword_exceptionIsThrown() throws SdkException {
         CredentialsInputValidator credentialsValidator = new CredentialsInputValidatorImpl();
         credentialsValidator.validate("user", null);
