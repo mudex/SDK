@@ -22,10 +22,10 @@ import java.util.Map;
  */
 public class LoginProviderImpl implements LoginProvider {
 
-    SDKConfigurationProvider sdkConfigurationProvider;
-    CxRestClient cxRestClient;
-    CxSoapClient cxSoapClient;
-    Logger logger = LoggerFactory.getLogger(LoginProviderImpl.class);
+    private final SDKConfigurationProvider sdkConfigurationProvider;
+    private final CxRestClient cxRestClient;
+    private final CxSoapClient cxSoapClient;
+    private final Logger logger = LoggerFactory.getLogger(LoginProviderImpl.class);
 
 
     @Inject
