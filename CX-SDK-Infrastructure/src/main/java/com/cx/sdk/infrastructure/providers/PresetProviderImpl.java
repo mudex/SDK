@@ -10,6 +10,7 @@ import com.cx.sdk.infrastructure.CxSoapClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.lang.model.element.Element;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class PresetProviderImpl implements PresetProvider {
     private final CxSoapClient cxSoapClient;
     private final SDKConfigurationProvider sdkConfigurationProvider;
 
+    @Inject
     public PresetProviderImpl(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
         this.cxSoapClient = new CxSoapClient(this.sdkConfigurationProvider);

@@ -9,6 +9,7 @@ import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.entities.Preset;
 import com.cx.sdk.domain.entities.Team;
 import com.cx.sdk.infrastructure.CxSoapClient;
+import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,7 @@ public class TeamProviderImpl implements TeamProvider {
     private final CxSoapClient cxSoapClient;
     private final SDKConfigurationProvider sdkConfigurationProvider;
 
+    @Inject
     public TeamProviderImpl(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
         this.cxSoapClient = new CxSoapClient(this.sdkConfigurationProvider);

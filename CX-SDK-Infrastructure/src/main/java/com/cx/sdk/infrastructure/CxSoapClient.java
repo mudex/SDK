@@ -56,6 +56,20 @@ public class CxSoapClient {
         return response;
     }
 
+    public CxWSResponseConfigSetList getConfigurations(Session session) throws Exception {
+        CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy();
+        CxWSResponseConfigSetList response = cxSDKWebServiceSoap.getConfigurationSetList(session.getSessionId());
+        validateResponse(response, "Failed to get configurations");
+        return response;
+    }
+
+    public CxWSResponseConfigSetList getProjectSettings(Session session) throws Exception {
+        CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy();
+        CxWSResponseConfigSetList response = cxSDKWebServiceSoap.getConfigurationSetList(session.getSessionId());
+        validateResponse(response, "Failed to get project settings");
+        return response;
+    }
+
     private URL getWsdlUrl(URL cxServerUrl) {
         if (cxServerUrl.toString().endsWith("wsdl")) {
             return cxServerUrl;
