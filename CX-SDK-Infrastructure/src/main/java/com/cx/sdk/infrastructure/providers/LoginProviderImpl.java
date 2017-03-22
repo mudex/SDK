@@ -3,6 +3,7 @@ package com.cx.sdk.infrastructure.providers;
 import com.checkmarx.plugin.common.api.CxSamlClient;
 import com.checkmarx.plugin.common.api.CxSamlClientImpl;
 import com.checkmarx.plugin.common.webbrowsering.SAMLLoginData;
+import com.checkmarx.v7.CxWSResponseLoginData;
 import com.cx.sdk.application.contracts.providers.LoginProvider;
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.domain.Session;
@@ -36,14 +37,20 @@ public class LoginProviderImpl implements LoginProvider {
 
     @Override
     public Session login(String userName, String password) throws SdkException {
-        return new Session(cxSoapClient.login(userName, password),
-                            cxRestClient.login(userName, password));
+        CxWSResponseLoginData cxWSResponseLoginData = cxSoapClient.login(userName, password);
+        return new Session(cxWSResponseLoginData.getSessionId(),
+                            cxRestClient.login(userName, password),
+                            cxWSResponseLoginData.isIsScanner(),
+                            cxWSResponseLoginData.isAllowedToChangeNotExploitable());
     }
 
     @Override
     public Session ssoLogin() throws SdkException {
-        return new Session(cxSoapClient.ssoLogin(),
-                cxRestClient.ssoLogin());
+        CxWSResponseLoginData cxWSResponseLoginData = cxSoapClient.ssoLogin();
+        return new Session(cxWSResponseLoginData.getSessionId(),
+                            cxRestClient.ssoLogin(),
+                            cxWSResponseLoginData.isIsScanner(),
+                            cxWSResponseLoginData.isAllowedToChangeNotExploitable());
     }
 
     @Override
@@ -63,7 +70,10 @@ public class LoginProviderImpl implements LoginProvider {
         if (samlLoginData.wasCanceled)
             return null;
 
-        return new Session(samlLoginData.getCxWSResponseLoginData().getSessionId(), extractCxCoockies(samlLoginData));
+        return new Session(samlLoginData.getCxWSResponseLoginData().getSessionId(),
+                            extractCxCoockies(samlLoginData),
+                            samlLoginData.getCxWSResponseLoginData().isIsScanner(),
+                            samlLoginData.getCxWSResponseLoginData().isAllowedToChangeNotExploitable());
     }
 
     private Map<String, String> extractCxCoockies(SAMLLoginData samlLoginData) {

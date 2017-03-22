@@ -8,6 +8,8 @@ import java.util.Map;
 public class SessionDTO {
     private String sessionId;
     private Map<String, String> cookies;
+    private boolean isScanner;
+    private boolean isAllowedToChangeNotExploitable;
 
     public String getSessionId() {
         return sessionId;
@@ -23,5 +25,21 @@ public class SessionDTO {
 
     public void setCookies(Map<String, String> cookies) {
         this.cookies = cookies;
+    }
+
+    public boolean getIsScanner() {
+        return isScanner;
+    }
+
+    public void setIsScanner(boolean scanner) {
+        isScanner = scanner;
+    }
+
+    public boolean isAllowedToChangeNotExploitable() {
+        return isAllowedToChangeNotExploitable;
+    }
+
+    public void setAllowedToChangeNotExploitable(boolean allowedToChangeNotExploitable) {
+        isAllowedToChangeNotExploitable = allowedToChangeNotExploitable;
     }
 }

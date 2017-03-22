@@ -1,5 +1,6 @@
 package com.cx.sdk.infrastructure.integrationtests;
 
+import com.checkmarx.v7.CxWSResponseLoginData;
 import com.cx.sdk.infrastructure.CxSoapClient;
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.infrastructure.SDKConfigurationProviderFactory;
@@ -26,7 +27,7 @@ public class CxSoapClientTests {
         String password = "Cx123456!";
 
         // Act
-        String session = cxSoapClient.login(userName, password);
+        CxWSResponseLoginData session = cxSoapClient.login(userName, password);
 
         // Assert
         Assert.assertNotNull(session);
@@ -53,7 +54,7 @@ public class CxSoapClientTests {
         CxSoapClient cxSoapClient = new CxSoapClient(sdkConfigurationProvider);
 
         // Act
-        String session = cxSoapClient.ssoLogin();
+        CxWSResponseLoginData session = cxSoapClient.ssoLogin();
 
         // Assert
         Assert.assertNotNull(session);

@@ -52,7 +52,7 @@ public class CxClientImplTest {
         CxClient client = createClient();
         Map<String, String> cookies = new HashMap<>();
         cookies.put("key", "value");
-        Session session = new Session("sessionId", cookies);
+        Session session = new Session("sessionId", cookies, true, true);
         when(loginService.login(USERNAME, PASSWORD)).thenReturn(session);
 
         // Act
@@ -61,6 +61,8 @@ public class CxClientImplTest {
         // Assert
         assertEquals(session.getSessionId(), result.getSessionId());
         assertEquals(session.getCookies(), result.getCookies());
+        assertEquals(session.getIsScanner(), result.getIsScanner());
+        assertEquals(session.getIsAllowedToChangeNotExploitable(), result.isAllowedToChangeNotExploitable());
     }
 
 }
