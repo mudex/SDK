@@ -2,6 +2,7 @@ package com.cx.sdk.infrastructure.providers;
 
 import com.checkmarx.v7.CxWSResponseConfigSetList;
 import com.checkmarx.v7.CxWSResponsePresetList;
+import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
 import com.cx.sdk.application.contracts.providers.ConfigurationProvider;
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.domain.Session;
@@ -30,16 +31,19 @@ public class ConfigurationProviderImpl implements ConfigurationProvider {
     }
 
     @Override
-    public List<Configuration> getConfigurations(Session session) throws Exception {
+    public List<Configuration> getEngineConfigurations(Session session) throws Exception {
         List<Configuration> configurations = new ArrayList<>();
         try {
             CxWSResponseConfigSetList response = this.cxSoapClient.getConfigurations(session);
             for (com.checkmarx.v7.ConfigurationSet configurationSet : response.getConfigSetList().getConfigurationSet()) {
                 configurations.add(new Configuration(Long.toString(configurationSet.getID()), configurationSet.getConfigSetName()));
             }
+        }
+        catch(NotAuthorizedException unauthorizedException) {
+            throw unauthorizedException;
         } catch (Exception e) {
             logger.error("[SDK][ConfigurationProviderImpl] Failed to get configurations", e);
-            throw e;
+            throw new Exception("Failed to get engine configurations");
         }
         return configurations;
     }

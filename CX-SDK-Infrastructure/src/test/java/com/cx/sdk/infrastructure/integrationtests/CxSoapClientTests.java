@@ -18,10 +18,10 @@ import java.net.URL;
 @Ignore
 public class CxSoapClientTests {
     @Test
-    public void login_validCredentails_sessionGeneratedSuccessfully() throws SdkException, MalformedURLException {
+    public void login_validCredentails_sessionGeneratedSuccessfully() throws Exception, MalformedURLException {
         // Arrange
         URL serverUrl = new URL("http://10.31.2.118");
-        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl);
+        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl, null, null, null, null);
         CxSoapClient cxSoapClient = new CxSoapClient(sdkConfigurationProvider);
         String userName = "admin@cx";
         String password = "Cx123456!";
@@ -34,10 +34,10 @@ public class CxSoapClientTests {
     }
 
     @Test(expected = SdkException.class)
-    public void login_invalidCredentails_throwException() throws MalformedURLException, SdkException {
+    public void login_invalidCredentails_throwException() throws Exception {
         // Arrange
         URL serverUrl = new URL("http://10.31.2.118");
-        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl);
+        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl, null, null, null, null);
         CxSoapClient cxSoapClient = new CxSoapClient(sdkConfigurationProvider);
         String userName = "adminasds@cx";
         String password = "Cx123456!";
@@ -47,10 +47,10 @@ public class CxSoapClientTests {
     }
 
     @Test
-    public void ssoLogin_validCredentails_sessionGeneratedSuccessfully() throws SdkException, MalformedURLException {
+    public void ssoLogin_validCredentails_sessionGeneratedSuccessfully() throws Exception {
         // Arrange
         URL serverUrl = new URL("http://10.31.2.118");
-        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl);
+        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl, null, null, null, null);
         CxSoapClient cxSoapClient = new CxSoapClient(sdkConfigurationProvider);
 
         // Act

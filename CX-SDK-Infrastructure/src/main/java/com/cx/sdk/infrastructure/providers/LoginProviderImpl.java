@@ -36,7 +36,7 @@ public class LoginProviderImpl implements LoginProvider {
     }
 
     @Override
-    public Session login(String userName, String password) throws SdkException {
+    public Session login(String userName, String password) throws Exception {
         CxWSResponseLoginData cxWSResponseLoginData = cxSoapClient.login(userName, password);
         return new Session(cxWSResponseLoginData.getSessionId(),
                             cxRestClient.login(userName, password),
@@ -45,7 +45,7 @@ public class LoginProviderImpl implements LoginProvider {
     }
 
     @Override
-    public Session ssoLogin() throws SdkException {
+    public Session ssoLogin() throws Exception {
         CxWSResponseLoginData cxWSResponseLoginData = cxSoapClient.ssoLogin();
         return new Session(cxWSResponseLoginData.getSessionId(),
                             cxRestClient.ssoLogin(),
@@ -54,7 +54,7 @@ public class LoginProviderImpl implements LoginProvider {
     }
 
     @Override
-    public Session samlLogin() throws SdkException {
+    public Session samlLogin() throws Exception {
         CxSamlClient cxSamlClient = new CxSamlClientImpl(sdkConfigurationProvider.getCxServerUrl(),
                                                          sdkConfigurationProvider.getCxOriginName());
         SAMLLoginData samlLoginData = null;

@@ -1,5 +1,6 @@
 package com.cx.sdk.infrastructure.integrationtests.providers;
 
+import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
 import com.cx.sdk.application.contracts.providers.PresetProvider;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.entities.Preset;
@@ -23,11 +24,11 @@ public class PresetProviderImplTest extends ProviderTestBase {
 
     @Before
     public void setUp() throws Exception {
-        session = createSession();
+        session = createValidSession();
     }
 
     @Test
-    public void getPresets() throws Exception {
+    public void getPresets_shouldSucceed_givenValidSession() throws Exception {
         // Arrange
         PresetProvider provider = createProvider();
 
@@ -38,4 +39,13 @@ public class PresetProviderImplTest extends ProviderTestBase {
         assertTrue(result.size() > 0);
     }
 
+    @Test(expected = NotAuthorizedException.class)
+    public void getPresets_shouldThrow_givenInvalidSession() throws Exception {
+        // Arrange
+        PresetProvider provider = createProvider();
+        Session invalidSession = createInvalidSession();
+
+        // Act & Assert
+        provider.getPresets(invalidSession);
+    }
 }

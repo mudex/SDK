@@ -1,6 +1,7 @@
 package com.cx.sdk.infrastructure.providers;
 
 import com.checkmarx.v7.CxWSResponsePresetList;
+import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
 import com.cx.sdk.application.contracts.providers.PresetProvider;
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.domain.Session;
@@ -37,9 +38,12 @@ public class PresetProviderImpl implements PresetProvider {
             for (com.checkmarx.v7.Preset preset : response.getPresetList().getPreset()) {
                 presets.add(new Preset(Long.toString(preset.getID()), preset.getPresetName()));
             }
+        }
+        catch(NotAuthorizedException unauthorizedException) {
+            throw unauthorizedException;
         } catch (Exception e) {
             logger.error("[SDK][PresetProviderImpl] Failed to get presets", e);
-            throw e;
+            throw new Exception("Failed to get presets");
         }
         return presets;
     }

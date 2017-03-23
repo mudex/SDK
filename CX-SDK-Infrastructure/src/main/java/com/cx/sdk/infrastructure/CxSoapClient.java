@@ -2,13 +2,12 @@ package com.cx.sdk.infrastructure;
 
 import com.checkmarx.v7.*;
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
+import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
 import com.cx.sdk.domain.Session;
-import com.cx.sdk.domain.entities.Preset;
 import com.cx.sdk.domain.exceptions.SdkException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
 
 /**
@@ -21,7 +20,7 @@ public class CxSoapClient {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
     }
 
-    public CxWSResponseLoginData login(String userName, String password) throws SdkException {
+    public CxWSResponseLoginData login(String userName, String password) throws Exception {
         URL wsdlUrl = getWsdlUrl(sdkConfigurationProvider.getCxServerUrl());
         CxSDKWebService cxSDKWebService = new CxSDKWebService(wsdlUrl);
         CxSDKWebServiceSoap cxSDKWebServiceSoap = cxSDKWebService.getCxSDKWebServiceSoap();
@@ -30,43 +29,36 @@ public class CxSoapClient {
         credentials.setPass(password);
 
         CxWSResponseLoginData responseLoginData = cxSDKWebServiceSoap.login(credentials, 1033);
-        validateLoginResponse(responseLoginData, "Login failed");
+        validateLoginResponse(responseLoginData);
         return responseLoginData;
     }
 
-    public CxWSResponseLoginData ssoLogin() throws SdkException {
+    public CxWSResponseLoginData ssoLogin() throws Exception {
         CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy();
 
         CxWSResponseLoginData responseLoginData = cxSDKWebServiceSoap.ssoLogin(new Credentials(), 1033);
-        validateLoginResponse(responseLoginData, "Login failed");
+        validateLoginResponse(responseLoginData);
         return responseLoginData;
     }
 
     public CxWSResponsePresetList getPresets(Session session) throws Exception {
         CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy();
         CxWSResponsePresetList response = cxSDKWebServiceSoap.getPresetList(session.getSessionId());
-        validateResponse(response, "Failed to get presets");
+        validateResponse(response);
         return response;
     }
 
     public CxWSResponseGroupList getTeams(Session session) throws Exception {
         CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy();
         CxWSResponseGroupList response = cxSDKWebServiceSoap.getAssociatedGroupsList(session.getSessionId());
-        validateResponse(response, "Failed to get teams");
+        validateResponse(response);
         return response;
     }
 
     public CxWSResponseConfigSetList getConfigurations(Session session) throws Exception {
         CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy();
         CxWSResponseConfigSetList response = cxSDKWebServiceSoap.getConfigurationSetList(session.getSessionId());
-        validateResponse(response, "Failed to get configurations");
-        return response;
-    }
-
-    public CxWSResponseConfigSetList getProjectSettings(Session session) throws Exception {
-        CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy();
-        CxWSResponseConfigSetList response = cxSDKWebServiceSoap.getConfigurationSetList(session.getSessionId());
-        validateResponse(response, "Failed to get project settings");
+        validateResponse(response);
         return response;
     }
 
@@ -82,14 +74,22 @@ public class CxSoapClient {
         }
     }
 
-    private void validateResponse(CxWSBasicRepsonse response, String errorMessage) throws Exception {
-        if (response == null || !response.isIsSuccesfull())
+    private void validateResponse(CxWSBasicRepsonse response) throws Exception {
+        if (response == null)
             throw new Exception(response.getErrorMessage());
+
+        if (response.isIsSuccesfull())
+            return;
+
+        if (response.getErrorMessage().equals("ReConnect"))
+            throw new NotAuthorizedException();
+
+        throw new Exception(response.getErrorMessage());
     }
 
-    private void validateLoginResponse(CxWSBasicRepsonse response, String errorMessage) throws SdkException {
+    private void validateLoginResponse(CxWSBasicRepsonse response) throws SdkException {
         if (response == null || !response.isIsSuccesfull())
-            throw new SdkException(errorMessage);
+            throw new SdkException("Login failed");
     }
 
     private CxSDKWebServiceSoap createProxy() {

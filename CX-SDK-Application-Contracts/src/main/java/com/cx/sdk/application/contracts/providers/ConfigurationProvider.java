@@ -9,5 +9,5 @@ import java.util.List;
  * Created by victork on 22/03/2017.
  */
 public interface ConfigurationProvider {
-    List<Configuration> getConfigurations(Session session) throws Exception;
+    List<Configuration> getEngineConfigurations(Session session) throws Exception;
 }

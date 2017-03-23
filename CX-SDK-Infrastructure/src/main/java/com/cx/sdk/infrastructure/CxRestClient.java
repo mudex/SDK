@@ -1,6 +1,7 @@
 package com.cx.sdk.infrastructure;
 
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
+import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
 import com.cx.sdk.domain.exceptions.SdkException;
 import com.sun.jersey.api.client.*;
 import org.json.JSONObject;
@@ -21,7 +22,7 @@ public class CxRestClient {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
     }
 
-    public Map<String, String> ssoLogin() throws SdkException {
+    public Map<String, String> ssoLogin() throws Exception {
 
             WebResource webResource = client
                     .resource(restResourcesURIBuilder.buildSsoLoginURL(sdkConfigurationProvider.getCxServerUrl()).toString());
@@ -34,7 +35,7 @@ public class CxRestClient {
         return extractCxCookies(response);
     }
 
-    public Map<String, String> login(String userName, String password) throws SdkException {
+    public Map<String, String> login(String userName, String password) throws Exception {
 
         WebResource webResource = client
                 .resource(restResourcesURIBuilder.buildLoginURL(sdkConfigurationProvider.getCxServerUrl()).toString());
@@ -51,8 +52,11 @@ public class CxRestClient {
         return extractCxCookies(response);
     }
 
-    private void validateResponse(ClientResponse response) throws SdkException {
-        if (response.getStatus() >= 400) {
+    private void validateResponse(ClientResponse response) throws Exception {
+        if (response.getStatus() == 401) {
+            throw new NotAuthorizedException();
+        }
+        else if (response.getStatus() >= 400) {
             throw new SdkException("Failed : HTTP error code : "
                     + response.getStatus());
         }

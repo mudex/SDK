@@ -22,14 +22,19 @@ public abstract class ProviderTestBase {
 
     protected ProviderTestBase() {
         URL serverUrl = getUrl();
-        sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl);
+        sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl, null, null, null, null);
     }
 
-    protected Session createSession() throws Exception {
+    protected Session createValidSession() throws Exception {
         String userName = "admin@cx";
         String password = "Cx123456!";
         LoginProvider loginProvider = new LoginProviderImpl(sdkConfigurationProvider);
         Session session = loginProvider.login(userName, password);
+        return session;
+    }
+    
+    protected Session createInvalidSession() {
+        Session session = new Session("some-fake-id", null, false, false);
         return session;
     }
 

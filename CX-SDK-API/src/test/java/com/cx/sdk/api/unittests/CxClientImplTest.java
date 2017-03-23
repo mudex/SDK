@@ -3,6 +3,7 @@ package com.cx.sdk.api.unittests;
 import com.cx.sdk.api.CxClient;
 import com.cx.sdk.api.CxClientImpl;
 import com.cx.sdk.api.SdkConfiguration;
+import com.cx.sdk.api.dtos.LoginTypeDTO;
 import com.cx.sdk.api.dtos.SessionDTO;
 import com.cx.sdk.application.services.LoginService;
 import com.cx.sdk.domain.Session;
@@ -10,6 +11,8 @@ import org.junit.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,15 +38,37 @@ public class CxClientImplTest {
     }
 
     @Test
-    public void createNewInstance() {
+    public void createNewInstance_shouldSucceed_givenProvidedAllRequiredValues() {
         // Arrange
         SdkConfiguration configuration = mock(SdkConfiguration.class);
+        when(configuration.getCxServerUrl()).thenReturn(getFakeUrl());
+        when(configuration.getLoginType()).thenReturn(LoginTypeDTO.CREDENTIALS);
 
         // Act
         CxClient client = CxClientImpl.createNewInstance(configuration);
 
         // Assert
         assertNotNull(client);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void createNewInstance_shouldThrow_givenMissingCxServerUrl() {
+        // Arrange
+        SdkConfiguration configuration = mock(SdkConfiguration.class);
+        when(configuration.getLoginType()).thenReturn(LoginTypeDTO.CREDENTIALS);
+
+        // Act & Assert
+        CxClientImpl.createNewInstance(configuration);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void createNewInstance_shouldThrow_givenMissingLoginType() {
+        // Arrange
+        SdkConfiguration configuration = mock(SdkConfiguration.class);
+        when(configuration.getCxServerUrl()).thenReturn(getFakeUrl());
+
+        // Act & Assert
+        CxClientImpl.createNewInstance(configuration);
     }
 
     @Test
@@ -53,10 +78,10 @@ public class CxClientImplTest {
         Map<String, String> cookies = new HashMap<>();
         cookies.put("key", "value");
         Session session = new Session("sessionId", cookies, true, true);
-        when(loginService.login(USERNAME, PASSWORD)).thenReturn(session);
+        when(loginService.login()).thenReturn(session);
 
         // Act
-        SessionDTO result = client.login(USERNAME, PASSWORD);
+        SessionDTO result = client.login();
 
         // Assert
         assertEquals(session.getSessionId(), result.getSessionId());
@@ -65,4 +90,12 @@ public class CxClientImplTest {
         assertEquals(session.getIsAllowedToChangeNotExploitable(), result.isAllowedToChangeNotExploitable());
     }
 
+    private URL getFakeUrl() {
+        try {
+            return new URL("http://some-fake-url.com");
+        }
+        catch(MalformedURLException e) {
+            return null;
+        }
+    }
 }

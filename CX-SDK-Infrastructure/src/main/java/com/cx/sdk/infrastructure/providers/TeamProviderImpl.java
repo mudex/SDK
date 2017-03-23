@@ -3,6 +3,7 @@ package com.cx.sdk.infrastructure.providers;
 import com.checkmarx.v7.CxWSBasicRepsonse;
 import com.checkmarx.v7.CxWSResponseGroupList;
 import com.checkmarx.v7.CxWSResponsePresetList;
+import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.providers.TeamProvider;
 import com.cx.sdk.domain.Session;
@@ -39,9 +40,12 @@ public class TeamProviderImpl implements TeamProvider {
                 teams.add(new Team(group.getID(), group.getGroupName()));
             }
         }
+        catch(NotAuthorizedException unauthorizedException) {
+            throw unauthorizedException;
+        }
         catch (Exception e) {
             logger.error("[SDK][TeamProviderImpl] Failed to get teams", e);
-            throw e;
+            throw new Exception("Failed to get teams");
         }
         return teams;
     }

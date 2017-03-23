@@ -4,6 +4,7 @@ import com.cx.sdk.application.contracts.providers.*;
 import com.cx.sdk.application.services.LoginService;
 import com.cx.sdk.application.services.LoginServiceImpl;
 import com.cx.sdk.domain.CredentialsInputValidator;
+import com.cx.sdk.domain.enums.LoginType;
 import com.cx.sdk.domain.validators.CredentialsInputValidatorImpl;
 import com.cx.sdk.infrastructure.SDKConfigurationProviderFactory;
 import com.cx.sdk.infrastructure.providers.ConfigurationProviderImpl;
@@ -12,13 +13,14 @@ import com.cx.sdk.infrastructure.providers.PresetProviderImpl;
 import com.cx.sdk.infrastructure.providers.TeamProviderImpl;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import org.modelmapper.ModelMapper;
 
 /**
  * Created by victork on 28/02/2017.
  */
 public class Bootstrapper extends AbstractModule {
 
-
+    private static final ModelMapper modelMapper = new ModelMapper();
     private SdkConfiguration configuration;
 
     public Bootstrapper(SdkConfiguration configuration) {
@@ -35,7 +37,12 @@ public class Bootstrapper extends AbstractModule {
 
     @Provides
     SDKConfigurationProvider provideSDKConfigurationProvider() {
-        return new SDKConfigurationProviderFactory().create(configuration.getCxServerUrl(), configuration.getOriginName());
+        return new SDKConfigurationProviderFactory().create(
+                configuration.getCxServerUrl(),
+                configuration.getOriginName(),
+                modelMapper.map(configuration.getLoginType(), LoginType.class),
+                configuration.getUsername(),
+                configuration.getPassword());
     }
 
     private void registerApiDependencies() {
