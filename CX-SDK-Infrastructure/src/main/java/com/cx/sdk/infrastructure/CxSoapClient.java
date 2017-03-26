@@ -75,13 +75,10 @@ public class CxSoapClient {
     }
 
     private void validateResponse(CxWSBasicRepsonse response) throws Exception {
-        if (response == null)
-            throw new Exception(response.getErrorMessage());
-
         if (response.isIsSuccesfull())
             return;
 
-        if (response.getErrorMessage().equals("ReConnect"))
+        if ("ReConnect".equals(response.getErrorMessage()))
             throw new NotAuthorizedException();
 
         throw new Exception(response.getErrorMessage());
