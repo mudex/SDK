@@ -32,7 +32,7 @@ public class TeamProviderImpl implements TeamProvider {
     }
 
     @Override
-    public List<Team> getTeams(Session session) throws Exception {
+    public List<Team> getTeams(Session session) throws RuntimeException {
         List<Team> teams = new ArrayList<>();
         try {
             CxWSResponseGroupList response = this.cxSoapClient.getTeams(session);
@@ -45,7 +45,7 @@ public class TeamProviderImpl implements TeamProvider {
         }
         catch (Exception e) {
             logger.error("[SDK][TeamProviderImpl] Failed to get teams", e);
-            throw new Exception("Failed to get teams");
+            throw new RuntimeException("Failed to get teams");
         }
         return teams;
     }

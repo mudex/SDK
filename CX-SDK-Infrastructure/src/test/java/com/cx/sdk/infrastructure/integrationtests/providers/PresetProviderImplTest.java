@@ -6,6 +6,7 @@ import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.entities.Preset;
 import com.cx.sdk.infrastructure.providers.PresetProviderImpl;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import static org.junit.Assert.*;
 /**
  * Created by victork on 22/03/2017.
  */
+@Ignore
 public class PresetProviderImplTest extends ProviderTestBase {
     private Session session;
 

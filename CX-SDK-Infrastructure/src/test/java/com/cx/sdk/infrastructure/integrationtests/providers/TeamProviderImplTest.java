@@ -8,6 +8,7 @@ import com.cx.sdk.infrastructure.providers.PresetProviderImpl;
 import com.cx.sdk.infrastructure.providers.TeamProviderImpl;
 import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import static org.junit.Assert.*;
 /**
  * Created by victork on 22/03/2017.
  */
+@Ignore
 public class TeamProviderImplTest extends ProviderTestBase {
     private TeamProvider createProvider() {
         return new TeamProviderImpl(this.sdkConfigurationProvider);
@@ -28,7 +30,6 @@ public class TeamProviderImplTest extends ProviderTestBase {
     public void setUp() throws Exception {
         session = createValidSession();
     }
-
 
     @Test
     public void getTeams_shouldReturnTeams_givenValidSession() throws Exception {

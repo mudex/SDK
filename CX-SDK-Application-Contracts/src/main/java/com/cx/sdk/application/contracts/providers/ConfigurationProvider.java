@@ -1,7 +1,7 @@
 package com.cx.sdk.application.contracts.providers;
 
 import com.cx.sdk.domain.Session;
-import com.cx.sdk.domain.entities.Configuration;
+import com.cx.sdk.domain.entities.EngineConfiguration;
 
 import java.util.List;
 
@@ -9,5 +9,5 @@ import java.util.List;
  * Created by victork on 22/03/2017.
  */
 public interface ConfigurationProvider {
-    List<Configuration> getEngineConfigurations(Session session) throws Exception;
+    List<EngineConfiguration> getEngineConfigurations(Session session) throws RuntimeException;
 }

@@ -5,7 +5,7 @@ import com.cx.sdk.domain.exceptions.SdkException;
 /**
  * Created by victork on 23/03/2017.
  */
-public class NotAuthorizedException extends Exception {
+public class NotAuthorizedException extends RuntimeException {
     public NotAuthorizedException()  {
         this("Not Authorized");
     }

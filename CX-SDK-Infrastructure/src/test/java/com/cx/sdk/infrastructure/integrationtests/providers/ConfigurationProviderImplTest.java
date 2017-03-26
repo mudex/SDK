@@ -3,9 +3,10 @@ package com.cx.sdk.infrastructure.integrationtests.providers;
 import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
 import com.cx.sdk.application.contracts.providers.ConfigurationProvider;
 import com.cx.sdk.domain.Session;
-import com.cx.sdk.domain.entities.Configuration;
+import com.cx.sdk.domain.entities.EngineConfiguration;
 import com.cx.sdk.infrastructure.providers.ConfigurationProviderImpl;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import static org.junit.Assert.*;
 /**
  * Created by victork on 22/03/2017.
  */
+@Ignore
 public class ConfigurationProviderImplTest extends ProviderTestBase {
     private Session session;
 
@@ -33,7 +35,7 @@ public class ConfigurationProviderImplTest extends ProviderTestBase {
         ConfigurationProvider provider = createProvider();
 
         // Act
-        List<Configuration> result = provider.getEngineConfigurations(session);
+        List<EngineConfiguration> result = provider.getEngineConfigurations(session);
 
         // Assert
         assertTrue(result.size() > 0);
