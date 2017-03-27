@@ -10,6 +10,7 @@ public class SessionDTO {
     private Map<String, String> cookies;
     private boolean isScanner;
     private boolean isAllowedToChangeNotExploitable;
+    private boolean isIsAllowedToModifyResultDetails;
 
     public String getSessionId() {
         return sessionId;
@@ -41,5 +42,13 @@ public class SessionDTO {
 
     public void setAllowedToChangeNotExploitable(boolean allowedToChangeNotExploitable) {
         isAllowedToChangeNotExploitable = allowedToChangeNotExploitable;
+    }
+
+    public boolean isIsAllowedToModifyResultDetails() {
+        return isIsAllowedToModifyResultDetails;
+    }
+
+    public void setIsAllowedToModifyResultDetails(boolean isAllowedToModifyResultDetails) {
+        isIsAllowedToModifyResultDetails = isAllowedToModifyResultDetails;
     }
 }

@@ -41,7 +41,8 @@ public class LoginProviderImpl implements LoginProvider {
         return new Session(cxWSResponseLoginData.getSessionId(),
                             cxRestClient.login(userName, password),
                             cxWSResponseLoginData.isIsScanner(),
-                            cxWSResponseLoginData.isAllowedToChangeNotExploitable());
+                            cxWSResponseLoginData.isAllowedToChangeNotExploitable(),
+                            cxWSResponseLoginData.isIsAllowedToModifyResultDetails());
     }
 
     @Override
@@ -50,7 +51,8 @@ public class LoginProviderImpl implements LoginProvider {
         return new Session(cxWSResponseLoginData.getSessionId(),
                             cxRestClient.ssoLogin(),
                             cxWSResponseLoginData.isIsScanner(),
-                            cxWSResponseLoginData.isAllowedToChangeNotExploitable());
+                            cxWSResponseLoginData.isAllowedToChangeNotExploitable(),
+                            cxWSResponseLoginData.isIsAllowedToModifyResultDetails());
     }
 
     @Override
@@ -73,7 +75,8 @@ public class LoginProviderImpl implements LoginProvider {
         return new Session(samlLoginData.getCxWSResponseLoginData().getSessionId(),
                             extractCxCoockies(samlLoginData),
                             samlLoginData.getCxWSResponseLoginData().isIsScanner(),
-                            samlLoginData.getCxWSResponseLoginData().isAllowedToChangeNotExploitable());
+                            samlLoginData.getCxWSResponseLoginData().isAllowedToChangeNotExploitable(),
+                            samlLoginData.getCxWSResponseLoginData().isIsAllowedToModifyResultDetails());
     }
 
     private Map<String, String> extractCxCoockies(SAMLLoginData samlLoginData) {

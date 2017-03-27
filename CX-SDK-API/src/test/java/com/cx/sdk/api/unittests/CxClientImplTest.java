@@ -20,7 +20,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -62,7 +61,7 @@ public class CxClientImplTest {
     public void setup() {
         Map<String, String> cookies = new HashMap<>();
         cookies.put("key", "value");
-        session = new Session("sessionId", cookies, true, true);
+        session = new Session("sessionId", cookies, true, true, true);
     }
 
     @Test

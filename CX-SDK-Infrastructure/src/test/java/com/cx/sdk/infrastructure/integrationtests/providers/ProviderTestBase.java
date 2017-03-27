@@ -34,7 +34,7 @@ public abstract class ProviderTestBase {
     }
     
     protected Session createInvalidSession() {
-        Session session = new Session("some-fake-id", null, false, false);
+        Session session = new Session("some-fake-id", null, false, false, false);
         return session;
     }
 
