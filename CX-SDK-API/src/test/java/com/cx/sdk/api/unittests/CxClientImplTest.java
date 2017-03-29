@@ -232,10 +232,10 @@ public class CxClientImplTest {
     }
 
     @Test
-    public void handleRetryCommandForExpiredSession_shouldLogin_givenHasNoSession() throws Exception {
+    public void handleAuthorizedActionInvoker_shouldLogin_givenHasNoSession() throws Exception {
         // Arrange
         CxClientImpl container = (CxClientImpl)createClient();
-        CxClientImpl.RetryCommandForExpiredSession<String> command = container.new RetryCommandForExpiredSession<>();
+        CxClientImpl.AuthorizedActionInvoker<String> command = container.new AuthorizedActionInvoker();
         DummyInterface dummyInterface = mock(DummyInterface.class);
         String expectedResult = "my-result";
         when(dummyInterface.foo()).thenReturn(expectedResult);
@@ -243,7 +243,7 @@ public class CxClientImplTest {
         when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.CREDENTIALS);
 
         // Act
-        String result = command.run(dummyInterface::foo);
+        String result = command.invoke(dummyInterface::foo);
 
         // Assert
         assertEquals(result, expectedResult);
@@ -251,10 +251,10 @@ public class CxClientImplTest {
     }
 
     @Test
-    public void handleRetryCommandForExpiredSession_shouldLogin_givenFailedDueToNotAuthenticated() throws Exception {
+    public void handleAuthorizedActionInvoker_shouldLogin_givenFailedDueToNotAuthenticated() throws Exception {
         // Arrange
         CxClientImpl container = (CxClientImpl)createClient();
-        CxClientImpl.RetryCommandForExpiredSession<String> command = container.new RetryCommandForExpiredSession<>();
+        CxClientImpl.AuthorizedActionInvoker<String> command = container.new AuthorizedActionInvoker();
         DummyInterface dummyInterface = mock(DummyInterface.class);
         String expectedResult = "my-result";
         when(dummyInterface.foo())
@@ -264,7 +264,7 @@ public class CxClientImplTest {
         when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.CREDENTIALS);
 
         // Act
-        String result = command.run(dummyInterface::foo);
+        String result = command.invoke(dummyInterface::foo);
 
         // Assert
         assertEquals(result, expectedResult);
@@ -272,15 +272,15 @@ public class CxClientImplTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void handleRetryCommandForExpiredSession_shouldThrow_givenUnhandledError() throws Exception {
+    public void handleAuthorizedActionInvoker_shouldThrow_givenUnhandledError() throws Exception {
         // Arrange
         CxClientImpl container = (CxClientImpl)createClient();
-        CxClientImpl.RetryCommandForExpiredSession<String> command = container.new RetryCommandForExpiredSession<>();
+        CxClientImpl.AuthorizedActionInvoker<String> command = container.new AuthorizedActionInvoker();
         DummyInterface dummyInterface = mock(DummyInterface.class);
         when(dummyInterface.foo()).thenThrow(new RuntimeException());
 
         // Act & Assert
-        command.run(dummyInterface::foo);
+        command.invoke(dummyInterface::foo);
     }
 
     private URL getFakeUrl() {

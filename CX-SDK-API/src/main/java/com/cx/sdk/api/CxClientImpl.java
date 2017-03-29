@@ -87,8 +87,8 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public List<EngineConfigurationDTO> getEngineConfigurations() throws Exception {
-        RetryCommandForExpiredSession<List<EngineConfiguration>> command = new RetryCommandForExpiredSession<>();
-        List<EngineConfiguration> engineConfigurations = command.run(() -> configurationProvider.getEngineConfigurations(singletonSession));
+        AuthorizedActionInvoker<List<EngineConfiguration>> action = new AuthorizedActionInvoker<>();
+        List<EngineConfiguration> engineConfigurations = action.invoke(() -> configurationProvider.getEngineConfigurations(singletonSession));
         List<EngineConfigurationDTO> dtos = engineConfigurations.stream()
                 .map(engineConfiguration -> modelMapper.map(engineConfiguration, EngineConfigurationDTO.class))
                 .collect(Collectors.toList());
@@ -97,8 +97,8 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public List<PresetDTO> getPresets() throws Exception {
-        RetryCommandForExpiredSession<List<Preset>> command = new RetryCommandForExpiredSession<>();
-        List<Preset> presets = command.run(() -> presetProvider.getPresets(singletonSession));
+        AuthorizedActionInvoker<List<Preset>> action = new AuthorizedActionInvoker<>();
+        List<Preset> presets = action.invoke(() -> presetProvider.getPresets(singletonSession));
         List<PresetDTO> dtos = presets.stream()
                 .map(preset -> modelMapper.map(preset, PresetDTO.class))
                 .collect(Collectors.toList());
@@ -107,16 +107,16 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public List<TeamDTO> getTeams() throws Exception {
-        RetryCommandForExpiredSession<List<Team>> command = new RetryCommandForExpiredSession<>();
-        List<Team> teams = command.run(() -> teamProvider.getTeams(singletonSession));
+        AuthorizedActionInvoker<List<Team>> action = new AuthorizedActionInvoker<>();
+        List<Team> teams = action.invoke(() -> teamProvider.getTeams(singletonSession));
         List<TeamDTO> dtos = teams.stream()
                 .map(team -> modelMapper.map(team, TeamDTO.class))
                 .collect(Collectors.toList());
         return dtos;
     }
 
-    public class RetryCommandForExpiredSession<T> {
-        public T run(Supplier<T> function) throws Exception {
+    public class AuthorizedActionInvoker<T> {
+        public T invoke(Supplier<T> function) throws Exception {
             try {
                 if (singletonSession == null) {
                     login();
