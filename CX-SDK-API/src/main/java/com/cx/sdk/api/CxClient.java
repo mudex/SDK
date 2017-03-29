@@ -12,8 +12,6 @@ import java.util.List;
  */
 public interface CxClient {
     SessionDTO login() throws Exception;
-    SessionDTO ssoLogin() throws Exception;
-    SessionDTO samlLogin() throws Exception;
 
     List<EngineConfigurationDTO> getEngineConfigurations() throws Exception;
     List<PresetDTO> getPresets() throws Exception;

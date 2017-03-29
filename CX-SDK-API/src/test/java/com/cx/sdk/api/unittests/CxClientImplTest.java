@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -54,6 +55,9 @@ public class CxClientImplTest {
                 configurationProvider,
                 presetProvider,
                 teamProvider);
+        Field sessionField = CxClientImpl.class.getDeclaredField("singletonSession");
+        sessionField.setAccessible(true);
+        sessionField.set(clientImp, null);
         return clientImp;
     }
 
@@ -99,10 +103,11 @@ public class CxClientImplTest {
     }
 
     @Test
-    public void login_shouldReturnSessionDto_givenSuccess() throws Exception  {
+    public void loginWithCredentials_shouldReturnSessionDto_givenSuccess() throws Exception  {
         // Arrange
         CxClient client = createClient();
         when(loginService.login()).thenReturn(session);
+        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.CREDENTIALS);
 
         // Act
         SessionDTO result = client.login();
@@ -112,26 +117,28 @@ public class CxClientImplTest {
     }
 
     @Test
-    public void ssoLogin_shouldReturnSessionDto_givenSuccess() throws Exception  {
+    public void loginWithSSO_shouldReturnSessionDto_givenSuccess() throws Exception  {
         // Arrange
         CxClient client = createClient();
         when(loginService.ssoLogin()).thenReturn(session);
+        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.SSO);
 
         // Act
-        SessionDTO result = client.ssoLogin();
+        SessionDTO result = client.login();
 
         // Assert
         validateSession(session, result);
     }
 
     @Test
-    public void samlLogin_shouldReturnSessionDto_givenSuccess() throws Exception  {
+    public void loginWithSAML_shouldReturnSessionDto_givenSuccess() throws Exception  {
         // Arrange
         CxClient client = createClient();
         when(loginService.samlLogin()).thenReturn(session);
+        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.SAML);
 
         // Act
-        SessionDTO result = client.samlLogin();
+        SessionDTO result = client.login();
 
         // Assert
         validateSession(session, result);
@@ -225,10 +232,10 @@ public class CxClientImplTest {
     }
 
     @Test
-    public void handleAuthorizationFailureCommand_shouldLogin_givenHasNoSession() throws Exception {
+    public void handleRetryCommandForExpiredSession_shouldLogin_givenHasNoSession() throws Exception {
         // Arrange
         CxClientImpl container = (CxClientImpl)createClient();
-        CxClientImpl.HandleAuthorizationFailureCommand<String> command = container.new HandleAuthorizationFailureCommand<>();
+        CxClientImpl.RetryCommandForExpiredSession<String> command = container.new RetryCommandForExpiredSession<>();
         DummyInterface dummyInterface = mock(DummyInterface.class);
         String expectedResult = "my-result";
         when(dummyInterface.foo()).thenReturn(expectedResult);
@@ -244,10 +251,10 @@ public class CxClientImplTest {
     }
 
     @Test
-    public void handleAuthorizationFailureCommand_shouldLoginWithCredentials_givenFailedDueToNotAuthenticated() throws Exception {
+    public void handleRetryCommandForExpiredSession_shouldLogin_givenFailedDueToNotAuthenticated() throws Exception {
         // Arrange
         CxClientImpl container = (CxClientImpl)createClient();
-        CxClientImpl.HandleAuthorizationFailureCommand<String> command = container.new HandleAuthorizationFailureCommand<>();
+        CxClientImpl.RetryCommandForExpiredSession<String> command = container.new RetryCommandForExpiredSession<>();
         DummyInterface dummyInterface = mock(DummyInterface.class);
         String expectedResult = "my-result";
         when(dummyInterface.foo())
@@ -264,53 +271,11 @@ public class CxClientImplTest {
         verify(loginService, times(2)).login();
     }
 
-    @Test
-    public void handleAuthorizationFailureCommand_shouldLoginWithSSO_givenFailedDueToNotAuthenticated() throws Exception {
-        // Arrange
-        CxClientImpl container = (CxClientImpl)createClient();
-        CxClientImpl.HandleAuthorizationFailureCommand<String> command = container.new HandleAuthorizationFailureCommand<>();
-        DummyInterface dummyInterface = mock(DummyInterface.class);
-        String expectedResult = "my-result";
-        when(dummyInterface.foo())
-                .thenThrow(new NotAuthorizedException("OMG!"))
-                .thenReturn(expectedResult);
-        when(loginService.ssoLogin()).thenReturn(session);
-        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.SSO);
-
-        // Act
-        String result = command.run(dummyInterface::foo);
-
-        // Assert
-        assertEquals(result, expectedResult);
-        verify(loginService, times(2)).ssoLogin();
-    }
-
-    @Test
-    public void handleAuthorizationFailureCommand_shouldLoginWithSAML_givenFailedDueToNotAuthenticated() throws Exception {
-        // Arrange
-        CxClientImpl container = (CxClientImpl)createClient();
-        CxClientImpl.HandleAuthorizationFailureCommand<String> command = container.new HandleAuthorizationFailureCommand<>();
-        DummyInterface dummyInterface = mock(DummyInterface.class);
-        String expectedResult = "my-result";
-        when(dummyInterface.foo())
-                .thenThrow(new NotAuthorizedException("OMG!"))
-                .thenReturn(expectedResult);
-        when(loginService.samlLogin()).thenReturn(session);
-        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.SAML);
-
-        // Act
-        String result = command.run(dummyInterface::foo);
-
-        // Assert
-        assertEquals(result, expectedResult);
-        verify(loginService, times(2)).samlLogin();
-    }
-
     @Test(expected = RuntimeException.class)
-    public void handleAuthorizationFailureCommand_shouldThrow_givenUnhandledError() throws Exception {
+    public void handleRetryCommandForExpiredSession_shouldThrow_givenUnhandledError() throws Exception {
         // Arrange
         CxClientImpl container = (CxClientImpl)createClient();
-        CxClientImpl.HandleAuthorizationFailureCommand<String> command = container.new HandleAuthorizationFailureCommand<>();
+        CxClientImpl.RetryCommandForExpiredSession<String> command = container.new RetryCommandForExpiredSession<>();
         DummyInterface dummyInterface = mock(DummyInterface.class);
         when(dummyInterface.foo()).thenThrow(new RuntimeException());
 
