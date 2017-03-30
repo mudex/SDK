@@ -4,7 +4,10 @@ import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
 import com.cx.sdk.domain.exceptions.SdkException;
 import com.sun.jersey.api.client.*;
-import org.json.JSONObject;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.core.NewCookie;
 import java.util.HashMap;
@@ -16,10 +19,13 @@ import java.util.Map;
 public class CxRestClient {
     private final SDKConfigurationProvider sdkConfigurationProvider;
     private final RestResourcesURIBuilder restResourcesURIBuilder = new RestResourcesURIBuilder();
-    private final Client client = Client.create();
+    private final Client client;
 
     public CxRestClient(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
+        ClientConfig clientConfig = new DefaultClientConfig();
+        clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        client = Client.create(clientConfig);
     }
 
     public Map<String, String> ssoLogin() throws Exception {
