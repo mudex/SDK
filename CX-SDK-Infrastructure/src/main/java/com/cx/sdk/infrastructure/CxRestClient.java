@@ -46,12 +46,13 @@ public class CxRestClient {
         WebResource webResource = client
                 .resource(restResourcesURIBuilder.buildLoginURL(sdkConfigurationProvider.getCxServerUrl()).toString());
 
-        HashMap<String, String> params = new HashMap();
-        params.put("username", userName);
-        params.put("password", password);
-
-        ClientResponse response = webResource.type("application/json").header("CxOrigin",sdkConfigurationProvider.getCxOriginName())
-                .post(ClientResponse.class, new JSONObject(params).toString());
+        HashMap<String, Object> params = new HashMap();
+        params.put("UserName", userName);
+        params.put("Password", password);
+        ClientResponse response = webResource.accept("application/json")
+                .type("application/json")
+                .header("CxOrigin",sdkConfigurationProvider.getCxOriginName())
+                .post(ClientResponse.class, params);
 
         validateResponse(response);
 
