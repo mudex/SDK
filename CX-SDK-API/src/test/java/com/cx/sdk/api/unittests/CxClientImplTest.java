@@ -1,6 +1,7 @@
 package com.cx.sdk.api.unittests;
 
 import com.cx.sdk.api.CxClient;
+import com.cx.sdk.api.CxClientException;
 import com.cx.sdk.api.CxClientImpl;
 import com.cx.sdk.api.SdkConfiguration;
 import com.cx.sdk.api.dtos.*;
@@ -163,7 +164,7 @@ public class CxClientImplTest {
         assertEquals(configs.get(0).getName(), configuration.getName());
     }
 
-    @Test(expected = SdkException.class)
+    @Test(expected = CxClientException.class)
     public void getEngineConfigurations_shouldFail_givenCannotLogin() throws Exception {
         // Arrange
         CxClient client = createClient();
@@ -192,7 +193,7 @@ public class CxClientImplTest {
         assertEquals(presets.get(0).getName(), preset.getName());
     }
 
-    @Test(expected = SdkException.class)
+    @Test(expected = CxClientException.class)
     public void getPresets_shouldFail_givenCannotLogin() throws Exception {
         // Arrange
         CxClient client = createClient();
@@ -221,7 +222,7 @@ public class CxClientImplTest {
         assertEquals(teams.get(0).getName(), team.getName());
     }
 
-    @Test(expected = SdkException.class)
+    @Test(expected = CxClientException.class)
     public void getTeams_shouldFail_givenCannotLogin() throws Exception {
         // Arrange
         CxClient client = createClient();

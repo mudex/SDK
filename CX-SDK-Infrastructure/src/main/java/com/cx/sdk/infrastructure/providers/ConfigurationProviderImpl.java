@@ -6,6 +6,7 @@ import com.cx.sdk.application.contracts.providers.ConfigurationProvider;
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.entities.EngineConfiguration;
+import com.cx.sdk.domain.exceptions.SdkException;
 import com.cx.sdk.infrastructure.CxSoapClient;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class ConfigurationProviderImpl implements ConfigurationProvider {
     }
 
     @Override
-    public List<EngineConfiguration> getEngineConfigurations(Session session) throws RuntimeException {
+    public List<EngineConfiguration> getEngineConfigurations(Session session) throws SdkException {
         List<EngineConfiguration> configurations = new ArrayList<>();
         try {
             CxWSResponseConfigSetList response = this.cxSoapClient.getConfigurations(session);
@@ -41,7 +42,7 @@ public class ConfigurationProviderImpl implements ConfigurationProvider {
             throw unauthorizedException;
         } catch (Exception e) {
             logger.error("[SDK][ConfigurationProviderImpl] Failed to get configurations", e);
-            throw new RuntimeException("Failed to get engine configurations");
+            throw new SdkException("Failed to get engine configurations");
         }
         return configurations;
     }

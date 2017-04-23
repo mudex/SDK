@@ -11,4 +11,8 @@ public class SdkException extends RuntimeException {
     public SdkException(String message, Exception exception) {
         super(message, exception);
     }
+
+    public SdkException(Exception e) {
+        this(e.getMessage());
+    }
 }

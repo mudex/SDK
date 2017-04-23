@@ -31,7 +31,7 @@ public class PresetProviderImpl implements PresetProvider {
     }
 
     @Override
-    public List<Preset> getPresets(Session session) throws RuntimeException {
+    public List<Preset> getPresets(Session session) throws SdkException {
         List<Preset> presets = new ArrayList<>();
         try {
             CxWSResponsePresetList response = this.cxSoapClient.getPresets(session);
@@ -43,7 +43,7 @@ public class PresetProviderImpl implements PresetProvider {
             throw unauthorizedException;
         } catch (Exception e) {
             logger.error("[SDK][PresetProviderImpl] Failed to get presets", e);
-            throw new RuntimeException("Failed to get presets");
+            throw new SdkException("Failed to get presets");
         }
         return presets;
     }

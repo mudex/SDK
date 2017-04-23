@@ -7,7 +7,7 @@ import com.cx.sdk.domain.exceptions.SdkException;
  * Created by ehuds on 2/22/2017.
  */
 public interface LoginService {
-    Session login() throws RuntimeException;
-    Session ssoLogin() throws RuntimeException;
-    Session samlLogin() throws RuntimeException;
+    Session login() throws SdkException;
+    Session ssoLogin() throws SdkException;
+    Session samlLogin() throws SdkException;
 }

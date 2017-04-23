@@ -34,7 +34,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public Session login() throws RuntimeException {
+    public Session login() throws SdkException {
         String userName = sdkConfigurationProvider.getUsername();
         String password = sdkConfigurationProvider.getPassword();
 
@@ -50,13 +50,13 @@ public class LoginServiceImpl implements LoginService {
         }
         catch(Exception e) {
             logger.error(FAILED_TO_LOGIN_WITH_CREDENTIALS, e);
-            throw new RuntimeException(e);
+            throw new SdkException("Failed to login with credentials", e);
         }
         return session;
     }
 
     @Override
-    public Session ssoLogin() throws RuntimeException {
+    public Session ssoLogin() throws SdkException {
         Session session;
         try {
             validateLoginConfiguration(LoginType.SSO);
@@ -74,7 +74,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public Session samlLogin() throws RuntimeException {
+    public Session samlLogin() throws SdkException {
         Session session;
         try {
             validateLoginConfiguration(LoginType.SAML);
@@ -86,12 +86,12 @@ public class LoginServiceImpl implements LoginService {
         }
         catch(Exception e) {
             logger.error(FAILED_TO_LOGIN_WITH_SAML, e);
-            throw new RuntimeException(e);
+            throw new SdkException("Failed to login with SAML", e);
         }
         return session;
     }
 
-    private void validateLoginConfiguration(LoginType expectedLoginType) {
+    private void validateLoginConfiguration(LoginType expectedLoginType) throws SdkException {
         boolean hasExpectedLoginType = expectedLoginType == sdkConfigurationProvider.getLoginType();
         if (hasExpectedLoginType)
             return;

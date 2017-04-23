@@ -10,5 +10,5 @@ import java.util.List;
  * Created by victork on 22/03/2017.
  */
 public interface PresetProvider {
-    List<Preset> getPresets(Session session) throws RuntimeException;
+    List<Preset> getPresets(Session session) throws SdkException;
 }

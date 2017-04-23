@@ -36,27 +36,41 @@ public class LoginProviderImpl implements LoginProvider {
     }
 
     @Override
-    public Session login(String userName, String password) throws Exception {
-        CxWSResponseLoginData cxWSResponseLoginData = cxSoapClient.login(userName, password);
-        return new Session(cxWSResponseLoginData.getSessionId(),
-                            cxRestClient.login(userName, password),
-                            cxWSResponseLoginData.isIsScanner(),
-                            cxWSResponseLoginData.isAllowedToChangeNotExploitable(),
-                            cxWSResponseLoginData.isIsAllowedToModifyResultDetails());
+    public Session login(String userName, String password) throws SdkException {
+        try {
+            CxWSResponseLoginData cxWSResponseLoginData = cxSoapClient.login(userName, password);
+            return new Session(cxWSResponseLoginData.getSessionId(),
+                    cxRestClient.login(userName, password),
+                    cxWSResponseLoginData.isIsScanner(),
+                    cxWSResponseLoginData.isAllowedToChangeNotExploitable(),
+                    cxWSResponseLoginData.isIsAllowedToModifyResultDetails());
+        } catch (Exception e) {
+            String errorMessage = String.format("Failed to preform credentials login to server: %s",
+                    sdkConfigurationProvider.getCxServerUrl().toString());
+            logger.error(errorMessage, e);
+            throw new SdkException(errorMessage, e);
+        }
     }
 
     @Override
-    public Session ssoLogin() throws Exception {
-        CxWSResponseLoginData cxWSResponseLoginData = cxSoapClient.ssoLogin();
-        return new Session(cxWSResponseLoginData.getSessionId(),
-                            cxRestClient.ssoLogin(),
-                            cxWSResponseLoginData.isIsScanner(),
-                            cxWSResponseLoginData.isAllowedToChangeNotExploitable(),
-                            cxWSResponseLoginData.isIsAllowedToModifyResultDetails());
+    public Session ssoLogin() throws SdkException {
+        try {
+            CxWSResponseLoginData cxWSResponseLoginData = cxSoapClient.ssoLogin();
+            return new Session(cxWSResponseLoginData.getSessionId(),
+                    cxRestClient.ssoLogin(),
+                    cxWSResponseLoginData.isIsScanner(),
+                    cxWSResponseLoginData.isAllowedToChangeNotExploitable(),
+                    cxWSResponseLoginData.isIsAllowedToModifyResultDetails());
+        } catch (Exception e) {
+            String errorMessage = String.format("Failed to preform sso login to server: %s",
+                    sdkConfigurationProvider.getCxServerUrl().toString());
+            logger.error(errorMessage, e);
+            throw new SdkException(errorMessage, e);
+        }
     }
 
     @Override
-    public Session samlLogin() throws Exception {
+    public Session samlLogin() throws SdkException {
         CxSamlClient cxSamlClient = new CxSamlClientImpl(sdkConfigurationProvider.getCxServerUrl(),
                                                          sdkConfigurationProvider.getCxOriginName());
         SAMLLoginData samlLoginData = null;
@@ -65,7 +79,7 @@ public class LoginProviderImpl implements LoginProvider {
         } catch (Exception e) {
             String errorMessage = String.format("Failed to preform saml login to server: %s",
                     sdkConfigurationProvider.getCxServerUrl().toString());
-            logger.info(errorMessage, e);
+            logger.error(errorMessage, e);
             throw new SdkException(errorMessage, e);
         }
 

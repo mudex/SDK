@@ -9,6 +9,7 @@ import com.cx.sdk.application.contracts.providers.TeamProvider;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.entities.Preset;
 import com.cx.sdk.domain.entities.Team;
+import com.cx.sdk.domain.exceptions.SdkException;
 import com.cx.sdk.infrastructure.CxSoapClient;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class TeamProviderImpl implements TeamProvider {
     }
 
     @Override
-    public List<Team> getTeams(Session session) throws RuntimeException {
+    public List<Team> getTeams(Session session) throws SdkException {
         List<Team> teams = new ArrayList<>();
         try {
             CxWSResponseGroupList response = this.cxSoapClient.getTeams(session);
@@ -45,7 +46,7 @@ public class TeamProviderImpl implements TeamProvider {
         }
         catch (Exception e) {
             logger.error("[SDK][TeamProviderImpl] Failed to get teams", e);
-            throw new RuntimeException("Failed to get teams");
+            throw new SdkException("Failed to get teams");
         }
         return teams;
     }

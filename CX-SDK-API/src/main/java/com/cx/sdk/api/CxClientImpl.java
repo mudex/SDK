@@ -15,6 +15,7 @@ import com.cx.sdk.domain.entities.EngineConfiguration;
 import com.cx.sdk.domain.entities.Preset;
 import com.cx.sdk.domain.entities.Team;
 import com.cx.sdk.domain.enums.LoginType;
+import com.cx.sdk.domain.exceptions.SdkException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.modelmapper.ModelMapper;
@@ -64,7 +65,7 @@ public class CxClientImpl implements CxClient {
     }
 
     @Override
-    public SessionDTO login() throws Exception {
+    public SessionDTO login() throws SdkException {
         LoginType loginType = sdkConfigurationProvider.getLoginType();
 
         switch (loginType) {
@@ -79,44 +80,58 @@ public class CxClientImpl implements CxClient {
                 break;
             default:
                 String errorMessage = String.format("login does not support the following login type: '%s'", loginType);
-                throw new Exception(errorMessage);
+                throw new SdkException(errorMessage);
         }
 
         return modelMapper.map(singletonSession, SessionDTO.class);
     }
 
     @Override
-    public List<EngineConfigurationDTO> getEngineConfigurations() throws Exception {
+    public List<EngineConfigurationDTO> getEngineConfigurations() throws CxClientException {
         AuthorizedActionInvoker<List<EngineConfiguration>> action = new AuthorizedActionInvoker<>();
-        List<EngineConfiguration> engineConfigurations = action.invoke(() -> configurationProvider.getEngineConfigurations(singletonSession));
-        List<EngineConfigurationDTO> dtos = engineConfigurations.stream()
-                .map(engineConfiguration -> modelMapper.map(engineConfiguration, EngineConfigurationDTO.class))
-                .collect(Collectors.toList());
-        return dtos;
+        try {
+            List<EngineConfiguration> engineConfigurations = action.invoke(() -> configurationProvider.getEngineConfigurations(singletonSession));
+            List<EngineConfigurationDTO> dtos = engineConfigurations.stream()
+                    .map(engineConfiguration -> modelMapper.map(engineConfiguration, EngineConfigurationDTO.class))
+                    .collect(Collectors.toList());
+            return dtos;
+        } catch (SdkException sdk) {
+            throw new CxClientException(sdk.getMessage());
+        }
     }
 
     @Override
-    public List<PresetDTO> getPresets() throws Exception {
+    public List<PresetDTO> getPresets() throws CxClientException {
         AuthorizedActionInvoker<List<Preset>> action = new AuthorizedActionInvoker<>();
-        List<Preset> presets = action.invoke(() -> presetProvider.getPresets(singletonSession));
-        List<PresetDTO> dtos = presets.stream()
-                .map(preset -> modelMapper.map(preset, PresetDTO.class))
-                .collect(Collectors.toList());
-        return dtos;
+        try {
+            List<Preset> presets = action.invoke(() -> presetProvider.getPresets(singletonSession));
+            List<PresetDTO> dtos = presets.stream()
+                    .map(preset -> modelMapper.map(preset, PresetDTO.class))
+                    .collect(Collectors.toList());
+            return dtos;
+        } catch (SdkException sdk) {
+            throw new CxClientException(sdk.getMessage());
+        }
     }
 
+
     @Override
-    public List<TeamDTO> getTeams() throws Exception {
+    public List<TeamDTO> getTeams() throws CxClientException {
         AuthorizedActionInvoker<List<Team>> action = new AuthorizedActionInvoker<>();
-        List<Team> teams = action.invoke(() -> teamProvider.getTeams(singletonSession));
-        List<TeamDTO> dtos = teams.stream()
-                .map(team -> modelMapper.map(team, TeamDTO.class))
-                .collect(Collectors.toList());
-        return dtos;
+        try {
+            List<Team> teams = action.invoke(() -> teamProvider.getTeams(singletonSession));
+            List<TeamDTO> dtos = teams.stream()
+                    .map(team -> modelMapper.map(team, TeamDTO.class))
+                    .collect(Collectors.toList());
+            return dtos;
+        }
+        catch(SdkException sdk) {
+            throw new CxClientException(sdk.getMessage());
+        }
     }
 
     public class AuthorizedActionInvoker<T> {
-        public T invoke(Supplier<T> function) throws Exception {
+        public T invoke(Supplier<T> function) throws SdkException {
             try {
                 if (singletonSession == null) {
                     login();
@@ -128,7 +143,7 @@ public class CxClientImpl implements CxClient {
             }
         }
 
-        private T loginAndHandleFunction(Supplier<T> function) throws Exception
+        private T loginAndHandleFunction(Supplier<T> function) throws SdkException
         {
             login();
             return function.get();
