@@ -7,7 +7,6 @@ import com.sun.jersey.api.client.*;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
-import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.core.NewCookie;
 import java.util.HashMap;
