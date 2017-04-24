@@ -6,10 +6,7 @@ import com.cx.sdk.api.CxClientImpl;
 import com.cx.sdk.api.SdkConfiguration;
 import com.cx.sdk.api.dtos.*;
 import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
-import com.cx.sdk.application.contracts.providers.ConfigurationProvider;
-import com.cx.sdk.application.contracts.providers.PresetProvider;
-import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
-import com.cx.sdk.application.contracts.providers.TeamProvider;
+import com.cx.sdk.application.contracts.providers.*;
 import com.cx.sdk.application.services.LoginService;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.entities.EngineConfiguration;
@@ -38,6 +35,8 @@ import static org.mockito.Mockito.*;
 public class CxClientImplTest {
     private final String USERNAME = "user";
     private final String PASSWORD = "pass";
+    private final String PROJECT_NAME = "projectName";
+    private final String TEAM_ID = "1";
 
     private Session session;
 
@@ -46,16 +45,19 @@ public class CxClientImplTest {
     private final ConfigurationProvider configurationProvider = mock(ConfigurationProvider.class);
     private final PresetProvider presetProvider = mock(PresetProvider.class);
     private final TeamProvider teamProvider = mock(TeamProvider.class);
+    private final ProjectProvider projectProvider = mock(ProjectProvider.class);
+
 
     private CxClient createClient() throws Exception {
         Constructor<?>[] constructors = CxClientImpl.class.getDeclaredConstructors();
         constructors[0].setAccessible(true);
-        CxClient clientImp = (CxClientImpl)constructors[0].newInstance(
+        CxClient clientImp = (CxClientImpl) constructors[0].newInstance(
                 loginService,
                 sdkConfigurationProvider,
                 configurationProvider,
                 presetProvider,
-                teamProvider);
+                teamProvider,
+                projectProvider);
         Field sessionField = CxClientImpl.class.getDeclaredField("singletonSession");
         sessionField.setAccessible(true);
         sessionField.set(clientImp, null);
@@ -104,7 +106,7 @@ public class CxClientImplTest {
     }
 
     @Test
-    public void loginWithCredentials_shouldReturnSessionDto_givenSuccess() throws Exception  {
+    public void loginWithCredentials_shouldReturnSessionDto_givenSuccess() throws Exception {
         // Arrange
         CxClient client = createClient();
         when(loginService.login()).thenReturn(session);
@@ -118,7 +120,7 @@ public class CxClientImplTest {
     }
 
     @Test
-    public void loginWithSSO_shouldReturnSessionDto_givenSuccess() throws Exception  {
+    public void loginWithSSO_shouldReturnSessionDto_givenSuccess() throws Exception {
         // Arrange
         CxClient client = createClient();
         when(loginService.ssoLogin()).thenReturn(session);
@@ -132,7 +134,7 @@ public class CxClientImplTest {
     }
 
     @Test
-    public void loginWithSAML_shouldReturnSessionDto_givenSuccess() throws Exception  {
+    public void loginWithSAML_shouldReturnSessionDto_givenSuccess() throws Exception {
         // Arrange
         CxClient client = createClient();
         when(loginService.samlLogin()).thenReturn(session);
@@ -235,7 +237,7 @@ public class CxClientImplTest {
     @Test
     public void handleAuthorizedActionInvoker_shouldLogin_givenHasNoSession() throws Exception {
         // Arrange
-        CxClientImpl container = (CxClientImpl)createClient();
+        CxClientImpl container = (CxClientImpl) createClient();
         CxClientImpl.AuthorizedActionInvoker<String> command = container.new AuthorizedActionInvoker();
         DummyInterface dummyInterface = mock(DummyInterface.class);
         String expectedResult = "my-result";
@@ -254,7 +256,7 @@ public class CxClientImplTest {
     @Test
     public void handleAuthorizedActionInvoker_shouldLogin_givenFailedDueToNotAuthenticated() throws Exception {
         // Arrange
-        CxClientImpl container = (CxClientImpl)createClient();
+        CxClientImpl container = (CxClientImpl) createClient();
         CxClientImpl.AuthorizedActionInvoker<String> command = container.new AuthorizedActionInvoker();
         DummyInterface dummyInterface = mock(DummyInterface.class);
         String expectedResult = "my-result";
@@ -272,13 +274,15 @@ public class CxClientImplTest {
         verify(loginService, times(2)).login();
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = SdkException.class)
     public void handleAuthorizedActionInvoker_shouldThrow_givenUnhandledError() throws Exception {
         // Arrange
-        CxClientImpl container = (CxClientImpl)createClient();
+        CxClientImpl container = (CxClientImpl) createClient();
         CxClientImpl.AuthorizedActionInvoker<String> command = container.new AuthorizedActionInvoker();
         DummyInterface dummyInterface = mock(DummyInterface.class);
-        when(dummyInterface.foo()).thenThrow(new RuntimeException());
+        when(dummyInterface.foo()).thenThrow(new SdkException("Runtime exception"));
+        when(loginService.login()).thenReturn(session);
+        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.CREDENTIALS);
 
         // Act & Assert
         command.invoke(dummyInterface::foo);
@@ -287,8 +291,7 @@ public class CxClientImplTest {
     private URL getFakeUrl() {
         try {
             return new URL("http://some-fake-url.com");
-        }
-        catch(MalformedURLException e) {
+        } catch (MalformedURLException e) {
             return null;
         }
     }
@@ -312,6 +315,42 @@ public class CxClientImplTest {
     }
 
     private interface DummyInterface {
-        String foo() throws RuntimeException;
+        String foo() throws SdkException;
+    }
+
+    @Test
+    public void validateProjectName_shouldSucceed_givenValidProjectName() throws Exception {
+        // Arrange
+        CxClientImpl container = (CxClientImpl) createClient();
+        when(loginService.login()).thenReturn(session);
+        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.CREDENTIALS);
+        when(projectProvider.isValidProjectName(session, PROJECT_NAME, TEAM_ID)).thenReturn(true);
+
+        // Act & assert
+        container.validateProjectName(PROJECT_NAME, TEAM_ID);
+    }
+
+    @Test(expected = CxClientException.class)
+    public void validateProjectName_shouldThrow_givenInvalidProjectName() throws Exception {
+        // Arrange
+        CxClientImpl container = (CxClientImpl) createClient();
+        when(loginService.login()).thenReturn(session);
+        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.CREDENTIALS);
+        when(projectProvider.isValidProjectName(session, PROJECT_NAME, TEAM_ID)).thenReturn(false);
+
+        // Act & assert
+        container.validateProjectName(PROJECT_NAME, TEAM_ID);
+    }
+
+    @Test(expected = CxClientException.class)
+    public void validateProjectName_shouldThrow_givenUnexpectedError() throws Exception {
+        // Arrange
+        CxClientImpl container = (CxClientImpl) createClient();
+        when(loginService.login()).thenReturn(session);
+        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.CREDENTIALS);
+        when(projectProvider.isValidProjectName(session, PROJECT_NAME, TEAM_ID)).thenThrow(new SdkException("Unexpected Runtime exception"));
+
+        // Act & assert
+        container.validateProjectName(PROJECT_NAME, TEAM_ID);
     }
 }

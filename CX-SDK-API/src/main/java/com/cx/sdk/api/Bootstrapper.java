@@ -7,10 +7,7 @@ import com.cx.sdk.domain.CredentialsInputValidator;
 import com.cx.sdk.domain.enums.LoginType;
 import com.cx.sdk.domain.validators.CredentialsInputValidatorImpl;
 import com.cx.sdk.infrastructure.SDKConfigurationProviderFactory;
-import com.cx.sdk.infrastructure.providers.ConfigurationProviderImpl;
-import com.cx.sdk.infrastructure.providers.LoginProviderImpl;
-import com.cx.sdk.infrastructure.providers.PresetProviderImpl;
-import com.cx.sdk.infrastructure.providers.TeamProviderImpl;
+import com.cx.sdk.infrastructure.providers.*;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import org.modelmapper.ModelMapper;
@@ -62,5 +59,6 @@ public class Bootstrapper extends AbstractModule {
         bind(ConfigurationProvider.class).to(ConfigurationProviderImpl.class);
         bind(TeamProvider.class).to(TeamProviderImpl.class);
         bind(PresetProvider.class).to(PresetProviderImpl.class);
+        bind(ProjectProvider.class).to(ProjectProviderImpl.class);
     }
 }

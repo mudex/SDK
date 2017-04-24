@@ -62,6 +62,14 @@ public class CxSoapClient {
         return response;
     }
 
+    public Boolean isProjectNameValid(Session session, String projectName, String groupId) throws Exception {
+        CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy();
+        CxWSBasicRepsonse response = cxSDKWebServiceSoap.isValidProjectName(session.getSessionId(), projectName, groupId);
+        validateResponse(response);
+        Boolean isValid = response.isIsSuccesfull();
+        return isValid;
+    }
+
     private URL getWsdlUrl(URL cxServerUrl) {
         if (cxServerUrl.toString().endsWith("wsdl")) {
             return cxServerUrl;

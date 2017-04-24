@@ -18,5 +18,5 @@ public interface CxClient {
     List<PresetDTO> getPresets() throws CxClientException;
     List<TeamDTO> getTeams() throws CxClientException;
 
-//    void validateProjectName(String projectName, String teamId) throws CxClientException;
+    void validateProjectName(String projectName, String teamId) throws CxClientException;
 }

@@ -5,10 +5,7 @@ import com.cx.sdk.api.dtos.PresetDTO;
 import com.cx.sdk.api.dtos.SessionDTO;
 import com.cx.sdk.api.dtos.TeamDTO;
 import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
-import com.cx.sdk.application.contracts.providers.ConfigurationProvider;
-import com.cx.sdk.application.contracts.providers.PresetProvider;
-import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
-import com.cx.sdk.application.contracts.providers.TeamProvider;
+import com.cx.sdk.application.contracts.providers.*;
 import com.cx.sdk.application.services.LoginService;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.entities.EngineConfiguration;
@@ -19,6 +16,7 @@ import com.cx.sdk.domain.exceptions.SdkException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.modelmapper.ModelMapper;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -36,6 +34,7 @@ public class CxClientImpl implements CxClient {
     private final ConfigurationProvider configurationProvider;
     private final PresetProvider presetProvider;
     private final TeamProvider teamProvider;
+    private final ProjectProvider projectProvider;
 
     private static Session singletonSession;
 
@@ -44,12 +43,14 @@ public class CxClientImpl implements CxClient {
                          SDKConfigurationProvider sdkConfigurationProvider,
                          ConfigurationProvider configurationProvider,
                          PresetProvider presetProvider,
-                         TeamProvider teamProvider) {
+                         TeamProvider teamProvider,
+                         ProjectProvider projectProvider) {
         this.loginService = loginService;
         this.sdkConfigurationProvider = sdkConfigurationProvider;
         this.configurationProvider = configurationProvider;
         this.presetProvider = presetProvider;
         this.teamProvider = teamProvider;
+        this.projectProvider = projectProvider;
     }
 
     public static CxClient createNewInstance(SdkConfiguration configuration) {
@@ -124,6 +125,20 @@ public class CxClientImpl implements CxClient {
                     .map(team -> modelMapper.map(team, TeamDTO.class))
                     .collect(Collectors.toList());
             return dtos;
+        }
+        catch(SdkException sdk) {
+            throw new CxClientException(sdk.getMessage());
+        }
+    }
+
+    @Override
+    public void validateProjectName(String projectName, String teamId) throws CxClientException {
+        AuthorizedActionInvoker<Boolean> action = new AuthorizedActionInvoker<>();
+        try {
+            Boolean isValid = action.invoke(() -> projectProvider.isValidProjectName(singletonSession, projectName, teamId));
+            if(!isValid){
+                throw new CxClientException("Invalid Project Name");
+            }
         }
         catch(SdkException sdk) {
             throw new CxClientException(sdk.getMessage());
