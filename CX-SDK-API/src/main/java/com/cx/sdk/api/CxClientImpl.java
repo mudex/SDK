@@ -16,7 +16,6 @@ import com.cx.sdk.domain.exceptions.SdkException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.modelmapper.ModelMapper;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -61,6 +60,7 @@ public class CxClientImpl implements CxClient {
             throw new IllegalArgumentException("Please provide the CxServerURL");
         }
 
+        singletonSession = null;
         Injector injector = Guice.createInjector(new Bootstrapper(configuration));
         return injector.getInstance(CxClient.class);
     }

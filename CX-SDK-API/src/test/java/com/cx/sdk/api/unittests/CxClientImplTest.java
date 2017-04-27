@@ -64,6 +64,19 @@ public class CxClientImplTest {
         return clientImp;
     }
 
+    private Session getSession(CxClientImpl cxClient) throws Exception {
+        Field f = cxClient.getClass().getDeclaredField("singletonSession");
+        f.setAccessible(true);
+        Session session = (Session) f.get(cxClient);
+        return session;
+    }
+
+    private void setSession(CxClientImpl cxClient, Session session) throws Exception{
+        Field f = cxClient.getClass().getDeclaredField("singletonSession");
+        f.setAccessible(true);
+        f.set(cxClient, session);
+    }
+
     @Before
     public void setup() {
         Map<String, String> cookies = new HashMap<>();
@@ -77,12 +90,28 @@ public class CxClientImplTest {
         SdkConfiguration configuration = mock(SdkConfiguration.class);
         when(configuration.getCxServerUrl()).thenReturn(getFakeUrl());
         when(configuration.getLoginType()).thenReturn(LoginTypeDTO.CREDENTIALS);
-
         // Act
         CxClient client = CxClientImpl.createNewInstance(configuration);
 
         // Assert
         assertNotNull(client);
+    }
+
+    @Test
+    public void createNewInstance_shouldClearSingletonSession_givenSessionAlreadyExists() throws Exception {
+        // Arrange
+        SdkConfiguration configuration = mock(SdkConfiguration.class);
+        when(configuration.getCxServerUrl()).thenReturn(getFakeUrl());
+        when(configuration.getLoginType()).thenReturn(LoginTypeDTO.CREDENTIALS);
+        CxClient client = CxClientImpl.createNewInstance(configuration);
+        setSession((CxClientImpl)client, mock(Session.class));
+
+        // Act
+        client = CxClientImpl.createNewInstance(configuration);
+
+        // Assert
+         Session expectedSession = getSession((CxClientImpl)client);
+        assertNull(expectedSession);
     }
 
     @Test(expected = IllegalArgumentException.class)
