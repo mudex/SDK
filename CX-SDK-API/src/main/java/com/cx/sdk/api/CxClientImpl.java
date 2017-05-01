@@ -132,13 +132,11 @@ public class CxClientImpl implements CxClient {
     }
 
     @Override
-    public void validateProjectName(String projectName, String teamId) throws CxClientException {
+    public Boolean validateProjectName(String projectName, String teamId) throws CxClientException {
         AuthorizedActionInvoker<Boolean> action = new AuthorizedActionInvoker<>();
         try {
             Boolean isValid = action.invoke(() -> projectProvider.isValidProjectName(singletonSession, projectName, teamId));
-            if(!isValid){
-                throw new CxClientException("Invalid Project Name");
-            }
+            return isValid;            
         }
         catch(SdkException sdk) {
             throw new CxClientException(sdk.getMessage());

@@ -40,7 +40,8 @@ public interface CxClient {
     /*
      * @param projectName
      * @param teamId
+     * @return Boolean
      * @throws CxClientException
      */
-    void validateProjectName(String projectName, String teamId) throws CxClientException;
+    Boolean validateProjectName(String projectName, String teamId) throws CxClientException;
 }
