@@ -1,4 +1,6 @@
 **/target/**
 *.iml
 .idea/
+.project
+CX-SDK-API/src/test/java/
 
