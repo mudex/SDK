@@ -60,7 +60,7 @@ public class CxClientImpl implements CxClient {
         if (configuration.getCxServerUrl() == null) {
             throw new IllegalArgumentException("Please provide the CxServerURL");
         }
-
+        singletonSession = null;
         Injector injector = Guice.createInjector(new Bootstrapper(configuration));
         return injector.getInstance(CxClient.class);
     }
