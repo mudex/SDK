@@ -174,7 +174,6 @@ public class LoginProviderImplTest extends ProviderTestBase {
     }
 
     @Test
-    @Ignore("Opens OKTA page")
     public void samlLogin_shouldThrow_givenServerWithoutCxClient() throws Exception {
 
         // Arrange
