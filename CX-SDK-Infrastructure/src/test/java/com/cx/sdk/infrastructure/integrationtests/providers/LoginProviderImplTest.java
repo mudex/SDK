@@ -2,6 +2,7 @@ package com.cx.sdk.infrastructure.integrationtests.providers;
 
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.domain.Session;
+import com.cx.sdk.domain.exceptions.SdkException;
 import com.cx.sdk.infrastructure.SDKConfigurationProviderFactory;
 import com.cx.sdk.infrastructure.providers.LoginProviderImpl;
 import org.junit.Assert;
@@ -38,23 +39,15 @@ public class LoginProviderImplTest extends ProviderTestBase {
 
     }
 
-    @Test
+    @Test(expected = SdkException.class)
     public void login_shouldThrow_givenInvalidServerAddress() throws Exception {
 
         // Arrange
         SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(getUrl(INVALID_SERVER_URL), null, null, null, null);
         LoginProviderImpl loginProvider = new LoginProviderImpl(sdkConfigurationProvider);
 
-        // Act
-        Session session = null;
-        try {
-            session = loginProvider.login(VALID_USERNAME, VALID_PASSWORD);
-        } catch (Exception e) {
-        }
-
-        // Assert
-        Assert.assertTrue(session == null);
-
+        // Act & Assert
+        loginProvider.login(VALID_USERNAME, VALID_PASSWORD);
     }
 
     @Test
