@@ -30,8 +30,8 @@ public class LoginProviderImpl implements LoginProvider {
     private final CxSoapClient cxSoapClient;
     private final Logger logger = LoggerFactory.getLogger(LoginProviderImpl.class);
 
-    public static final String CX_SERVER_INTERFACE_URI = "/cxwebinterface/sdk/cxsdkwebservice.asmx";
     public static final String SERVER_CONNECTIVITY_FAILURE = "Failed to validate server connectivity for server: ";
+    public static final String CX_SDK_WEB_SERVICE_URL = "/cxwebinterface/sdk/cxsdkwebservice.asmx";
 
     @Inject
     public LoginProviderImpl(SDKConfigurationProvider sdkConfigurationProvider) {
@@ -134,7 +134,7 @@ public class LoginProviderImpl implements LoginProvider {
     private boolean isCxWebServiceAvailable() {
         int responseCode;
         try {
-            URL urlAddress = sdkConfigurationProvider.getCxServerUrl();
+            URL urlAddress = new URL(sdkConfigurationProvider.getCxServerUrl(), CX_SDK_WEB_SERVICE_URL);
             HttpURLConnection httpConnection = (HttpURLConnection) urlAddress.openConnection();
             httpConnection.setRequestMethod("GET");
             httpConnection.setRequestProperty("User-Agent", "Mozilla/5.0");
