@@ -17,6 +17,7 @@ import javax.inject.Inject;
 public class LoginServiceImpl implements LoginService {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
+
     public static final String FAILED_TO_LOGIN = "Failed to login";
     public static final String FAILED_TO_LOGIN_WITH_CREDENTIALS = "Failed to login with credentials";
     public static final String FAILED_TO_LOGIN_WITH_SSO = "Failed to login with SSO";
@@ -37,18 +38,15 @@ public class LoginServiceImpl implements LoginService {
     public Session login() throws SdkException {
         String userName = sdkConfigurationProvider.getUsername();
         String password = sdkConfigurationProvider.getPassword();
-
         Session session;
         try {
             validateLoginConfiguration(LoginType.CREDENTIALS);
             credentialsValidator.validate(userName, password);
             session = loginProvider.login(userName, password);
-        }
-        catch(SdkException sdkException) {
+        } catch (SdkException sdkException) {
             logger.info(FAILED_TO_LOGIN_WITH_CREDENTIALS, sdkException);
             throw sdkException;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             logger.error(FAILED_TO_LOGIN_WITH_CREDENTIALS, e);
             throw new SdkException("Failed to login with credentials", e);
         }
@@ -61,12 +59,10 @@ public class LoginServiceImpl implements LoginService {
         try {
             validateLoginConfiguration(LoginType.SSO);
             session = loginProvider.ssoLogin();
-        }
-        catch(SdkException sdkException) {
+        } catch (SdkException sdkException) {
             logger.warn(FAILED_TO_LOGIN_WITH_SSO, sdkException);
             throw sdkException;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             logger.error(FAILED_TO_LOGIN_WITH_SSO, e);
             throw new RuntimeException(e);
         }
@@ -79,12 +75,10 @@ public class LoginServiceImpl implements LoginService {
         try {
             validateLoginConfiguration(LoginType.SAML);
             session = loginProvider.samlLogin();
-        }
-        catch(SdkException sdkException) {
+        } catch (SdkException sdkException) {
             logger.warn(FAILED_TO_LOGIN_WITH_SAML, sdkException);
             throw sdkException;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             logger.error(FAILED_TO_LOGIN_WITH_SAML, e);
             throw new SdkException("Failed to login with SAML", e);
         }
