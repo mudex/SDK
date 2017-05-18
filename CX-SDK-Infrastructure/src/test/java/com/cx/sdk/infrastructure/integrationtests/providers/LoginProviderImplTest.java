@@ -28,15 +28,10 @@ public class LoginProviderImplTest extends ProviderTestBase {
         LoginProviderImpl loginProvider = new LoginProviderImpl(sdkConfigurationProvider);
 
         // Act
-        Session session = null;
-        try {
-            session = loginProvider.login(VALID_USERNAME, VALID_PASSWORD);
-        } catch (Exception e) {
-        }
+        Session session = loginProvider.login(VALID_USERNAME, VALID_PASSWORD);
 
         // Assert
         Assert.assertTrue(session != null);
-
     }
 
     @Test(expected = SdkException.class)
@@ -50,23 +45,15 @@ public class LoginProviderImplTest extends ProviderTestBase {
         loginProvider.login(VALID_USERNAME, VALID_PASSWORD);
     }
 
-    @Test
+    @Test(expected = SdkException.class)
     public void login_shouldThrow_givenServerWithoutCxClient() throws Exception {
 
         // Arrange
         SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(getUrl(VALID_SERVER_WITHOUT_CX_CLIENT), null, null, null, null);
         LoginProviderImpl loginProvider = new LoginProviderImpl(sdkConfigurationProvider);
 
-        // Act
-        Session session = null;
-        try {
-            session = loginProvider.login(VALID_USERNAME, VALID_PASSWORD);
-        } catch (Exception e) {
-        }
-
-        // Assert
-        Assert.assertTrue(session == null);
-
+        // Act & Assert
+        loginProvider.login(VALID_USERNAME, VALID_PASSWORD);
     }
 
     @Test
@@ -78,53 +65,32 @@ public class LoginProviderImplTest extends ProviderTestBase {
         LoginProviderImpl loginProvider = new LoginProviderImpl(sdkConfigurationProvider);
 
         // Act
-        Session session = null;
-        try {
-            session = loginProvider.ssoLogin();
-        } catch (Exception e) {
-        }
+        Session session = loginProvider.ssoLogin();
 
         // Assert
         Assert.assertTrue(session != null);
-
     }
 
-    @Test
+    @Test(expected = SdkException.class)
     public void ssoLogin_shouldThrow_givenInvalidServerAddress() throws Exception {
 
         // Arrange
         SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(getUrl(INVALID_SERVER_URL), null, null, null, null);
         LoginProviderImpl loginProvider = new LoginProviderImpl(sdkConfigurationProvider);
 
-        // Act
-        Session session = null;
-        try {
-            loginProvider.ssoLogin();
-        } catch (Exception e) {
-        }
-
-        // Assert
-        Assert.assertTrue(session == null);
-
+        // Act & Assert
+        loginProvider.ssoLogin();
     }
 
-    @Test
+    @Test(expected = SdkException.class)
     public void ssoLogin_shouldThrow_givenServerWithoutCxClient() throws Exception {
 
         // Arrange
         SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(getUrl(VALID_SERVER_WITHOUT_CX_CLIENT), null, null, null, null);
         LoginProviderImpl loginProvider = new LoginProviderImpl(sdkConfigurationProvider);
 
-        // Act
-        Session session = null;
-        try {
-            loginProvider.ssoLogin();
-        } catch (Exception e) {
-        }
-
-        // Assert
-        Assert.assertTrue(session == null);
-
+        // Act & Assert
+        loginProvider.ssoLogin();
     }
 
     @Test
@@ -136,52 +102,31 @@ public class LoginProviderImplTest extends ProviderTestBase {
         LoginProviderImpl loginProvider = new LoginProviderImpl(sdkConfigurationProvider);
 
         // Act
-        Session session = null;
-        try {
-            session = loginProvider.samlLogin();
-        } catch (Exception e) {
-        }
+        Session session = loginProvider.samlLogin();
 
         // Assert
         Assert.assertTrue(session != null);
-
     }
 
-    @Test
+    @Test(expected = SdkException.class)
     public void samlLogin_shouldThrow_givenInvalidServerAddress() throws Exception {
 
         // Arrange
         SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(getUrl(INVALID_SERVER_URL), null, null, null, null);
         LoginProviderImpl loginProvider = new LoginProviderImpl(sdkConfigurationProvider);
 
-        // Act
-        Session session = null;
-        try {
-            session = loginProvider.samlLogin();
-        } catch (Exception e) {
-        }
-
-        // Assert
-        Assert.assertTrue(session == null);
-
+        // Act & Assert
+        loginProvider.samlLogin();
     }
 
-    @Test
+    @Test(expected = SdkException.class)
     public void samlLogin_shouldThrow_givenServerWithoutCxClient() throws Exception {
 
         // Arrange
         SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(getUrl(VALID_SERVER_WITHOUT_CX_CLIENT), null, null, null, null);
         LoginProviderImpl loginProvider = new LoginProviderImpl(sdkConfigurationProvider);
 
-        // Act
-        Session session = null;
-        try {
-            loginProvider.samlLogin();
-        } catch (Exception e) {
-        }
-
-        // Assert
-        Assert.assertTrue(session == null);
-
+        // Act & Assert
+        loginProvider.samlLogin();
     }
 }
