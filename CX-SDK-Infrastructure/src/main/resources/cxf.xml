@@ -19,7 +19,7 @@
             <sec:Authorization>CXFClient</sec:Authorization>
 
         </http-conf:authorization>
-        <http-conf:authSupplier class="com.checkmarx.cxviewer.utils.DynamicAuthSupplier"/>
+        <http-conf:authSupplier class="com.cx.sdk.infrastructure.authentication.kerberos.DynamicAuthSupplier"/>
     </http-conf:conduit>
 
 

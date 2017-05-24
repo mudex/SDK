@@ -1,4 +1,4 @@
-package com.cx.sdk.infrastructure.authentication;
+package com.cx.sdk.infrastructure.authentication.kerberos;
 
 import waffle.util.Base64;
 import waffle.windows.auth.impl.WindowsSecurityContextImpl;
