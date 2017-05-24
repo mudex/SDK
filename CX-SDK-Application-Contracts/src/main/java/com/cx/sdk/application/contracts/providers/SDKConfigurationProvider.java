@@ -13,4 +13,5 @@ public interface SDKConfigurationProvider {
     LoginType getLoginType();
     String getUsername();
     String getPassword();
+    Boolean useKerberosAuthentication();
 }

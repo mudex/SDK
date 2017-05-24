@@ -19,10 +19,20 @@ public class SDKConfigurationProviderFactory {
             LoginType loginType,
             String username,
             String password) {
-        return initSdkConfigurationProvider(serverUrl, cxOrigin, loginType, username, password);
+        return initSdkConfigurationProvider(serverUrl, cxOrigin, loginType, username, password, false);
     }
 
-    private SDKConfigurationProvider initSdkConfigurationProvider(URL serverUrl, String cxOrigin, LoginType loginType, String username, String password) {
+    public SDKConfigurationProvider create(
+            URL serverUrl,
+            String cxOrigin,
+            LoginType loginType,
+            String username,
+            String password,
+            Boolean useKerberosAuthentication) {
+        return initSdkConfigurationProvider(serverUrl, cxOrigin, loginType, username, password, useKerberosAuthentication);
+    }
+
+    private SDKConfigurationProvider initSdkConfigurationProvider(URL serverUrl, String cxOrigin, LoginType loginType, String username, String password, Boolean useKerberosAuthentication) {
         return new SDKConfigurationProvider() {
             @Override
             public String getCxOriginName() {
@@ -47,6 +57,11 @@ public class SDKConfigurationProviderFactory {
             @Override
             public String getPassword() {
                 return password;
+            }
+
+            @Override
+            public Boolean useKerberosAuthentication() {
+                return useKerberosAuthentication;
             }
         };
     }
