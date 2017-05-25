@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
  */
 public class CxClientImpl implements CxClient {
     private static final ModelMapper modelMapper = new ModelMapper();
+    public static final String LOGIN_CONF_PATH = "resources/login.conf";
 
     private final LoginService loginService;
     private final SDKConfigurationProvider sdkConfigurationProvider;
@@ -71,7 +72,7 @@ public class CxClientImpl implements CxClient {
 
     private static void initKerberosParameters(SdkConfiguration configuration) {
         if (configuration.useKerberosAuthentication()) {
-            System.setProperty("java.security.auth.login.config", new File("resources/login.conf").getAbsolutePath());
+            System.setProperty("java.security.auth.login.config", new File(LOGIN_CONF_PATH).getAbsolutePath());
             System.setProperty("com.sun.security.auth.module.Krb5LoginModule", "true");
         }
     }

@@ -3,12 +3,14 @@ package com.cx.sdk.infrastructure;
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
 import com.cx.sdk.domain.exceptions.SdkException;
+import com.cx.sdk.infrastructure.authentication.kerberos.WindowsAuthenticator;
 import com.sun.jersey.api.client.*;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 
 import javax.ws.rs.core.NewCookie;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +21,7 @@ public class CxRestClient {
     private final SDKConfigurationProvider sdkConfigurationProvider;
     private final RestResourcesURIBuilder restResourcesURIBuilder = new RestResourcesURIBuilder();
     private final Client client;
+    public static final String AUTH_TYPE_NEGOTIATE = "Negotiate";
 
     public CxRestClient(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
@@ -29,10 +32,7 @@ public class CxRestClient {
 
     public Map<String, String> ssoLogin() throws Exception {
 
-            WebResource webResource = client
-                    .resource(restResourcesURIBuilder.buildSsoLoginURL(sdkConfigurationProvider.getCxServerUrl()).toString());
-
-            ClientResponse response = webResource.header("CxOrigin",sdkConfigurationProvider.getCxOriginName())
+            ClientResponse response = baseRequest(sdkConfigurationProvider.getCxServerUrl())
                     .post(ClientResponse.class, " ");
 
         validateResponse(response);
@@ -42,20 +42,30 @@ public class CxRestClient {
 
     public Map<String, String> login(String userName, String password) throws Exception {
 
-        WebResource webResource = client
-                .resource(restResourcesURIBuilder.buildLoginURL(sdkConfigurationProvider.getCxServerUrl()).toString());
-
         HashMap<String, Object> params = new HashMap();
         params.put("UserName", userName);
         params.put("Password", password);
-        ClientResponse response = webResource.accept("application/json")
+        ClientResponse response = baseRequest(sdkConfigurationProvider.getCxServerUrl())
                 .type("application/json")
-                .header("CxOrigin", sdkConfigurationProvider.getCxOriginName())
                 .post(ClientResponse.class, params);
 
         validateResponse(response);
 
         return extractCxCookies(response);
+    }
+
+    private WebResource.Builder baseRequest(URL resourceUrl) {
+        WebResource webResource = client
+                .resource(restResourcesURIBuilder.buildLoginURL(sdkConfigurationProvider.getCxServerUrl()).toString());
+
+        WebResource.Builder requestBuilder = webResource.accept("application/json")
+                .header("CxOrigin", sdkConfigurationProvider.getCxOriginName());
+
+        if (sdkConfigurationProvider.useKerberosAuthentication()) {
+            requestBuilder = requestBuilder.header("Authorization", AUTH_TYPE_NEGOTIATE + " " + WindowsAuthenticator.getKrbToken(resourceUrl.getAuthority()));
+        }
+
+        return requestBuilder;
     }
 
     private void validateResponse(ClientResponse response) throws Exception {
