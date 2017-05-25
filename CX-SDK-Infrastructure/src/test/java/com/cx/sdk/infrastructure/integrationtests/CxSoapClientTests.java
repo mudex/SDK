@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -51,6 +52,23 @@ public class CxSoapClientTests {
         // Arrange
         URL serverUrl = new URL("http://10.31.2.118");
         SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl, null, null, null, null);
+        CxSoapClient cxSoapClient = new CxSoapClient(sdkConfigurationProvider);
+
+        // Act
+        CxWSResponseLoginData session = cxSoapClient.ssoLogin();
+
+        // Assert
+        Assert.assertNotNull(session);
+    }
+
+    @Test
+    public void ssoLogin_kerberosAuthentivationConfigured_sessionGeneratedSuccessfully() throws Exception {
+        // Arrange
+        URL serverUrl = new URL("http://ehudserver1605");
+        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl, null, null, null, null, true);
+        File file = new File("resources/login.conf");
+        System.setProperty("java.security.auth.login.config", file.getAbsolutePath());
+        System.setProperty("com.sun.security.auth.module.Krb5LoginModule", "true");
         CxSoapClient cxSoapClient = new CxSoapClient(sdkConfigurationProvider);
 
         // Act

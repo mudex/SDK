@@ -33,6 +33,13 @@ public class CxClientTests {
     }
 
     @Test
+    public void ssoLogin_KerberosConfigured_loginSuccessfull() throws Exception {
+        CxClient cxClient = CxClientImpl.createNewInstance(new SdkConfiguration(new URL("http://ehudserver1605"), "Intelij", LoginTypeDTO.CREDENTIALS, "admin@cx", "Cx123456!", true));
+        SessionDTO session = cxClient.login();
+        Assert.assertNotNull(session);
+    }
+
+    @Test
     public void samlLogin_samlConfiguredProperly_loginSuccessful() throws Exception {
         CxClient cxClient = CxClientImpl.createNewInstance(new SdkConfiguration(new URL("http://10.31.2.118"), "cx-Intelij", LoginTypeDTO.CREDENTIALS, "admin@cx", "Cx123456!"));
         SessionDTO session = cxClient.login();

@@ -5,6 +5,7 @@ import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.exceptions.SdkException;
+import com.cx.sdk.infrastructure.authentication.kerberos.DynamicAuthSupplier;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,6 +19,7 @@ public class CxSoapClient {
 
     public CxSoapClient(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
+        DynamicAuthSupplier.setKerberosActive(sdkConfigurationProvider.useKerberosAuthentication());
     }
 
     public CxWSResponseLoginData login(String userName, String password) throws Exception {

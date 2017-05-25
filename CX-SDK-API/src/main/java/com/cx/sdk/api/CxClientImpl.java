@@ -19,6 +19,7 @@ import org.modelmapper.ModelMapper;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
+import java.io.File;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -60,9 +61,19 @@ public class CxClientImpl implements CxClient {
         if (configuration.getCxServerUrl() == null) {
             throw new IllegalArgumentException("Please provide the CxServerURL");
         }
+
+        initKerberosParameters(configuration);
+
         singletonSession = null;
         Injector injector = Guice.createInjector(new Bootstrapper(configuration));
         return injector.getInstance(CxClient.class);
+    }
+
+    private static void initKerberosParameters(SdkConfiguration configuration) {
+        if (configuration.useKerberosAuthentication()) {
+            System.setProperty("java.security.auth.login.config", new File("resources/login.conf").getAbsolutePath());
+            System.setProperty("com.sun.security.auth.module.Krb5LoginModule", "true");
+        }
     }
 
     @Override
