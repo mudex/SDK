@@ -32,8 +32,8 @@ public class CxRestClient {
 
     public Map<String, String> ssoLogin() throws Exception {
 
-            ClientResponse response = baseRequest(sdkConfigurationProvider.getCxServerUrl())
-                    .post(ClientResponse.class, " ");
+        ClientResponse response = baseRequest(restResourcesURIBuilder.buildSsoLoginURL(sdkConfigurationProvider.getCxServerUrl()))
+                .post(ClientResponse.class, " ");
 
         validateResponse(response);
 
@@ -45,8 +45,8 @@ public class CxRestClient {
         HashMap<String, Object> params = new HashMap();
         params.put("UserName", userName);
         params.put("Password", password);
-        ClientResponse response = baseRequest(sdkConfigurationProvider.getCxServerUrl())
-                .type("application/json")
+        ClientResponse response = baseRequest(restResourcesURIBuilder.buildLoginURL(sdkConfigurationProvider.getCxServerUrl()))
+                .type("application/json").accept("application/json")
                 .post(ClientResponse.class, params);
 
         validateResponse(response);
@@ -56,10 +56,9 @@ public class CxRestClient {
 
     private WebResource.Builder baseRequest(URL resourceUrl) {
         WebResource webResource = client
-                .resource(restResourcesURIBuilder.buildLoginURL(sdkConfigurationProvider.getCxServerUrl()).toString());
+                .resource(resourceUrl.toString());
 
-        WebResource.Builder requestBuilder = webResource.accept("application/json")
-                .header("CxOrigin", sdkConfigurationProvider.getCxOriginName());
+        WebResource.Builder requestBuilder = webResource.header("CxOrigin", sdkConfigurationProvider.getCxOriginName());
 
         if (sdkConfigurationProvider.useKerberosAuthentication()) {
             requestBuilder = requestBuilder.header("Authorization", AUTH_TYPE_NEGOTIATE + " " + WindowsAuthenticator.getKrbToken(resourceUrl.getAuthority()));
