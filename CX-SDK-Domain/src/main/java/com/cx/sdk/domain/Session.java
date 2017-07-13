@@ -26,5 +26,6 @@ public class Session {
     }
     public Map<String, String> getCookies() { return cookies; }
     public boolean getIsScanner() { return isScanner; }
-    public boolean getIsAllowedToChangeNotExploitable() { return isAllowedToChangeNotExploitable; }
+    public boolean getIsAllowedToChangeNotExploitable() { return isAllowedToChangeNotExploitable; }    
+    public boolean getIsAllowedToModifyResultDetails() { return isIsAllowedToModifyResultDetails; }
 }
