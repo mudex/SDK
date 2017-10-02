@@ -5,7 +5,7 @@
     <parent>
         <artifactId>checkmarx-sdk</artifactId>
         <groupId>com.cx.sdk</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>8.51.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>CX-SDK-Infrastructure</artifactId>
@@ -17,12 +17,12 @@
         <dependency>
             <groupId>com.cx.sdk</groupId>
             <artifactId>CX-SDK-Domain</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>8.51.0</version>
         </dependency>
         <dependency>
             <groupId>com.cx.sdk</groupId>
             <artifactId>CX-SDK-Application-Contracts</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>8.51.0</version>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
@@ -49,6 +49,7 @@
             <artifactId>waffle-jna</artifactId>
             <version>1.6</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -57,6 +58,46 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http-jetty</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-core</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-bindings-soap</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-wsdl</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-databinding-jaxb</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-bindings-xml</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-ws-policy</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-simple</artifactId>
             <version>${cxf.version}</version>
         </dependency>
     </dependencies>

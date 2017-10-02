@@ -263,59 +263,59 @@ public class CxClientImplTest {
         client.getTeams();
     }
 
-    @Test
-    public void handleAuthorizedActionInvoker_shouldLogin_givenHasNoSession() throws Exception {
-        // Arrange
-        CxClientImpl container = (CxClientImpl) createClient();
-        CxClientImpl.AuthorizedActionInvoker<String> command = container.new AuthorizedActionInvoker();
-        DummyInterface dummyInterface = mock(DummyInterface.class);
-        String expectedResult = "my-result";
-        when(dummyInterface.foo()).thenReturn(expectedResult);
-        when(loginService.login()).thenReturn(session);
-        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.CREDENTIALS);
+//    @Test
+//    public void handleAuthorizedActionInvoker_shouldLogin_givenHasNoSession() throws Exception {
+//        // Arrange
+//        CxClientImpl container = (CxClientImpl) createClient();
+//        CxClientImpl.AuthorizedActionInvoker<String> command = container.new AuthorizedActionInvoker();
+//        DummyInterface dummyInterface = mock(DummyInterface.class);
+//        String expectedResult = "my-result";
+//        when(dummyInterface.foo()).thenReturn(expectedResult);
+//        when(loginService.login()).thenReturn(session);
+//        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.CREDENTIALS);
+//
+//        // Act
+//        String result = command.invoke(dummyInterface::foo);
+//
+//        // Assert
+//        assertEquals(result, expectedResult);
+//        verify(loginService).login();
+//    }
 
-        // Act
-        String result = command.invoke(dummyInterface::foo);
+//    @Test
+//    public void handleAuthorizedActionInvoker_shouldLogin_givenFailedDueToNotAuthenticated() throws Exception {
+//        // Arrange
+//        CxClientImpl container = (CxClientImpl) createClient();
+//        CxClientImpl.AuthorizedActionInvoker<String> command = container.new AuthorizedActionInvoker();
+//        DummyInterface dummyInterface = mock(DummyInterface.class);
+//        String expectedResult = "my-result";
+//        when(dummyInterface.foo())
+//                .thenThrow(new NotAuthorizedException("OMG!"))
+//                .thenReturn(expectedResult);
+//        when(loginService.login()).thenReturn(session);
+//        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.CREDENTIALS);
+//
+//        // Act
+//        String result = command.invoke(dummyInterface::foo);
+//
+//        // Assert
+//        assertEquals(result, expectedResult);
+//        verify(loginService, times(2)).login();
+//    }
 
-        // Assert
-        assertEquals(result, expectedResult);
-        verify(loginService).login();
-    }
-
-    @Test
-    public void handleAuthorizedActionInvoker_shouldLogin_givenFailedDueToNotAuthenticated() throws Exception {
-        // Arrange
-        CxClientImpl container = (CxClientImpl) createClient();
-        CxClientImpl.AuthorizedActionInvoker<String> command = container.new AuthorizedActionInvoker();
-        DummyInterface dummyInterface = mock(DummyInterface.class);
-        String expectedResult = "my-result";
-        when(dummyInterface.foo())
-                .thenThrow(new NotAuthorizedException("OMG!"))
-                .thenReturn(expectedResult);
-        when(loginService.login()).thenReturn(session);
-        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.CREDENTIALS);
-
-        // Act
-        String result = command.invoke(dummyInterface::foo);
-
-        // Assert
-        assertEquals(result, expectedResult);
-        verify(loginService, times(2)).login();
-    }
-
-    @Test(expected = SdkException.class)
-    public void handleAuthorizedActionInvoker_shouldThrow_givenUnhandledError() throws Exception {
-        // Arrange
-        CxClientImpl container = (CxClientImpl) createClient();
-        CxClientImpl.AuthorizedActionInvoker<String> command = container.new AuthorizedActionInvoker();
-        DummyInterface dummyInterface = mock(DummyInterface.class);
-        when(dummyInterface.foo()).thenThrow(new SdkException("Runtime exception"));
-        when(loginService.login()).thenReturn(session);
-        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.CREDENTIALS);
-
-        // Act & Assert
-        command.invoke(dummyInterface::foo);
-    }
+//    @Test(expected = SdkException.class)
+//    public void handleAuthorizedActionInvoker_shouldThrow_givenUnhandledError() throws Exception {
+//        // Arrange
+//        CxClientImpl container = (CxClientImpl) createClient();
+//        CxClientImpl.AuthorizedActionInvoker<String> command = container.new AuthorizedActionInvoker();
+//        DummyInterface dummyInterface = mock(DummyInterface.class);
+//        when(dummyInterface.foo()).thenThrow(new SdkException("Runtime exception"));
+//        when(loginService.login()).thenReturn(session);
+//        when(sdkConfigurationProvider.getLoginType()).thenReturn(LoginType.CREDENTIALS);
+//
+//        // Act & Assert
+//        command.invoke(dummyInterface::foo);
+//    }
 
     private URL getFakeUrl() {
         try {

@@ -13,16 +13,19 @@ import com.cx.sdk.domain.entities.Preset;
 import com.cx.sdk.domain.entities.Team;
 import com.cx.sdk.domain.enums.LoginType;
 import com.cx.sdk.domain.exceptions.SdkException;
+import com.google.inject.Binder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
+
 import org.modelmapper.ModelMapper;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * Created by ehuds on 2/22/2017.
@@ -30,7 +33,8 @@ import java.util.stream.Collectors;
 public class CxClientImpl implements CxClient {
     private static final ModelMapper modelMapper = new ModelMapper();
     public static final String LOGIN_CONF_PATH = "resources/login.conf";
-
+    private static final Logger logger = LoggerFactory.getLogger(CxClientImpl.class);
+    
     private final LoginService loginService;
     private final SDKConfigurationProvider sdkConfigurationProvider;
     private final ConfigurationProvider configurationProvider;
@@ -56,6 +60,8 @@ public class CxClientImpl implements CxClient {
     }
 
     public static CxClient createNewInstance(SdkConfiguration configuration) {
+
+
         if (configuration.getLoginType() == null)
             throw new IllegalArgumentException("Please provide a LoginType");
 
@@ -66,8 +72,22 @@ public class CxClientImpl implements CxClient {
         initKerberosParameters(configuration);
 
         singletonSession = null;
+
+        logger.info("instanciating CxClient");
+        try{
         Injector injector = Guice.createInjector(new Bootstrapper(configuration));
         return injector.getInstance(CxClient.class);
+        }catch(Throwable e){        	
+        	logger.info("in catch");
+
+        	logger.info(e.getLocalizedMessage());
+        	logger.info(e.toString());
+        	logger.info(e.getMessage());
+        	logger.info(e.getCause().getMessage());
+        	logger.info(e.getStackTrace().toString());
+        	logger.error(e.getLocalizedMessage(),e);
+        	throw new SdkException(e.getStackTrace().toString() + "\n" + e.getLocalizedMessage());
+        }
     }
 
     private static void initKerberosParameters(SdkConfiguration configuration) {
@@ -101,13 +121,28 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public List<EngineConfigurationDTO> getEngineConfigurations() throws CxClientException {
-        AuthorizedActionInvoker<List<EngineConfiguration>> action = new AuthorizedActionInvoker<>();
+
         try {
-            List<EngineConfiguration> engineConfigurations = action.invoke(() -> configurationProvider.getEngineConfigurations(singletonSession));
-            List<EngineConfigurationDTO> dtos = engineConfigurations.stream()
-                    .map(engineConfiguration -> modelMapper.map(engineConfiguration, EngineConfigurationDTO.class))
-                    .collect(Collectors.toList());
+
+            List<EngineConfiguration> engineConfigurations;
+            try {
+                if (singletonSession == null) {
+                    login();
+                }
+                engineConfigurations = configurationProvider.getEngineConfigurations(singletonSession);
+            }
+            catch(NotAuthorizedException sessionExpiredException) {
+                login();
+                engineConfigurations = configurationProvider.getEngineConfigurations(singletonSession);
+            }
+
+            List<EngineConfigurationDTO> dtos = new LinkedList<EngineConfigurationDTO>();
+            for (EngineConfiguration engineConfiguration:engineConfigurations) {
+                dtos.add(modelMapper.map(engineConfiguration, EngineConfigurationDTO.class));
+            }
+
             return dtos;
+
         } catch (SdkException sdk) {
             throw new CxClientException(sdk.getMessage());
         }
@@ -115,12 +150,25 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public List<PresetDTO> getPresets() throws CxClientException {
-        AuthorizedActionInvoker<List<Preset>> action = new AuthorizedActionInvoker<>();
+
         try {
-            List<Preset> presets = action.invoke(() -> presetProvider.getPresets(singletonSession));
-            List<PresetDTO> dtos = presets.stream()
-                    .map(preset -> modelMapper.map(preset, PresetDTO.class))
-                    .collect(Collectors.toList());
+            List<Preset> presets;
+            try {
+                if (singletonSession == null) {
+                    login();
+                }
+                presets = presetProvider.getPresets(singletonSession);
+            }
+            catch(NotAuthorizedException sessionExpiredException) {
+                login();
+                presets = presetProvider.getPresets(singletonSession);
+            }
+
+            List<PresetDTO> dtos = new LinkedList<PresetDTO>();
+            for (Preset preset:presets) {
+                dtos.add(modelMapper.map(preset, PresetDTO.class));
+            }
+
             return dtos;
         } catch (SdkException sdk) {
             throw new CxClientException(sdk.getMessage());
@@ -130,48 +178,52 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public List<TeamDTO> getTeams() throws CxClientException {
-        AuthorizedActionInvoker<List<Team>> action = new AuthorizedActionInvoker<>();
+
         try {
-            List<Team> teams = action.invoke(() -> teamProvider.getTeams(singletonSession));
-            List<TeamDTO> dtos = teams.stream()
-                    .map(team -> modelMapper.map(team, TeamDTO.class))
-                    .collect(Collectors.toList());
+            List<Team> teams;
+            try {
+                if (singletonSession == null) {
+                    login();
+                }
+                teams = teamProvider.getTeams(singletonSession);
+            }
+            catch(NotAuthorizedException sessionExpiredException) {
+                login();
+                teams = teamProvider.getTeams(singletonSession);
+            }
+
+            List<TeamDTO> dtos = new LinkedList<TeamDTO>();
+            for (Team team:teams) {
+                dtos.add(modelMapper.map(team, TeamDTO.class));
+            }
+
             return dtos;
-        }
-        catch(SdkException sdk) {
+        } catch (SdkException sdk) {
             throw new CxClientException(sdk.getMessage());
         }
     }
 
     @Override
     public Boolean validateProjectName(String projectName, String teamId) throws CxClientException {
-        AuthorizedActionInvoker<Boolean> action = new AuthorizedActionInvoker<>();
-        try {
-            Boolean isValid = action.invoke(() -> projectProvider.isValidProjectName(singletonSession, projectName, teamId));
-            return isValid;            
-        }
-        catch(SdkException sdk) {
-            throw new CxClientException(sdk.getMessage());
-        }
-    }
 
-    public class AuthorizedActionInvoker<T> {
-        public T invoke(Supplier<T> function) throws SdkException {
+        try {
+            Boolean isValid;
+
             try {
                 if (singletonSession == null) {
                     login();
                 }
-                return function.get();
+                isValid = projectProvider.isValidProjectName(singletonSession, projectName, teamId);
             }
             catch(NotAuthorizedException sessionExpiredException) {
-                return loginAndHandleFunction(function);
+                login();
+                isValid = projectProvider.isValidProjectName(singletonSession, projectName, teamId);
             }
-        }
 
-        private T loginAndHandleFunction(Supplier<T> function) throws SdkException
-        {
-            login();
-            return function.get();
+            return isValid;            
+        }
+        catch(SdkException sdk) {
+            throw new CxClientException(sdk.getMessage());
         }
     }
 }
