@@ -73,20 +73,20 @@ public class CxClientImpl implements CxClient {
 
         singletonSession = null;
 
-        logger.info("instanciating CxClient");
+        logger.info("Guice: instantiating CxClient");
         try{
-        Injector injector = Guice.createInjector(new Bootstrapper(configuration));
-        return injector.getInstance(CxClient.class);
-        }catch(Throwable e){        	
-        	logger.info("in catch");
+            Injector injector = Guice.createInjector(new Bootstrapper(configuration));
+            return injector.getInstance(CxClient.class);
+        }catch(Throwable e){
+            logger.info("in catch");
 
-        	logger.info(e.getLocalizedMessage());
-        	logger.info(e.toString());
-        	logger.info(e.getMessage());
-        	logger.info(e.getCause().getMessage());
-        	logger.info(e.getStackTrace().toString());
-        	logger.error(e.getLocalizedMessage(),e);
-        	throw new SdkException(e.getStackTrace().toString() + "\n" + e.getLocalizedMessage());
+            logger.info(e.getLocalizedMessage());
+            logger.info(e.toString());
+            logger.info(e.getMessage());
+            logger.info(e.getCause().getMessage());
+            logger.info(e.getStackTrace().toString());
+            logger.error(e.getLocalizedMessage(),e);
+            throw new SdkException(e.getStackTrace().toString() + "\n" + e.getLocalizedMessage());
         }
     }
 
