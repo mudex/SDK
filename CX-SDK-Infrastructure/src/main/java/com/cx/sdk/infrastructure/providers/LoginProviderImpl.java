@@ -118,7 +118,7 @@ public class LoginProviderImpl implements LoginProvider {
     }
 
     private boolean isCxServerAvailable() {
-        return (isServerAvailable() && isCxWebServiceAvailable());
+        return /*(isServerAvailable() &&*/ isCxWebServiceAvailable() /*)*/;
     }
 
     private boolean isServerAvailable() {
