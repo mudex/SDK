@@ -32,7 +32,7 @@ public class SDKConfigurationProviderFactory {
         return initSdkConfigurationProvider(serverUrl, cxOrigin, loginType, username, password, useKerberosAuthentication);
     }
 
-    private SDKConfigurationProvider initSdkConfigurationProvider(URL serverUrl, String cxOrigin, LoginType loginType, String username, String password, Boolean useKerberosAuthentication) {
+    private SDKConfigurationProvider initSdkConfigurationProvider(final URL serverUrl,final String cxOrigin,final LoginType loginType,final String username,final String password,final Boolean useKerberosAuthentication) {
         return new SDKConfigurationProvider() {
             @Override
             public String getCxOriginName() {

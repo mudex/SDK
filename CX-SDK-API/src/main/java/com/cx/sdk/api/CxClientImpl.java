@@ -16,13 +16,12 @@ import com.cx.sdk.domain.exceptions.SdkException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.modelmapper.ModelMapper;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+
 
 /**
  * Created by ehuds on 2/22/2017.
@@ -101,12 +100,29 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public List<EngineConfigurationDTO> getEngineConfigurations() throws CxClientException {
-        AuthorizedActionInvoker<List<EngineConfiguration>> action = new AuthorizedActionInvoker<>();
+
         try {
-            List<EngineConfiguration> engineConfigurations = action.invoke(() -> configurationProvider.getEngineConfigurations(singletonSession));
-            List<EngineConfigurationDTO> dtos = engineConfigurations.stream()
-                    .map(engineConfiguration -> modelMapper.map(engineConfiguration, EngineConfigurationDTO.class))
-                    .collect(Collectors.toList());
+            if (singletonSession == null) {
+                login();
+            }
+            return getEngineConfigurationDTOs();
+
+        }
+        catch(NotAuthorizedException sessionExpiredException) {
+            login();
+            return getEngineConfigurationDTOs();
+
+        }
+    }
+
+    private List<EngineConfigurationDTO> getEngineConfigurationDTOs() throws CxClientException {
+        try {
+            List<EngineConfiguration> engineConfigurations = configurationProvider.getEngineConfigurations(singletonSession);
+            List<EngineConfigurationDTO> dtos = new ArrayList(engineConfigurations.size());
+
+            for (EngineConfiguration configuration: engineConfigurations ) {
+                dtos.add(new EngineConfigurationDTO(configuration.getId(), configuration.getName()));
+            }
             return dtos;
         } catch (SdkException sdk) {
             throw new CxClientException(sdk.getMessage());
@@ -115,12 +131,28 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public List<PresetDTO> getPresets() throws CxClientException {
-        AuthorizedActionInvoker<List<Preset>> action = new AuthorizedActionInvoker<>();
+
         try {
-            List<Preset> presets = action.invoke(() -> presetProvider.getPresets(singletonSession));
-            List<PresetDTO> dtos = presets.stream()
-                    .map(preset -> modelMapper.map(preset, PresetDTO.class))
-                    .collect(Collectors.toList());
+            if (singletonSession == null) {
+                login();
+            }
+            return getPresetDTOs();
+        }
+        catch(NotAuthorizedException sessionExpiredException) {
+            login();
+            return getPresetDTOs();
+        }
+    }
+
+    private List<PresetDTO> getPresetDTOs() throws CxClientException {
+        try {
+            List<Preset> presets = presetProvider.getPresets(singletonSession);
+            List<PresetDTO> dtos = new ArrayList(presets.size());
+
+            for (Preset preset: presets ) {
+                dtos.add(new PresetDTO(preset.getId(), preset.getName()));
+            }
+
             return dtos;
         } catch (SdkException sdk) {
             throw new CxClientException(sdk.getMessage());
@@ -130,13 +162,31 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public List<TeamDTO> getTeams() throws CxClientException {
-        AuthorizedActionInvoker<List<Team>> action = new AuthorizedActionInvoker<>();
+
         try {
-            List<Team> teams = action.invoke(() -> teamProvider.getTeams(singletonSession));
-            List<TeamDTO> dtos = teams.stream()
-                    .map(team -> modelMapper.map(team, TeamDTO.class))
-                    .collect(Collectors.toList());
+            if (singletonSession == null) {
+                login();
+            }
+            return getTeamDTOs();
+        }
+        catch(NotAuthorizedException sessionExpiredException) {
+            login();
+            return getTeamDTOs();
+        }
+    }
+
+    private List<TeamDTO> getTeamDTOs() throws CxClientException {
+        try {
+
+            List<Team> teams = teamProvider.getTeams(singletonSession);
+            List<TeamDTO> dtos = new ArrayList(teams.size());
+
+            for (Team team: teams ) {
+                dtos.add(new TeamDTO(team.getId(), team.getName()));
+            }
+
             return dtos;
+
         }
         catch(SdkException sdk) {
             throw new CxClientException(sdk.getMessage());
@@ -145,33 +195,47 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public Boolean validateProjectName(String projectName, String teamId) throws CxClientException {
-        AuthorizedActionInvoker<Boolean> action = new AuthorizedActionInvoker<>();
+
         try {
-            Boolean isValid = action.invoke(() -> projectProvider.isValidProjectName(singletonSession, projectName, teamId));
-            return isValid;            
+            if (singletonSession == null) {
+                login();
+            }
+            return isValid(projectName, teamId);
+        }
+        catch(NotAuthorizedException sessionExpiredException) {
+            login();
+            return isValid(projectName, teamId);
+        }
+    }
+
+    private Boolean isValid(String projectName, String teamId) throws CxClientException {
+        try {
+            Boolean isValid = projectProvider.isValidProjectName(singletonSession, projectName, teamId);
+            return isValid;
         }
         catch(SdkException sdk) {
             throw new CxClientException(sdk.getMessage());
         }
     }
 
-    public class AuthorizedActionInvoker<T> {
-        public T invoke(Supplier<T> function) throws SdkException {
-            try {
-                if (singletonSession == null) {
-                    login();
-                }
-                return function.get();
-            }
-            catch(NotAuthorizedException sessionExpiredException) {
-                return loginAndHandleFunction(function);
-            }
-        }
 
-        private T loginAndHandleFunction(Supplier<T> function) throws SdkException
-        {
-            login();
-            return function.get();
-        }
-    }
+//    public class AuthorizedActionInvoker<T> {
+//        public T invoke(Supplier<T> function) throws SdkException {
+//            try {
+//                if (singletonSession == null) {
+//                    login();
+//                }
+//                return function.get();
+//            }
+//            catch(NotAuthorizedException sessionExpiredException) {
+//                return loginAndHandleFunction(function);
+//            }
+//        }
+//
+//        private T loginAndHandleFunction(Supplier<T> function) throws SdkException
+//        {
+//            login();
+//            return function.get();
+//        }
+//    }
 }
