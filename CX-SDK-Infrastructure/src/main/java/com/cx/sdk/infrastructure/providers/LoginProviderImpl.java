@@ -100,7 +100,7 @@ public class LoginProviderImpl implements LoginProvider {
             throw new SdkException(errorMessage, e);
         }
 
-        if (samlLoginData.wasCanceled)
+        if (samlLoginData.wasCanceled() )
             return null;
 
         return new Session(samlLoginData.getCxWSResponseLoginData().getSessionId(),
