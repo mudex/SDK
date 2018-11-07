@@ -1,6 +1,7 @@
 package com.cx.sdk.api;
 
 import com.cx.sdk.api.dtos.LoginTypeDTO;
+import com.cx.sdk.domain.entities.ProxyParams;
 
 import java.net.URL;
 
@@ -14,14 +15,15 @@ public class SdkConfiguration {
     private final String username;
     private final String password;
     private final Boolean useKerberosAuthentication;
+    private final ProxyParams proxyParams;
 
 
-    public SdkConfiguration(URL cxServerUrl, String cxOrigin, LoginTypeDTO loginType, String username, String password)
+    public SdkConfiguration(URL cxServerUrl, String cxOrigin, LoginTypeDTO loginType, String username, String password, ProxyParams proxyParams)
     {
-        this(cxServerUrl, cxOrigin, loginType, username, password, false);
+        this(cxServerUrl, cxOrigin, loginType, username, password, false, proxyParams);
     }
 
-    public SdkConfiguration(URL cxServerUrl, String cxOrigin, LoginTypeDTO loginType, String username, String password, Boolean useKerberosAuthentication)
+    public SdkConfiguration(URL cxServerUrl, String cxOrigin, LoginTypeDTO loginType, String username, String password, Boolean useKerberosAuthentication, ProxyParams proxyParams)
     {
         this.cxServerUrl = cxServerUrl;
         this.cxOrigin = cxOrigin;
@@ -29,6 +31,7 @@ public class SdkConfiguration {
         this.username = username;
         this.password = password;
         this.useKerberosAuthentication = useKerberosAuthentication;
+        this.proxyParams = proxyParams;
     }
 
     public String getOriginName() {
@@ -52,4 +55,8 @@ public class SdkConfiguration {
     }
 
     public Boolean useKerberosAuthentication() { return useKerberosAuthentication; }
+
+    public ProxyParams getProxyParams() {
+        return proxyParams;
+    }
 }

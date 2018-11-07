@@ -10,13 +10,12 @@ import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.exceptions.SdkException;
 import com.cx.sdk.infrastructure.CxRestClient;
 import com.cx.sdk.infrastructure.CxSoapClient;
+import com.cx.sdk.infrastructure.proxy.ConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.URL;
+import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +28,7 @@ public class LoginProviderImpl implements LoginProvider {
     private final CxRestClient cxRestClient;
     private final CxSoapClient cxSoapClient;
     private final Logger logger = LoggerFactory.getLogger(LoginProviderImpl.class);
+    private final ConnectionFactory connectionFactory;
 
     public static final String SERVER_CONNECTIVITY_FAILURE = "Failed to validate server connectivity for server: ";
     public static final String CX_SDK_WEB_SERVICE_URL = "/cxwebinterface/sdk/cxsdkwebservice.asmx";
@@ -38,6 +38,7 @@ public class LoginProviderImpl implements LoginProvider {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
         cxRestClient = new CxRestClient(sdkConfigurationProvider);
         cxSoapClient = new CxSoapClient(sdkConfigurationProvider);
+        connectionFactory = new ConnectionFactory(sdkConfigurationProvider);
     }
 
     @Override
@@ -135,7 +136,7 @@ public class LoginProviderImpl implements LoginProvider {
         int responseCode;
         try {
             URL urlAddress = new URL(sdkConfigurationProvider.getCxServerUrl(), CX_SDK_WEB_SERVICE_URL);
-            HttpURLConnection httpConnection = (HttpURLConnection) urlAddress.openConnection();
+            HttpURLConnection httpConnection = connectionFactory.getHttpURLConnection(urlAddress);
             httpConnection.setRequestMethod("GET");
             httpConnection.setRequestProperty("User-Agent", "Mozilla/5.0");
             responseCode = httpConnection.getResponseCode();

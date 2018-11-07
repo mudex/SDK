@@ -1,5 +1,6 @@
 package com.cx.sdk.application.contracts.providers;
 
+import com.cx.sdk.domain.entities.ProxyParams;
 import com.cx.sdk.domain.enums.LoginType;
 
 import java.net.URL;
@@ -14,4 +15,5 @@ public interface SDKConfigurationProvider {
     String getUsername();
     String getPassword();
     Boolean useKerberosAuthentication();
+    ProxyParams getProxyParams();
 }

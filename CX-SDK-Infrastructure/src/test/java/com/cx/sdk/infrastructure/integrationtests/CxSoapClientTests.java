@@ -65,7 +65,7 @@ public class CxSoapClientTests {
     public void ssoLogin_kerberosAuthentivationConfigured_sessionGeneratedSuccessfully() throws Exception {
         // Arrange
         URL serverUrl = new URL("http://ehudserver1605");
-        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl, null, null, null, null, true);
+        SDKConfigurationProvider sdkConfigurationProvider = new SDKConfigurationProviderFactory().create(serverUrl, null, null, null, null, true, null);
         File file = new File("resources/login.conf");
         System.setProperty("java.security.auth.login.config", file.getAbsolutePath());
         System.setProperty("com.sun.security.auth.module.Krb5LoginModule", "true");

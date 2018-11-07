@@ -4,10 +4,17 @@ import com.checkmarx.v7.*;
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
 import com.cx.sdk.domain.Session;
+import com.cx.sdk.domain.entities.ProxyParams;
 import com.cx.sdk.domain.exceptions.SdkException;
 import com.cx.sdk.infrastructure.authentication.kerberos.DynamicAuthSupplier;
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.apache.cxf.transports.http.configuration.ProxyServerType;
 
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 
 
@@ -30,9 +37,33 @@ public class CxSoapClient {
         credentials.setUser(userName);
         credentials.setPass(password);
 
+        setProxySettingsForSoap(cxSDKWebServiceSoap);
         CxWSResponseLoginData responseLoginData = cxSDKWebServiceSoap.login(credentials, 1033);
         validateLoginResponse(responseLoginData);
         return responseLoginData;
+    }
+
+    private void setProxySettingsForSoap(CxSDKWebServiceSoap cxSDKWebServiceSoap) {
+        ProxyParams proxyParams = sdkConfigurationProvider.getProxyParams();
+        if(proxyParams.getType() != null){
+            Client client = ClientProxy.getClient(cxSDKWebServiceSoap);
+            HTTPConduit conduit = (HTTPConduit) client.getConduit();
+            String proxyServer = proxyParams.getServer();
+            int proxyServerPort = proxyParams.getPort();
+            if(proxyParams.getType().equals("HTTPS")){
+                proxyParams.setType(Proxy.Type.HTTP.name());
+            }
+            ProxyServerType proxyServerType = ProxyServerType.valueOf(proxyParams.getType());
+            HTTPClientPolicy clientPolicy = new HTTPClientPolicy();
+            clientPolicy.setProxyServerType(proxyServerType);
+            clientPolicy.setProxyServer(proxyServer);
+            clientPolicy.setProxyServerPort(proxyServerPort);
+            if(proxyParams.getUsername() != null){
+                conduit.getProxyAuthorization().setUserName(proxyParams.getUsername());
+                conduit.getProxyAuthorization().setPassword(proxyParams.getPassword());
+            }
+            conduit.setClient(clientPolicy);
+        }
     }
 
     public CxWSResponseLoginData ssoLogin() throws Exception {

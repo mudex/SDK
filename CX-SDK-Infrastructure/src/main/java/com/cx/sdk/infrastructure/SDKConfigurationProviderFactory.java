@@ -1,6 +1,7 @@
 package com.cx.sdk.infrastructure;
 
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
+import com.cx.sdk.domain.entities.ProxyParams;
 import com.cx.sdk.domain.enums.LoginType;
 
 import java.net.URL;
@@ -19,7 +20,7 @@ public class SDKConfigurationProviderFactory {
             LoginType loginType,
             String username,
             String password) {
-        return initSdkConfigurationProvider(serverUrl, cxOrigin, loginType, username, password, false);
+        return initSdkConfigurationProvider(serverUrl, cxOrigin, loginType, username, password, false, null);
     }
 
     public SDKConfigurationProvider create(
@@ -28,11 +29,12 @@ public class SDKConfigurationProviderFactory {
             LoginType loginType,
             String username,
             String password,
-            Boolean useKerberosAuthentication) {
-        return initSdkConfigurationProvider(serverUrl, cxOrigin, loginType, username, password, useKerberosAuthentication);
+            Boolean useKerberosAuthentication, ProxyParams proxyParams) {
+        return initSdkConfigurationProvider(serverUrl, cxOrigin, loginType, username, password, useKerberosAuthentication, proxyParams);
     }
 
-    private SDKConfigurationProvider initSdkConfigurationProvider(final URL serverUrl,final String cxOrigin,final LoginType loginType,final String username,final String password,final Boolean useKerberosAuthentication) {
+    private SDKConfigurationProvider initSdkConfigurationProvider(final URL serverUrl,final String cxOrigin,final LoginType loginType,final String username,final String password,
+                                                                  final Boolean useKerberosAuthentication, final ProxyParams proxyParams ) {
         return new SDKConfigurationProvider() {
             @Override
             public String getCxOriginName() {
@@ -62,6 +64,11 @@ public class SDKConfigurationProviderFactory {
             @Override
             public Boolean useKerberosAuthentication() {
                 return useKerberosAuthentication;
+            }
+
+            @Override
+            public ProxyParams getProxyParams() {
+                return proxyParams;
             }
         };
     }

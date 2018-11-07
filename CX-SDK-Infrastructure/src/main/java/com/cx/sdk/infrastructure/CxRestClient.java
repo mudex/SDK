@@ -2,12 +2,15 @@ package com.cx.sdk.infrastructure;
 
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
+import com.cx.sdk.domain.enums.LoginType;
 import com.cx.sdk.domain.exceptions.SdkException;
 import com.cx.sdk.infrastructure.authentication.kerberos.WindowsAuthenticator;
+import com.cx.sdk.infrastructure.proxy.ConnectionFactory;
 import com.sun.jersey.api.client.*;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
+import com.sun.jersey.client.urlconnection.URLConnectionClientHandler;
 
 import javax.ws.rs.core.NewCookie;
 import java.net.URL;
@@ -20,20 +23,38 @@ import java.util.Map;
 public class CxRestClient {
     private final SDKConfigurationProvider sdkConfigurationProvider;
     private final RestResourcesURIBuilder restResourcesURIBuilder = new RestResourcesURIBuilder();
+    private ConnectionFactory connectionFactory = null;
     private final Client client;
     public static final String AUTH_TYPE_NEGOTIATE = "Negotiate";
+    private URL url = null;
 
     public CxRestClient(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
+        URLConnectionClientHandler connection = getConnection();
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-        client = Client.create(clientConfig);
+        client = new Client(connection, clientConfig);
+    }
+
+    private URLConnectionClientHandler getConnection() {
+        setUrlByLoginType();
+        URLConnectionClientHandler urlConnectionClientHandler = new URLConnectionClientHandler(new ConnectionFactory(sdkConfigurationProvider));
+        return urlConnectionClientHandler;
+
+    }
+
+    private void setUrlByLoginType() {
+        LoginType loginType = sdkConfigurationProvider.getLoginType();
+        if (loginType.equals(LoginType.SSO)){
+            url = restResourcesURIBuilder.buildSsoLoginURL(sdkConfigurationProvider.getCxServerUrl());
+        } else if (loginType.equals(LoginType.CREDENTIALS)){
+            url = restResourcesURIBuilder.buildLoginURL(sdkConfigurationProvider.getCxServerUrl());
+        }
     }
 
     public Map<String, String> ssoLogin() throws Exception {
 
-        ClientResponse response = baseRequest(restResourcesURIBuilder.buildSsoLoginURL(sdkConfigurationProvider.getCxServerUrl()))
-                .post(ClientResponse.class, " ");
+        ClientResponse response = baseRequest(url).post(ClientResponse.class, " ");
 
         validateResponse(response);
 
@@ -45,7 +66,7 @@ public class CxRestClient {
         HashMap<String, Object> params = new HashMap();
         params.put("UserName", userName);
         params.put("Password", password);
-        ClientResponse response = baseRequest(restResourcesURIBuilder.buildLoginURL(sdkConfigurationProvider.getCxServerUrl()))
+        ClientResponse response = baseRequest(url)
                 .type("application/json").accept("application/json")
                 .post(ClientResponse.class, params);
 

@@ -40,7 +40,8 @@ public class Bootstrapper extends AbstractModule {
                 modelMapper.map(configuration.getLoginType(), LoginType.class),
                 configuration.getUsername(),
                 configuration.getPassword(),
-                configuration.useKerberosAuthentication());
+                configuration.useKerberosAuthentication(),
+                configuration.getProxyParams());
     }
 
     private void registerApiDependencies() {
