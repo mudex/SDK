@@ -134,6 +134,7 @@ public class CxSoapClient {
         URL wsdlUrl = getWsdlUrl(sdkConfigurationProvider.getCxServerUrl());
         CxSDKWebService cxSDKWebService = new CxSDKWebService(wsdlUrl);
         CxSDKWebServiceSoap cxSDKWebServiceSoap = cxSDKWebService.getCxSDKWebServiceSoap();
+        setProxySettingsForSoap(cxSDKWebServiceSoap);
         return cxSDKWebServiceSoap;
     }
 }
