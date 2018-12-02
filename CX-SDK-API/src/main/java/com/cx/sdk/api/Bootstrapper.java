@@ -3,9 +3,6 @@ package com.cx.sdk.api;
 import com.cx.sdk.application.contracts.providers.*;
 import com.cx.sdk.application.services.LoginService;
 import com.cx.sdk.application.services.LoginServiceImpl;
-import com.cx.sdk.domain.CredentialsInputValidator;
-import com.cx.sdk.domain.enums.LoginType;
-import com.cx.sdk.domain.validators.CredentialsInputValidatorImpl;
 import com.cx.sdk.infrastructure.SDKConfigurationProviderFactory;
 import com.cx.sdk.infrastructure.providers.*;
 import com.google.inject.AbstractModule;
@@ -28,7 +25,6 @@ public class Bootstrapper extends AbstractModule {
     protected void configure() {
         registerApiDependencies();
         registerApplicationDependencies();
-        registerDomainDependencies();
         registerInfrastructureDependencies();
     }
 
@@ -37,9 +33,6 @@ public class Bootstrapper extends AbstractModule {
         return new SDKConfigurationProviderFactory().create(
                 configuration.getCxServerUrl(),
                 configuration.getOriginName(),
-                modelMapper.map(configuration.getLoginType(), LoginType.class),
-                configuration.getUsername(),
-                configuration.getPassword(),
                 configuration.useKerberosAuthentication(),
                 configuration.getProxyParams());
     }
@@ -50,10 +43,6 @@ public class Bootstrapper extends AbstractModule {
 
     private void registerApplicationDependencies() {
         bind(LoginService.class).to(LoginServiceImpl.class);
-    }
-
-    private void registerDomainDependencies() {
-        bind(CredentialsInputValidator.class).to(CredentialsInputValidatorImpl.class);
     }
 
     private void registerInfrastructureDependencies() {

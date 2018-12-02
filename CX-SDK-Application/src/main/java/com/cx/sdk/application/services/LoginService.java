@@ -8,6 +8,4 @@ import com.cx.sdk.domain.exceptions.SdkException;
  */
 public interface LoginService {
     Session login() throws SdkException;
-    Session ssoLogin() throws SdkException;
-    Session samlLogin() throws SdkException;
 }

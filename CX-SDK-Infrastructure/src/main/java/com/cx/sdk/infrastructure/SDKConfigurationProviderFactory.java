@@ -2,7 +2,6 @@ package com.cx.sdk.infrastructure;
 
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.domain.entities.ProxyParams;
-import com.cx.sdk.domain.enums.LoginType;
 
 import java.net.URL;
 
@@ -16,25 +15,18 @@ public class SDKConfigurationProviderFactory {
 
     public SDKConfigurationProvider create(
             URL serverUrl,
-            String cxOrigin,
-            LoginType loginType,
-            String username,
-            String password) {
-        return initSdkConfigurationProvider(serverUrl, cxOrigin, loginType, username, password, false, null);
+            String cxOrigin) {
+        return initSdkConfigurationProvider(serverUrl, cxOrigin, false, null);
     }
 
     public SDKConfigurationProvider create(
             URL serverUrl,
             String cxOrigin,
-            LoginType loginType,
-            String username,
-            String password,
             Boolean useKerberosAuthentication, ProxyParams proxyParams) {
-        return initSdkConfigurationProvider(serverUrl, cxOrigin, loginType, username, password, useKerberosAuthentication, proxyParams);
+        return initSdkConfigurationProvider(serverUrl, cxOrigin, useKerberosAuthentication, proxyParams);
     }
 
-    private SDKConfigurationProvider initSdkConfigurationProvider(final URL serverUrl,final String cxOrigin,final LoginType loginType,final String username,final String password,
-                                                                  final Boolean useKerberosAuthentication, final ProxyParams proxyParams ) {
+    private SDKConfigurationProvider initSdkConfigurationProvider(final URL serverUrl,final String cxOrigin, final Boolean useKerberosAuthentication, final ProxyParams proxyParams ) {
         return new SDKConfigurationProvider() {
             @Override
             public String getCxOriginName() {
@@ -44,21 +36,6 @@ public class SDKConfigurationProviderFactory {
             @Override
             public URL getCxServerUrl() {
                 return serverUrl;
-            }
-
-            @Override
-            public LoginType getLoginType() {
-                return loginType;
-            }
-
-            @Override
-            public String getUsername() {
-                return username;
-            }
-
-            @Override
-            public String getPassword() {
-                return password;
             }
 
             @Override

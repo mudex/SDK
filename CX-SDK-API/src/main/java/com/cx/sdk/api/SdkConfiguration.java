@@ -11,25 +11,19 @@ import java.net.URL;
 public class SdkConfiguration {
     private final URL cxServerUrl;
     private final String cxOrigin;
-    private final LoginTypeDTO loginType;
-    private final String username;
-    private final String password;
     private final Boolean useKerberosAuthentication;
     private final ProxyParams proxyParams;
 
 
-    public SdkConfiguration(URL cxServerUrl, String cxOrigin, LoginTypeDTO loginType, String username, String password, ProxyParams proxyParams)
+    public SdkConfiguration(URL cxServerUrl, String cxOrigin, ProxyParams proxyParams)
     {
-        this(cxServerUrl, cxOrigin, loginType, username, password, false, proxyParams);
+        this(cxServerUrl, cxOrigin, false, proxyParams);
     }
 
-    public SdkConfiguration(URL cxServerUrl, String cxOrigin, LoginTypeDTO loginType, String username, String password, Boolean useKerberosAuthentication, ProxyParams proxyParams)
+    public SdkConfiguration(URL cxServerUrl, String cxOrigin, Boolean useKerberosAuthentication, ProxyParams proxyParams)
     {
         this.cxServerUrl = cxServerUrl;
         this.cxOrigin = cxOrigin;
-        this.loginType = loginType;
-        this.username = username;
-        this.password = password;
         this.useKerberosAuthentication = useKerberosAuthentication;
         this.proxyParams = proxyParams;
     }
@@ -40,18 +34,6 @@ public class SdkConfiguration {
 
     public URL getCxServerUrl() {
         return cxServerUrl;
-    }
-
-    public LoginTypeDTO getLoginType() {
-        return loginType;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public Boolean useKerberosAuthentication() { return useKerberosAuthentication; }

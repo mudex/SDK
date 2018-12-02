@@ -1,5 +1,6 @@
 package com.cx.sdk.api;
 
+import com.checkmarx.plugin.common.api.CxOIDCLoginClient;
 import com.cx.sdk.api.dtos.EngineConfigurationDTO;
 import com.cx.sdk.api.dtos.PresetDTO;
 import com.cx.sdk.api.dtos.SessionDTO;
@@ -11,7 +12,6 @@ import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.entities.EngineConfiguration;
 import com.cx.sdk.domain.entities.Preset;
 import com.cx.sdk.domain.entities.Team;
-import com.cx.sdk.domain.enums.LoginType;
 import com.cx.sdk.domain.exceptions.SdkException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -36,7 +36,6 @@ public class CxClientImpl implements CxClient {
     private final PresetProvider presetProvider;
     private final TeamProvider teamProvider;
     private final ProjectProvider projectProvider;
-
     private static Session singletonSession;
 
     @Inject
@@ -55,9 +54,6 @@ public class CxClientImpl implements CxClient {
     }
 
     public static CxClient createNewInstance(SdkConfiguration configuration) {
-        if (configuration.getLoginType() == null)
-            throw new IllegalArgumentException("Please provide a LoginType");
-
         if (configuration.getCxServerUrl() == null) {
             throw new IllegalArgumentException("Please provide the CxServerURL");
         }
@@ -78,23 +74,7 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public SessionDTO login() throws SdkException {
-        LoginType loginType = sdkConfigurationProvider.getLoginType();
-
-        switch (loginType) {
-            case CREDENTIALS:
-                singletonSession = loginService.login();
-                break;
-            case SAML:
-                singletonSession = loginService.samlLogin();
-                break;
-            case SSO:
-                singletonSession = loginService.ssoLogin();
-                break;
-            default:
-                String errorMessage = String.format("login does not support the following login type: '%s'", loginType);
-                throw new SdkException(errorMessage);
-        }
-
+        singletonSession = loginService.login();
         return modelMapper.map(singletonSession, SessionDTO.class);
     }
 
@@ -218,24 +198,4 @@ public class CxClientImpl implements CxClient {
         }
     }
 
-
-//    public class AuthorizedActionInvoker<T> {
-//        public T invoke(Supplier<T> function) throws SdkException {
-//            try {
-//                if (singletonSession == null) {
-//                    login();
-//                }
-//                return function.get();
-//            }
-//            catch(NotAuthorizedException sessionExpiredException) {
-//                return loginAndHandleFunction(function);
-//            }
-//        }
-//
-//        private T loginAndHandleFunction(Supplier<T> function) throws SdkException
-//        {
-//            login();
-//            return function.get();
-//        }
-//    }
 }

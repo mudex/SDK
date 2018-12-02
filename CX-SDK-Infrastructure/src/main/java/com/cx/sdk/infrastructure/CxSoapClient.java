@@ -5,10 +5,10 @@ import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.entities.ProxyParams;
-import com.cx.sdk.domain.exceptions.SdkException;
 import com.cx.sdk.infrastructure.authentication.kerberos.DynamicAuthSupplier;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.message.Message;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.apache.cxf.transports.http.configuration.ProxyServerType;
@@ -16,6 +16,7 @@ import org.apache.cxf.transports.http.configuration.ProxyServerType;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.*;
 
 
 /**
@@ -23,80 +24,37 @@ import java.net.URL;
  */
 public class CxSoapClient {
     private final SDKConfigurationProvider sdkConfigurationProvider;
+    private final String AUTHORIZATION_HEADER = "Authorization";
+    private final String BEARER = "Bearer ";
 
     public CxSoapClient(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
         DynamicAuthSupplier.setKerberosActive(sdkConfigurationProvider.useKerberosAuthentication());
     }
 
-    public CxWSResponseLoginData login(String userName, String password) throws Exception {
-        URL wsdlUrl = getWsdlUrl(sdkConfigurationProvider.getCxServerUrl());
-        CxSDKWebService cxSDKWebService = new CxSDKWebService(wsdlUrl);
-        CxSDKWebServiceSoap cxSDKWebServiceSoap = cxSDKWebService.getCxSDKWebServiceSoap();
-        Credentials credentials = new Credentials();
-        credentials.setUser(userName);
-        credentials.setPass(password);
-
-        setProxySettingsForSoap(cxSDKWebServiceSoap);
-        CxWSResponseLoginData responseLoginData = cxSDKWebServiceSoap.login(credentials, 1033);
-        validateLoginResponse(responseLoginData);
-        return responseLoginData;
-    }
-
-    private void setProxySettingsForSoap(CxSDKWebServiceSoap cxSDKWebServiceSoap) {
-        ProxyParams proxyParams = sdkConfigurationProvider.getProxyParams();
-        if(proxyParams.getType() != null){
-            Client client = ClientProxy.getClient(cxSDKWebServiceSoap);
-            HTTPConduit conduit = (HTTPConduit) client.getConduit();
-            String proxyServer = proxyParams.getServer();
-            int proxyServerPort = proxyParams.getPort();
-            if(proxyParams.getType().equals("HTTPS")){
-                proxyParams.setType(Proxy.Type.HTTP.name());
-            }
-            ProxyServerType proxyServerType = ProxyServerType.valueOf(proxyParams.getType());
-            HTTPClientPolicy clientPolicy = new HTTPClientPolicy();
-            clientPolicy.setProxyServerType(proxyServerType);
-            clientPolicy.setProxyServer(proxyServer);
-            clientPolicy.setProxyServerPort(proxyServerPort);
-            if(proxyParams.getUsername() != null){
-                conduit.getProxyAuthorization().setUserName(proxyParams.getUsername());
-                conduit.getProxyAuthorization().setPassword(proxyParams.getPassword());
-            }
-            conduit.setClient(clientPolicy);
-        }
-    }
-
-    public CxWSResponseLoginData ssoLogin() throws Exception {
-        CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy();
-
-        CxWSResponseLoginData responseLoginData = cxSDKWebServiceSoap.ssoLogin(new Credentials(), 1033);
-        validateLoginResponse(responseLoginData);
-        return responseLoginData;
-    }
-
     public CxWSResponsePresetList getPresets(Session session) throws Exception {
-        CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy();
+        CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy(session);
         CxWSResponsePresetList response = cxSDKWebServiceSoap.getPresetList(session.getSessionId());
         validateResponse(response);
         return response;
     }
 
     public CxWSResponseGroupList getTeams(Session session) throws Exception {
-        CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy();
+        CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy(session);
         CxWSResponseGroupList response = cxSDKWebServiceSoap.getAssociatedGroupsList(session.getSessionId());
         validateResponse(response);
         return response;
     }
 
     public CxWSResponseConfigSetList getConfigurations(Session session) throws Exception {
-        CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy();
+        CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy(session);
         CxWSResponseConfigSetList response = cxSDKWebServiceSoap.getConfigurationSetList(session.getSessionId());
         validateResponse(response);
         return response;
     }
 
     public Boolean isProjectNameValid(Session session, String projectName, String groupId) throws Exception {
-        CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy();
+        CxSDKWebServiceSoap cxSDKWebServiceSoap = createProxy(session);
         CxWSBasicRepsonse response = cxSDKWebServiceSoap.isValidProjectName(session.getSessionId(), projectName, groupId);
         validateResponse(response);
         Boolean isValid = response.isIsSuccesfull();
@@ -125,16 +83,43 @@ public class CxSoapClient {
         throw new Exception(response.getErrorMessage());
     }
 
-    private void validateLoginResponse(CxWSBasicRepsonse response) throws SdkException {
-        if (response == null || !response.isIsSuccesfull())
-            throw new SdkException("Login failed");
-    }
-
-    private CxSDKWebServiceSoap createProxy() {
+    private CxSDKWebServiceSoap createProxy(Session session) {
         URL wsdlUrl = getWsdlUrl(sdkConfigurationProvider.getCxServerUrl());
         CxSDKWebService cxSDKWebService = new CxSDKWebService(wsdlUrl);
         CxSDKWebServiceSoap cxSDKWebServiceSoap = cxSDKWebService.getCxSDKWebServiceSoap();
         setProxySettingsForSoap(cxSDKWebServiceSoap);
+        setAuthorizationHeader(cxSDKWebServiceSoap, session);
         return cxSDKWebServiceSoap;
+    }
+
+    private void setProxySettingsForSoap(CxSDKWebServiceSoap cxSDKWebServiceSoap) {
+        ProxyParams proxyParams = sdkConfigurationProvider.getProxyParams();
+        if(proxyParams.getType() != null){
+            Client client = ClientProxy.getClient(cxSDKWebServiceSoap);
+            HTTPConduit conduit = (HTTPConduit) client.getConduit();
+            String proxyServer = proxyParams.getServer();
+            int proxyServerPort = proxyParams.getPort();
+            if(proxyParams.getType().equals("HTTPS")){
+                proxyParams.setType(Proxy.Type.HTTP.name());
+            }
+            ProxyServerType proxyServerType = ProxyServerType.valueOf(proxyParams.getType());
+            HTTPClientPolicy clientPolicy = new HTTPClientPolicy();
+            clientPolicy.setProxyServerType(proxyServerType);
+            clientPolicy.setProxyServer(proxyServer);
+            clientPolicy.setProxyServerPort(proxyServerPort);
+            if(proxyParams.getUsername() != null){
+                conduit.getProxyAuthorization().setUserName(proxyParams.getUsername());
+                conduit.getProxyAuthorization().setPassword(proxyParams.getPassword());
+            }
+            conduit.setClient(clientPolicy);
+        }
+    }
+
+    private void setAuthorizationHeader(CxSDKWebServiceSoap cxSDKWebServiceSoap, Session session) {
+        Client client = ClientProxy.getClient(cxSDKWebServiceSoap);
+        String authorizationHeader = session.getAccessToken();
+        Map<String, List<String>> headers = new HashMap<>();
+        headers.put(AUTHORIZATION_HEADER, Arrays.asList(BEARER + authorizationHeader));
+        client.getRequestContext().put(Message.PROTOCOL_HEADERS, headers);
     }
 }

@@ -7,7 +7,9 @@ import java.util.Map;
  */
 public class SessionDTO {
     private String sessionId;
-    private Map<String, String> cookies;
+    private String accessToken;
+    private String refreshToken;
+    private Long accessTokenExpiration;
     private boolean isScanner;
     private boolean isAllowedToChangeNotExploitable;
     private boolean isIsAllowedToModifyResultDetails;
@@ -20,12 +22,20 @@ public class SessionDTO {
         this.sessionId = sessionId;
     }
 
-    public Map<String, String> getCookies() {
-        return cookies;
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
-    public void setCookies(Map<String, String> cookies) {
-        this.cookies = cookies;
+    public Long getAccessTokenExpiration() {
+        return accessTokenExpiration;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public boolean getIsScanner() {
@@ -50,5 +60,13 @@ public class SessionDTO {
 
     public void setIsAllowedToModifyResultDetails(boolean isAllowedToModifyResultDetails) {
         isIsAllowedToModifyResultDetails = isAllowedToModifyResultDetails;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void setAccessTokenExpiration(Long accessTokenExpiration) {
+        this.accessTokenExpiration = accessTokenExpiration;
     }
 }

@@ -1,14 +1,13 @@
 package com.cx.sdk.infrastructure.providers;
 
-import com.checkmarx.plugin.common.api.CxSamlClient;
-import com.checkmarx.plugin.common.api.CxSamlClientImpl;
-import com.checkmarx.plugin.common.webbrowsering.SAMLLoginData;
+import com.checkmarx.plugin.common.api.CxOIDCLoginClient;
+import com.checkmarx.plugin.common.api.CxOIDCLoginClientImpl;
+import com.checkmarx.plugin.common.webBrowsing.LoginData;
 import com.checkmarx.v7.CxWSResponseLoginData;
 import com.cx.sdk.application.contracts.providers.LoginProvider;
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.exceptions.SdkException;
-import com.cx.sdk.infrastructure.CxRestClient;
 import com.cx.sdk.infrastructure.CxSoapClient;
 import com.cx.sdk.infrastructure.proxy.ConnectionFactory;
 import org.slf4j.Logger;
@@ -16,8 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.net.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by ehuds on 2/25/2017.
@@ -25,8 +22,6 @@ import java.util.Map;
 public class LoginProviderImpl implements LoginProvider {
 
     private final SDKConfigurationProvider sdkConfigurationProvider;
-    private final CxRestClient cxRestClient;
-    private final CxSoapClient cxSoapClient;
     private final Logger logger = LoggerFactory.getLogger(LoginProviderImpl.class);
     private final ConnectionFactory connectionFactory;
 
@@ -36,64 +31,23 @@ public class LoginProviderImpl implements LoginProvider {
     @Inject
     public LoginProviderImpl(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
-        cxRestClient = new CxRestClient(sdkConfigurationProvider);
-        cxSoapClient = new CxSoapClient(sdkConfigurationProvider);
         connectionFactory = new ConnectionFactory(sdkConfigurationProvider);
     }
 
-    @Override
-    public Session login(String userName, String password) throws SdkException {
-        if (!isCxServerAvailable()) {
-            throw new SdkException(SERVER_CONNECTIVITY_FAILURE + sdkConfigurationProvider.getCxServerUrl().getHost());
-        }
 
-        try {
-            CxWSResponseLoginData cxWSResponseLoginData = cxSoapClient.login(userName, password);
-            return new Session(cxWSResponseLoginData.getSessionId(),
-                    cxRestClient.login(userName, password),
-                    cxWSResponseLoginData.isIsScanner(),
-                    cxWSResponseLoginData.isAllowedToChangeNotExploitable(),
-                    cxWSResponseLoginData.isIsAllowedToModifyResultDetails());
-        } catch (Exception e) {
-            String errorMessage = String.format("Failed to preform credentials login to server: %s",
-                    sdkConfigurationProvider.getCxServerUrl().toString());
-            logger.error(errorMessage, e);
-            throw new SdkException(errorMessage, e);
-        }
-    }
 
     @Override
-    public Session ssoLogin() throws SdkException {
-        if (!isCxServerAvailable()) {
-            throw new SdkException(SERVER_CONNECTIVITY_FAILURE + sdkConfigurationProvider.getCxServerUrl().toString());
-        }
-
-        try {
-            CxWSResponseLoginData cxWSResponseLoginData = cxSoapClient.ssoLogin();
-            return new Session(cxWSResponseLoginData.getSessionId(),
-                    cxRestClient.ssoLogin(),
-                    cxWSResponseLoginData.isIsScanner(),
-                    cxWSResponseLoginData.isAllowedToChangeNotExploitable(),
-                    cxWSResponseLoginData.isIsAllowedToModifyResultDetails());
-        } catch (Exception e) {
-            String errorMessage = String.format("Failed to preform sso login to server: %s",
-                    sdkConfigurationProvider.getCxServerUrl().toString());
-            logger.error(errorMessage, e);
-            throw new SdkException(errorMessage, e);
-        }
-    }
-
-    @Override
-    public Session samlLogin() throws SdkException {
-        if (!isCxServerAvailable()) {
-            throw new SdkException(SERVER_CONNECTIVITY_FAILURE + sdkConfigurationProvider.getCxServerUrl().toString());
-        }
-
-        CxSamlClient cxSamlClient = new CxSamlClientImpl(sdkConfigurationProvider.getCxServerUrl(),
+    public Session login() throws SdkException {
+        CxOIDCLoginClient cxOIDCLoginClient = new CxOIDCLoginClientImpl(sdkConfigurationProvider.getCxServerUrl(),
                 sdkConfigurationProvider.getCxOriginName());
-        SAMLLoginData samlLoginData = null;
+
+        if (!isCxServerAvailable()) {
+            throw new SdkException(SERVER_CONNECTIVITY_FAILURE + sdkConfigurationProvider.getCxServerUrl().toString());
+        }
+
+        LoginData loginData = null;
         try {
-            samlLoginData = cxSamlClient.login();
+            loginData = cxOIDCLoginClient.login();
         } catch (Exception e) {
             String errorMessage = String.format("Failed to preform saml login to server: %s",
                     sdkConfigurationProvider.getCxServerUrl().toString());
@@ -101,35 +55,20 @@ public class LoginProviderImpl implements LoginProvider {
             throw new SdkException(errorMessage, e);
         }
 
-        if (samlLoginData.wasCanceled() )
+        if (loginData.wasCanceled() )
             return null;
 
-        return new Session(samlLoginData.getCxWSResponseLoginData().getSessionId(),
-                extractCxCoockies(samlLoginData),
-                samlLoginData.getCxWSResponseLoginData().isIsScanner(),
-                samlLoginData.getCxWSResponseLoginData().isAllowedToChangeNotExploitable(),
-                samlLoginData.getCxWSResponseLoginData().isIsAllowedToModifyResultDetails());
-    }
-
-    private Map<String, String> extractCxCoockies(SAMLLoginData samlLoginData) {
-        Map coockies = new HashMap<String, String>();
-        coockies.put(samlLoginData.getCxCookie().getName(), samlLoginData.getCxCookie().getValue());
-        coockies.put(samlLoginData.getCXRFCookie().getName(), samlLoginData.getCXRFCookie().getValue());
-        return coockies;
+        return new Session("",
+                loginData.getAccessToken(),
+                loginData.getRefreshToken(),
+                loginData.getAccessTokenExpirationInMillis(),
+                true,
+                true,
+                true);
     }
 
     private boolean isCxServerAvailable() {
-        return /*(isServerAvailable() &&*/ isCxWebServiceAvailable() /*)*/;
-    }
-
-    private boolean isServerAvailable() {
-        try {
-            InetAddress inetAddress = InetAddress.getByName(sdkConfigurationProvider.getCxServerUrl().getHost());
-            return inetAddress.isReachable(5000);
-        } catch (Exception e) {
-            logger.error("Server connectivity test failed", e);
-            return false;
-        }
+        return isCxWebServiceAvailable();
     }
 
     private boolean isCxWebServiceAvailable() {
