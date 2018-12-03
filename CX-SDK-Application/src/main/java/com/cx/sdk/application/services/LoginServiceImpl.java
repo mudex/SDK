@@ -42,4 +42,10 @@ public class LoginServiceImpl implements LoginService {
         return session;
     }
 
+
+    @Override
+    public boolean isTokenExpired(){
+        return loginProvider.isTokenExpired();
+    };
+
 }

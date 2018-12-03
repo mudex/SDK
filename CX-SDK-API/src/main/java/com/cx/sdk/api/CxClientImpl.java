@@ -188,6 +188,11 @@ public class CxClientImpl implements CxClient {
         }
     }
 
+    @Override
+    public boolean isTokenExpired() {
+        return loginService.isTokenExpired();
+    }
+
     private Boolean isValid(String projectName, String teamId) throws CxClientException {
         try {
             Boolean isValid = projectProvider.isValidProjectName(singletonSession, projectName, teamId);

@@ -44,4 +44,6 @@ public interface CxClient {
      * @throws CxClientException
      */
     Boolean validateProjectName(String projectName, String teamId) throws CxClientException;
+
+    boolean isTokenExpired();
 }

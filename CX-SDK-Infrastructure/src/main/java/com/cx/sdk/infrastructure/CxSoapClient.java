@@ -5,7 +5,6 @@ import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.entities.ProxyParams;
-import com.cx.sdk.infrastructure.authentication.kerberos.DynamicAuthSupplier;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.message.Message;
@@ -29,7 +28,6 @@ public class CxSoapClient {
 
     public CxSoapClient(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
-        DynamicAuthSupplier.setKerberosActive(sdkConfigurationProvider.useKerberosAuthentication());
     }
 
     public CxWSResponsePresetList getPresets(Session session) throws Exception {

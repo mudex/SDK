@@ -33,7 +33,6 @@ public class Bootstrapper extends AbstractModule {
         return new SDKConfigurationProviderFactory().create(
                 configuration.getCxServerUrl(),
                 configuration.getOriginName(),
-                configuration.useKerberosAuthentication(),
                 configuration.getProxyParams());
     }
 

@@ -24,6 +24,7 @@ public class LoginProviderImpl implements LoginProvider {
     private final SDKConfigurationProvider sdkConfigurationProvider;
     private final Logger logger = LoggerFactory.getLogger(LoginProviderImpl.class);
     private final ConnectionFactory connectionFactory;
+    private final CxOIDCLoginClient cxOIDCLoginClient;
 
     public static final String SERVER_CONNECTIVITY_FAILURE = "Failed to validate server connectivity for server: ";
     public static final String CX_SDK_WEB_SERVICE_URL = "/cxwebinterface/sdk/cxsdkwebservice.asmx";
@@ -32,15 +33,14 @@ public class LoginProviderImpl implements LoginProvider {
     public LoginProviderImpl(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
         connectionFactory = new ConnectionFactory(sdkConfigurationProvider);
+        cxOIDCLoginClient = new CxOIDCLoginClientImpl(sdkConfigurationProvider.getCxServerUrl(),
+                sdkConfigurationProvider.getCxOriginName());
     }
 
 
 
     @Override
     public Session login() throws SdkException {
-        CxOIDCLoginClient cxOIDCLoginClient = new CxOIDCLoginClientImpl(sdkConfigurationProvider.getCxServerUrl(),
-                sdkConfigurationProvider.getCxOriginName());
-
         if (!isCxServerAvailable()) {
             throw new SdkException(SERVER_CONNECTIVITY_FAILURE + sdkConfigurationProvider.getCxServerUrl().toString());
         }
@@ -66,6 +66,12 @@ public class LoginProviderImpl implements LoginProvider {
                 true,
                 true);
     }
+
+    @Override
+    public boolean isTokenExpired() {
+        return cxOIDCLoginClient.isTokenExpired();
+    }
+
 
     private boolean isCxServerAvailable() {
         return isCxWebServiceAvailable();

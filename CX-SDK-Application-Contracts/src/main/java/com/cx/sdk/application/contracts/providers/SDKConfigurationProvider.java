@@ -10,6 +10,5 @@ import java.net.URL;
 public interface SDKConfigurationProvider {
     String getCxOriginName();
     URL getCxServerUrl();
-    Boolean useKerberosAuthentication();
     ProxyParams getProxyParams();
 }

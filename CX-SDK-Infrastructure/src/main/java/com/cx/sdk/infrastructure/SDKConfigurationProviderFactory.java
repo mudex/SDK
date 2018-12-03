@@ -16,17 +16,17 @@ public class SDKConfigurationProviderFactory {
     public SDKConfigurationProvider create(
             URL serverUrl,
             String cxOrigin) {
-        return initSdkConfigurationProvider(serverUrl, cxOrigin, false, null);
+        return initSdkConfigurationProvider(serverUrl, cxOrigin, null);
     }
 
     public SDKConfigurationProvider create(
             URL serverUrl,
             String cxOrigin,
-            Boolean useKerberosAuthentication, ProxyParams proxyParams) {
-        return initSdkConfigurationProvider(serverUrl, cxOrigin, useKerberosAuthentication, proxyParams);
+            ProxyParams proxyParams) {
+        return initSdkConfigurationProvider(serverUrl, cxOrigin, proxyParams);
     }
 
-    private SDKConfigurationProvider initSdkConfigurationProvider(final URL serverUrl,final String cxOrigin, final Boolean useKerberosAuthentication, final ProxyParams proxyParams ) {
+    private SDKConfigurationProvider initSdkConfigurationProvider(final URL serverUrl,final String cxOrigin, final ProxyParams proxyParams ) {
         return new SDKConfigurationProvider() {
             @Override
             public String getCxOriginName() {
@@ -36,11 +36,6 @@ public class SDKConfigurationProviderFactory {
             @Override
             public URL getCxServerUrl() {
                 return serverUrl;
-            }
-
-            @Override
-            public Boolean useKerberosAuthentication() {
-                return useKerberosAuthentication;
             }
 
             @Override

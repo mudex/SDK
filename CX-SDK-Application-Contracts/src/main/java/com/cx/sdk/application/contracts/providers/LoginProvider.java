@@ -8,4 +8,5 @@ import com.cx.sdk.domain.exceptions.SdkException;
  */
 public interface LoginProvider {
     Session login() throws SdkException;
+    boolean isTokenExpired();
 }
