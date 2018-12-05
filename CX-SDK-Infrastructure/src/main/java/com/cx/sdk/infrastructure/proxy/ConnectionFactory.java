@@ -34,7 +34,7 @@ public class ConnectionFactory implements HttpURLConnectionFactory {
         Proxy proxy = null;
         Proxy.Type proxyType = null;
         ProxyParams proxyParams = sdkConfigurationProvider.getProxyParams();
-        if (proxyParams.getType() != null){
+        if (proxyParams != null && proxyParams.getType() != null){
             if (proxyParams.getType().equals("HTTPS")){
                 proxyType =Proxy.Type.HTTP;
             } else {

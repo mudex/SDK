@@ -92,7 +92,7 @@ public class CxSoapClient {
 
     private void setProxySettingsForSoap(CxSDKWebServiceSoap cxSDKWebServiceSoap) {
         ProxyParams proxyParams = sdkConfigurationProvider.getProxyParams();
-        if(proxyParams.getType() != null){
+        if(proxyParams != null && proxyParams.getType() != null){
             Client client = ClientProxy.getClient(cxSDKWebServiceSoap);
             HTTPConduit conduit = (HTTPConduit) client.getConduit();
             String proxyServer = proxyParams.getServer();
