@@ -44,8 +44,15 @@ public class LoginServiceImpl implements LoginService {
 
 
     @Override
-    public boolean isTokenExpired(){
-        return loginProvider.isTokenExpired();
-    };
+    public boolean isTokenExpired(Long expirationTime){
+        return loginProvider.isTokenExpired(expirationTime);
+    }
+
+    @Override
+    public Session getAccessTokenFromRefreshToken(String refreshToken) {
+        return loginProvider.getAccessTokenFromRefreshToken(refreshToken);
+    }
+
+    ;
 
 }

@@ -189,8 +189,14 @@ public class CxClientImpl implements CxClient {
     }
 
     @Override
-    public boolean isTokenExpired() {
-        return loginService.isTokenExpired();
+    public boolean isTokenExpired(Long expirationTime) {
+        return loginService.isTokenExpired(expirationTime);
+    }
+
+    @Override
+    public SessionDTO getAccessTokenFromRefreshToken(String refreshToken) {
+        singletonSession  = loginService.getAccessTokenFromRefreshToken(refreshToken);
+        return modelMapper.map(singletonSession, SessionDTO.class);
     }
 
     private Boolean isValid(String projectName, String teamId) throws CxClientException {

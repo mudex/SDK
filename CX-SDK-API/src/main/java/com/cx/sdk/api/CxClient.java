@@ -4,6 +4,7 @@ import com.cx.sdk.api.dtos.EngineConfigurationDTO;
 import com.cx.sdk.api.dtos.PresetDTO;
 import com.cx.sdk.api.dtos.SessionDTO;
 import com.cx.sdk.api.dtos.TeamDTO;
+import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.exceptions.SdkException;
 
 import java.util.List;
@@ -45,5 +46,7 @@ public interface CxClient {
      */
     Boolean validateProjectName(String projectName, String teamId) throws CxClientException;
 
-    boolean isTokenExpired();
+    boolean isTokenExpired(Long expirationTime);
+
+    SessionDTO getAccessTokenFromRefreshToken(String refreshToken);
 }

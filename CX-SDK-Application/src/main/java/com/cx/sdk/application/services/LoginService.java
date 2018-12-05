@@ -8,5 +8,7 @@ import com.cx.sdk.domain.exceptions.SdkException;
  */
 public interface LoginService {
     Session login() throws SdkException;
-    boolean isTokenExpired();
+    boolean isTokenExpired(Long expirationTime);
+    Session getAccessTokenFromRefreshToken(String refreshToken);
+
 }
