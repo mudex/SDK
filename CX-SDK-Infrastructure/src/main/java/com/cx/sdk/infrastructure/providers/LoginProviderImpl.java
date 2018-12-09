@@ -70,7 +70,7 @@ public class LoginProviderImpl implements LoginProvider {
                 loginData.getAccessTokenExpirationInMillis(),
                 permissions.isSaveSastScan(),
                 permissions.isManageResultsExploitability(),
-                permissions.isManageResultsSeverity());
+                permissions.isManageResultsComment());
     }
 
     private Permissions getPermissions(String accessToken) {
@@ -116,7 +116,7 @@ public class LoginProviderImpl implements LoginProvider {
                 loginData.getAccessTokenExpirationInMillis(),
                 permissions.isSaveSastScan(),
                 permissions.isManageResultsExploitability(),
-                permissions.isManageResultsSeverity());
+                permissions.isManageResultsComment());
     }
 
     private boolean isCxServerAvailable() {
