@@ -80,13 +80,13 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public List<EngineConfigurationDTO> getEngineConfigurations(SessionDTO sessionDTO) throws CxClientException {
-        Session session = modelMapper.map(sessionDTO, Session.class);
-        return getEngineConfigurationDTOs(session);
+        setSingletonSession(sessionDTO);
+        return getEngineConfigurationDTOs();
     }
 
-    private List<EngineConfigurationDTO> getEngineConfigurationDTOs(Session session) throws CxClientException {
+    private List<EngineConfigurationDTO> getEngineConfigurationDTOs() throws CxClientException {
         try {
-            List<EngineConfiguration> engineConfigurations = configurationProvider.getEngineConfigurations(session);
+            List<EngineConfiguration> engineConfigurations = configurationProvider.getEngineConfigurations(singletonSession);
             List<EngineConfigurationDTO> dtos = new ArrayList(engineConfigurations.size());
 
             for (EngineConfiguration configuration: engineConfigurations ) {
@@ -100,14 +100,14 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public List<PresetDTO> getPresets(SessionDTO sessionDTO) throws CxClientException {
-        Session session = modelMapper.map(sessionDTO, Session.class);
-        return getPresetDTOs(session);
+        setSingletonSession(sessionDTO);
+        return getPresetDTOs();
 
     }
 
-    private List<PresetDTO> getPresetDTOs(Session session) throws CxClientException {
+    private List<PresetDTO> getPresetDTOs() throws CxClientException {
         try {
-            List<Preset> presets = presetProvider.getPresets(session);
+            List<Preset> presets = presetProvider.getPresets(singletonSession);
             List<PresetDTO> dtos = new ArrayList(presets.size());
 
             for (Preset preset: presets ) {
@@ -123,11 +123,25 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public List<TeamDTO> getTeams(SessionDTO sessionDTO) throws CxClientException {
-        Session session = modelMapper.map(sessionDTO, Session.class);
-        return getTeamDTOs(session);
+        setSingletonSession(sessionDTO);
+        return getTeamDTOs();
     }
 
-    private List<TeamDTO> getTeamDTOs(Session session) throws CxClientException {
+    private void setSingletonSession(SessionDTO sessionDTO) {
+        if(singletonSession == null && sessionDTO != null) {
+            singletonSession = new Session(sessionDTO.getSessionId(),
+                    sessionDTO.getAccessToken(),
+                    sessionDTO.getRefreshToken(),
+                    sessionDTO.getAccessTokenExpiration(),
+                    sessionDTO.getIsScanner(),
+                    sessionDTO.isAllowedToChangeNotExploitable(),
+                    sessionDTO.isIsAllowedToModifyResultDetails());
+        } else if (sessionDTO == null) {
+            login();
+        }
+    }
+
+    private List<TeamDTO> getTeamDTOs() throws CxClientException {
         try {
 
             List<Team> teams = teamProvider.getTeams(singletonSession);
