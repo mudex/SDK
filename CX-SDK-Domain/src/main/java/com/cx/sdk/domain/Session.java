@@ -13,6 +13,9 @@ public class Session {
     private boolean isAllowedToChangeNotExploitable;
     private boolean isIsAllowedToModifyResultDetails;
 
+    public Session (){
+    }
+
     public Session(String sessionId, String accessToken, String refreshToken, Long accessTokenExpiration,
                    boolean isScanner, boolean isAllowedToChangeNotExploitable,
                    boolean isIsAllowedToModifyResultDetails) {

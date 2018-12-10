@@ -79,25 +79,14 @@ public class CxClientImpl implements CxClient {
     }
 
     @Override
-    public List<EngineConfigurationDTO> getEngineConfigurations() throws CxClientException {
-
-        try {
-            if (singletonSession == null) {
-                login();
-            }
-            return getEngineConfigurationDTOs();
-
-        }
-        catch(NotAuthorizedException sessionExpiredException) {
-            login();
-            return getEngineConfigurationDTOs();
-
-        }
+    public List<EngineConfigurationDTO> getEngineConfigurations(SessionDTO sessionDTO) throws CxClientException {
+        Session session = modelMapper.map(sessionDTO, Session.class);
+        return getEngineConfigurationDTOs(session);
     }
 
-    private List<EngineConfigurationDTO> getEngineConfigurationDTOs() throws CxClientException {
+    private List<EngineConfigurationDTO> getEngineConfigurationDTOs(Session session) throws CxClientException {
         try {
-            List<EngineConfiguration> engineConfigurations = configurationProvider.getEngineConfigurations(singletonSession);
+            List<EngineConfiguration> engineConfigurations = configurationProvider.getEngineConfigurations(session);
             List<EngineConfigurationDTO> dtos = new ArrayList(engineConfigurations.size());
 
             for (EngineConfiguration configuration: engineConfigurations ) {
@@ -110,23 +99,15 @@ public class CxClientImpl implements CxClient {
     }
 
     @Override
-    public List<PresetDTO> getPresets() throws CxClientException {
+    public List<PresetDTO> getPresets(SessionDTO sessionDTO) throws CxClientException {
+        Session session = modelMapper.map(sessionDTO, Session.class);
+        return getPresetDTOs(session);
 
-        try {
-            if (singletonSession == null) {
-                login();
-            }
-            return getPresetDTOs();
-        }
-        catch(NotAuthorizedException sessionExpiredException) {
-            login();
-            return getPresetDTOs();
-        }
     }
 
-    private List<PresetDTO> getPresetDTOs() throws CxClientException {
+    private List<PresetDTO> getPresetDTOs(Session session) throws CxClientException {
         try {
-            List<Preset> presets = presetProvider.getPresets(singletonSession);
+            List<Preset> presets = presetProvider.getPresets(session);
             List<PresetDTO> dtos = new ArrayList(presets.size());
 
             for (Preset preset: presets ) {
@@ -141,21 +122,12 @@ public class CxClientImpl implements CxClient {
 
 
     @Override
-    public List<TeamDTO> getTeams() throws CxClientException {
-
-        try {
-            if (singletonSession == null) {
-                login();
-            }
-            return getTeamDTOs();
-        }
-        catch(NotAuthorizedException sessionExpiredException) {
-            login();
-            return getTeamDTOs();
-        }
+    public List<TeamDTO> getTeams(SessionDTO sessionDTO) throws CxClientException {
+        Session session = modelMapper.map(sessionDTO, Session.class);
+        return getTeamDTOs(session);
     }
 
-    private List<TeamDTO> getTeamDTOs() throws CxClientException {
+    private List<TeamDTO> getTeamDTOs(Session session) throws CxClientException {
         try {
 
             List<Team> teams = teamProvider.getTeams(singletonSession);
@@ -174,18 +146,10 @@ public class CxClientImpl implements CxClient {
     }
 
     @Override
-    public Boolean validateProjectName(String projectName, String teamId) throws CxClientException {
+    public Boolean validateProjectName(String projectName, String teamId, SessionDTO sessionDTO) throws CxClientException {
+        Session session = modelMapper.map(sessionDTO, Session.class);
+        return isValid(projectName, teamId, session);
 
-        try {
-            if (singletonSession == null) {
-                login();
-            }
-            return isValid(projectName, teamId);
-        }
-        catch(NotAuthorizedException sessionExpiredException) {
-            login();
-            return isValid(projectName, teamId);
-        }
     }
 
     @Override
@@ -199,9 +163,9 @@ public class CxClientImpl implements CxClient {
         return modelMapper.map(singletonSession, SessionDTO.class);
     }
 
-    private Boolean isValid(String projectName, String teamId) throws CxClientException {
+    private Boolean isValid(String projectName, String teamId, Session session) throws CxClientException {
         try {
-            Boolean isValid = projectProvider.isValidProjectName(singletonSession, projectName, teamId);
+            Boolean isValid = projectProvider.isValidProjectName(session, projectName, teamId);
             return isValid;
         }
         catch(SdkException sdk) {

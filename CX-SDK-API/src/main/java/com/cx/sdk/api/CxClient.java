@@ -24,19 +24,19 @@ public interface CxClient {
      * @return List<EngineConfigurationDTO>
      * @throws CxClientException
      */
-    List<EngineConfigurationDTO> getEngineConfigurations() throws CxClientException;
+    List<EngineConfigurationDTO> getEngineConfigurations(SessionDTO session) throws CxClientException;
     
     /*
      * @return List<PresetDTO>
      * @throws CxClientException
      */
-    List<PresetDTO> getPresets() throws CxClientException;
+    List<PresetDTO> getPresets(SessionDTO session) throws CxClientException;
     
     /*
      * @return List<TeamDTO>
      * @throws CxClientException
      */
-    List<TeamDTO> getTeams() throws CxClientException;
+    List<TeamDTO> getTeams(SessionDTO session) throws CxClientException;
     
     /*
      * @param projectName
@@ -44,7 +44,7 @@ public interface CxClient {
      * @return Boolean
      * @throws CxClientException
      */
-    Boolean validateProjectName(String projectName, String teamId) throws CxClientException;
+    Boolean validateProjectName(String projectName, String teamId, SessionDTO session) throws CxClientException;
 
     boolean isTokenExpired(Long expirationTime);
 
