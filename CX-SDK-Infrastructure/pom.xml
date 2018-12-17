@@ -25,6 +25,11 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>com.cx.sdk</groupId>
+            <artifactId>CX-SDK-OIDC-login</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
             <version>${jersey.version}</version>
@@ -33,11 +38,6 @@
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-json</artifactId>
             <version>${jersey.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.checkmarx.plugin.common</groupId>
-            <artifactId>OIDC-login-client</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

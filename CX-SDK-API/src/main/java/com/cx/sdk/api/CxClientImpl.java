@@ -1,6 +1,5 @@
 package com.cx.sdk.api;
 
-import com.checkmarx.plugin.common.api.CxOIDCLoginClient;
 import com.cx.sdk.api.dtos.EngineConfigurationDTO;
 import com.cx.sdk.api.dtos.PresetDTO;
 import com.cx.sdk.api.dtos.SessionDTO;

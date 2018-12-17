@@ -1,18 +1,18 @@
 package com.cx.sdk.infrastructure.providers;
 
-import com.checkmarx.plugin.common.api.CxOIDCLoginClient;
-import com.checkmarx.plugin.common.api.CxOIDCLoginClientImpl;
-import com.checkmarx.plugin.common.exceptions.CxRestClientException;
-import com.checkmarx.plugin.common.exceptions.CxRestLoginException;
-import com.checkmarx.plugin.common.exceptions.CxValidateResponseException;
-import com.checkmarx.plugin.common.restClient.entities.Permissions;
-import com.checkmarx.plugin.common.webBrowsing.LoginData;
 import com.checkmarx.v7.CxWSResponseLoginData;
 import com.cx.sdk.application.contracts.providers.LoginProvider;
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.domain.Session;
 import com.cx.sdk.domain.exceptions.SdkException;
 import com.cx.sdk.infrastructure.proxy.ConnectionFactory;
+import com.cx.sdk.oidcLogin.api.CxOIDCLoginClient;
+import com.cx.sdk.oidcLogin.api.CxOIDCLoginClientImpl;
+import com.cx.sdk.oidcLogin.exceptions.CxRestClientException;
+import com.cx.sdk.oidcLogin.exceptions.CxRestLoginException;
+import com.cx.sdk.oidcLogin.exceptions.CxValidateResponseException;
+import com.cx.sdk.oidcLogin.restClient.entities.Permissions;
+import com.cx.sdk.oidcLogin.webBrowsing.LoginData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
