@@ -1,6 +1,5 @@
 package com.cx.sdk.infrastructure.providers;
 
-import com.checkmarx.v7.CxWSResponseLoginData;
 import com.cx.sdk.application.contracts.providers.LoginProvider;
 import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.domain.Session;
