@@ -36,8 +36,8 @@ public class CxServerImpl implements ICxServer {
     private String userInfoURL;
     private HttpClient client;
     private List<Header> headers = new ArrayList<Header>();
-    private String tokenEndpoint = ":8080/identity/connect/token";
-    private String userInfoEndpoint = ":8080"+Consts.USER_INFO_ENDPOINT;
+    private String tokenEndpoint = Consts.SAST_PREFIX + "/identity/connect/token";
+    private String userInfoEndpoint = Consts.USER_INFO_ENDPOINT;
     private static final String FAIL_TO_VALIDATE_TOKEN_RESPONSE_ERROR = " User authentication failed";
     private static final String FAIL_TO_VALIDATE_USER_INFO_RESPONSE_ERROR = "User info failed";
     private final Logger logger = Logger.getLogger("com.checkmarx.plugin.common.CxServerImpl");

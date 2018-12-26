@@ -41,7 +41,7 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser  {
     public AuthenticationData browseAuthenticationData(String serverUrl, String clientName) throws Exception {
         this.clientName = clientName;
         this.serverUrl = serverUrl;
-        String authorizationEndpointUrl = serverUrl + Consts.PORT + Consts.AUTHORIZATION_ENDPOINT;
+        String authorizationEndpointUrl = serverUrl +  Consts.AUTHORIZATION_ENDPOINT;
         initBrowser(authorizationEndpointUrl);
         waitForAuthentication();
         if (hasErrors()) {
@@ -109,7 +109,7 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser  {
         sb.append("&");
         sb.append(Consts.RESPONSE_TYPE_KEY + "="+ Consts.RESPONSE_TYPE_VALUE);
         sb.append("&");
-        sb.append(Consts.REDIRECT_URI_KEY + "="+ serverUrl + Consts.PORT);
+        sb.append(Consts.REDIRECT_URI_KEY + "="+ serverUrl + Consts.SAST_PREFIX);
         return sb.toString();
     }
 
