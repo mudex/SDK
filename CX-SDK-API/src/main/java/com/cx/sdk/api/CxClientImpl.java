@@ -160,7 +160,8 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public Boolean validateProjectName(String projectName, String teamId, SessionDTO sessionDTO) throws CxClientException {
-        Session session = modelMapper.map(sessionDTO, Session.class);
+        Session session = new Session(sessionDTO.getSessionId(), sessionDTO.getAccessToken(), sessionDTO.getRefreshToken(), sessionDTO.getAccessTokenExpiration(),
+        sessionDTO.getIsScanner(), sessionDTO.isAllowedToChangeNotExploitable(), sessionDTO.isIsAllowedToModifyResultDetails());
         return isValid(projectName, teamId, session);
 
     }
