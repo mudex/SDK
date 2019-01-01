@@ -3,7 +3,7 @@ package com.cx.sdk.oidcLogin.constants;
 public class Consts {
 
     public static final String CLIENT_ID_KEY = "client_id";
-    public static final String CLIENT_VALUE = "ide_sast_client";
+    public static final String CLIENT_VALUE = "ide_client";
     public static final String SCOPE_KEY = "scope";
     public static final String CODE_KEY = "code";
     public static final String GRANT_TYPE_KEY = "grant_type";
