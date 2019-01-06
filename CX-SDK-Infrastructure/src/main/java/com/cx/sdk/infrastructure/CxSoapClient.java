@@ -23,8 +23,6 @@ import java.util.*;
  */
 public class CxSoapClient {
     private final SDKConfigurationProvider sdkConfigurationProvider;
-    private final String AUTHORIZATION_HEADER = "Authorization";
-    private final String BEARER = "Bearer ";
 
     public CxSoapClient(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
@@ -115,9 +113,7 @@ public class CxSoapClient {
 
     private void setAuthorizationHeader(CxSDKWebServiceSoap cxSDKWebServiceSoap, Session session) {
         Client client = ClientProxy.getClient(cxSDKWebServiceSoap);
-        String authorizationHeader = session.getAccessToken();
-        Map<String, List<String>> headers = new HashMap<>();
-        headers.put(AUTHORIZATION_HEADER, Arrays.asList(BEARER + authorizationHeader));
-        client.getRequestContext().put(Message.PROTOCOL_HEADERS, headers);
+        AuthorizationHeaderInterceptor interceptor = new AuthorizationHeaderInterceptor(session.getAccessToken());
+        client.getOutInterceptors().add(interceptor);
     }
 }
