@@ -109,7 +109,7 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser  {
         sb.append("&");
         sb.append(Consts.RESPONSE_TYPE_KEY + "="+ Consts.RESPONSE_TYPE_VALUE);
         sb.append("&");
-        sb.append(Consts.REDIRECT_URI_KEY + "="+ serverUrl);
+        sb.append(Consts.REDIRECT_URI_KEY + "="+ serverUrl + "/");
         return sb.toString();
     }
 
