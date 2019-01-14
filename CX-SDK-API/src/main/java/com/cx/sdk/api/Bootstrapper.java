@@ -46,9 +46,5 @@ public class Bootstrapper extends AbstractModule {
 
     private void registerInfrastructureDependencies() {
         bind(LoginProvider.class).to(LoginProviderImpl.class);
-        bind(ConfigurationProvider.class).to(ConfigurationProviderImpl.class);
-        bind(TeamProvider.class).to(TeamProviderImpl.class);
-        bind(PresetProvider.class).to(PresetProviderImpl.class);
-        bind(ProjectProvider.class).to(ProjectProviderImpl.class);
     }
 }

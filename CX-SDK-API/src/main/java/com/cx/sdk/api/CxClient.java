@@ -20,32 +20,6 @@ public interface CxClient {
      */
     SessionDTO login() throws SdkException;
 
-    /*
-     * @return List<EngineConfigurationDTO>
-     * @throws CxClientException
-     */
-    List<EngineConfigurationDTO> getEngineConfigurations(SessionDTO session) throws CxClientException;
-    
-    /*
-     * @return List<PresetDTO>
-     * @throws CxClientException
-     */
-    List<PresetDTO> getPresets(SessionDTO session) throws CxClientException;
-    
-    /*
-     * @return List<TeamDTO>
-     * @throws CxClientException
-     */
-    List<TeamDTO> getTeams(SessionDTO session) throws CxClientException;
-    
-    /*
-     * @param projectName
-     * @param teamId
-     * @return Boolean
-     * @throws CxClientException
-     */
-    Boolean validateProjectName(String projectName, String teamId, SessionDTO session) throws CxClientException;
-
     boolean isTokenExpired(Long expirationTime);
 
     SessionDTO getAccessTokenFromRefreshToken(String refreshToken);
