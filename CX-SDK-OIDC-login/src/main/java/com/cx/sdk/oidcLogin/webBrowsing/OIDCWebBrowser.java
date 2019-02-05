@@ -10,6 +10,7 @@ import com.teamdev.jxbrowser.chromium.events.LoadAdapter;
 import com.teamdev.jxbrowser.chromium.internal.Environment;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 import com.teamdev.jxbrowser.chromium.swing.DefaultNetworkDelegate;
+import org.apache.http.message.BasicNameValuePair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,7 +110,11 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser  {
         sb.append("&");
         sb.append(Consts.RESPONSE_TYPE_KEY + "="+ Consts.RESPONSE_TYPE_VALUE);
         sb.append("&");
-        sb.append(Consts.REDIRECT_URI_KEY + "="+ serverUrl + "/");
+        if(serverUrl.endsWith("/")){
+            sb.append(Consts.REDIRECT_URI_KEY + "="+ serverUrl);
+        } else {
+            sb.append(Consts.REDIRECT_URI_KEY + "="+ serverUrl + "/");
+        }
         return sb.toString();
     }
 
