@@ -129,6 +129,7 @@ public class LoginProviderImpl implements LoginProvider {
             HttpURLConnection httpConnection = connectionFactory.getHttpURLConnection(urlAddress);
             httpConnection.setRequestMethod("GET");
             httpConnection.setRequestProperty("User-Agent", "Mozilla/5.0");
+            httpConnection.setReadTimeout(60000);
             responseCode = httpConnection.getResponseCode();
         } catch (Exception e) {
             logger.error("Cx server interface is not available", e);
