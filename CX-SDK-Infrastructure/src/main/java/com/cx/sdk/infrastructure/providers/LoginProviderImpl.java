@@ -45,7 +45,7 @@ public class LoginProviderImpl implements LoginProvider {
 
     @Override
     public Session login() throws SdkException {
-        if (!isCxServerAvailable()) {
+        if (!isCxWebServiceAvailable()) {
             throw new SdkException(SERVER_CONNECTIVITY_FAILURE + sdkConfigurationProvider.getCxServerUrl().toString());
         }
 
@@ -116,10 +116,6 @@ public class LoginProviderImpl implements LoginProvider {
                 permissions.isSaveSastScan(),
                 permissions.isManageResultsExploitability(),
                 permissions.isManageResultsComment());
-    }
-
-    private boolean isCxServerAvailable() {
-        return isCxWebServiceAvailable();
     }
 
     private boolean isCxWebServiceAvailable() {

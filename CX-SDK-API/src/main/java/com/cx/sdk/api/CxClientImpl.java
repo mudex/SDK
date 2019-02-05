@@ -65,21 +65,6 @@ public class CxClientImpl implements CxClient {
         return modelMapper.map(singletonSession, SessionDTO.class);
     }
 
-
-    private void setSingletonSession(SessionDTO sessionDTO) {
-        if(singletonSession == null && sessionDTO != null) {
-            singletonSession = new Session(sessionDTO.getSessionId(),
-                    sessionDTO.getAccessToken(),
-                    sessionDTO.getRefreshToken(),
-                    sessionDTO.getAccessTokenExpiration(),
-                    sessionDTO.getIsScanner(),
-                    sessionDTO.isAllowedToChangeNotExploitable(),
-                    sessionDTO.isIsAllowedToModifyResultDetails());
-        } else if (sessionDTO == null) {
-            login();
-        }
-    }
-
     @Override
     public boolean isTokenExpired(Long expirationTime) {
         return loginService.isTokenExpired(expirationTime);
