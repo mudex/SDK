@@ -12,6 +12,8 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.apache.cxf.transports.http.configuration.ProxyServerType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.Proxy;
@@ -23,6 +25,7 @@ import java.net.URL;
  */
 public class CxSoapClient {
     private final SDKConfigurationProvider sdkConfigurationProvider;
+    private static final Logger logger = LoggerFactory.getLogger(CxSoapClient.class);
 
     public CxSoapClient(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
@@ -30,13 +33,14 @@ public class CxSoapClient {
     }
 
     public CxWSResponseLoginData login(String userName, String password) throws Exception {
+        logger.debug("Performing credentials login, SOAP client..");
         URL wsdlUrl = getWsdlUrl(sdkConfigurationProvider.getCxServerUrl());
+        logger.debug("Creating SDK web service");
         CxSDKWebService cxSDKWebService = new CxSDKWebService(wsdlUrl);
         CxSDKWebServiceSoap cxSDKWebServiceSoap = cxSDKWebService.getCxSDKWebServiceSoap();
         Credentials credentials = new Credentials();
         credentials.setUser(userName);
         credentials.setPass(password);
-
         setProxySettingsForSoap(cxSDKWebServiceSoap);
         CxWSResponseLoginData responseLoginData = cxSDKWebServiceSoap.login(credentials, 1033);
         validateLoginResponse(responseLoginData);
@@ -46,6 +50,7 @@ public class CxSoapClient {
     private void setProxySettingsForSoap(CxSDKWebServiceSoap cxSDKWebServiceSoap) {
         ProxyParams proxyParams = sdkConfigurationProvider.getProxyParams();
         if(proxyParams.getType() != null){
+            logger.debug("setting proxy for soap client");
             Client client = ClientProxy.getClient(cxSDKWebServiceSoap);
             HTTPConduit conduit = (HTTPConduit) client.getConduit();
             String proxyServer = proxyParams.getServer();
