@@ -35,10 +35,13 @@ public class ConnectionFactory implements HttpURLConnectionFactory {
         Proxy.Type proxyType = null;
         ProxyParams proxyParams = sdkConfigurationProvider.getProxyParams();
         if (proxyParams.getType() != null){
+            logger.debug("Setting proxy for URL connection");
             if (proxyParams.getType().equals("HTTPS")){
                 proxyType =Proxy.Type.HTTP;
+                logger.debug("Proxy type is HTTPS");
             } else {
                 proxyType = Proxy.Type.valueOf(proxyParams.getType());
+                logger.debug("Proxy type is: "+ proxyParams.getType());
             }
             proxy = new Proxy(proxyType, new InetSocketAddress(proxyParams.getServer(), proxyParams.getPort()));
         } else {
@@ -46,6 +49,7 @@ public class ConnectionFactory implements HttpURLConnectionFactory {
         }
         HttpURLConnection con = (HttpURLConnection) url.openConnection(proxy);
         if (con instanceof HttpsURLConnection) {
+            logger.debug("Connection is HttpsURLConnection, setting hostname verifier and SSL socket factory");
             HttpsURLConnection httpsCon = (HttpsURLConnection) url.openConnection(proxy);
             httpsCon.setHostnameVerifier(getHostnameVerifier());
             httpsCon.setSSLSocketFactory(getSslContext().getSocketFactory());

@@ -47,4 +47,13 @@ public class ProxyParams {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "ProxyParams{" +
+                "server='" + server + '\'' +
+                ", port=" + port +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }

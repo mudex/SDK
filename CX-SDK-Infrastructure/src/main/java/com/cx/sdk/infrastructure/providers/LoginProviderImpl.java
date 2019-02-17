@@ -135,11 +135,17 @@ public class LoginProviderImpl implements LoginProvider {
     private boolean isCxWebServiceAvailable() {
         int responseCode;
         try {
+            logger.debug("Check is CxWebServiceAvailable..");
             URL urlAddress = new URL(sdkConfigurationProvider.getCxServerUrl(), CX_SDK_WEB_SERVICE_URL);
             HttpURLConnection httpConnection = connectionFactory.getHttpURLConnection(urlAddress);
             httpConnection.setRequestMethod("GET");
             httpConnection.setRequestProperty("User-Agent", "Mozilla/5.0");
+            logger.debug("Setting readTimeout");
+            httpConnection.setReadTimeout(60000);
+            logger.debug("Is using proxy for opening connection: "+ httpConnection.usingProxy());
             responseCode = httpConnection.getResponseCode();
+            logger.debug("Response code is: " + responseCode);
+            logger.debug("Response message is: " + httpConnection.getResponseMessage());
         } catch (Exception e) {
             logger.error("Cx server interface is not available", e);
             return false;
