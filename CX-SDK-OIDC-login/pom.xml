@@ -19,8 +19,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <teamdev.version>6.21</teamdev.version>
-        <teamdev.license.version>6.19.1</teamdev.license.version>
+        <teamdev.version>6.23</teamdev.version>
+        <teamdev.license.version>6.23</teamdev.license.version>
     </properties>
 
     <dependencies>

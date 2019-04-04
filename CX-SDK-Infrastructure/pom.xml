@@ -11,7 +11,7 @@
     <artifactId>CX-SDK-Infrastructure</artifactId>
     <properties>
         <jersey.version>1.19.3</jersey.version>
-        <cxf.version>3.1.0</cxf.version>
+        <cxf.version>3.1.18</cxf.version>
     </properties>
     <dependencies>
         <dependency>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>3.0.6.RELEASE</version>
+            <version>4.1.9.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.github.dblock.waffle</groupId>
