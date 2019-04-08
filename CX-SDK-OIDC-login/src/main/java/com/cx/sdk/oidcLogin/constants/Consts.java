@@ -12,7 +12,8 @@ public class Consts {
     public static final String REDIRECT_URI_KEY = "redirect_uri";
     public static final String RESPONSE_TYPE_VALUE = "code";
     public static final String SCOPE_VALUE = "offline_access openid sast_api sast-permissions access_control_api";
-    public static final String SAST_PREFIX = "/cxrestapi/auth";
+    public static final String APPLICATION_NAME = "CxRestAPI";
+    public static final String SAST_PREFIX = "/" + APPLICATION_NAME + "/auth";
     public static final String AUTHORIZATION_ENDPOINT = SAST_PREFIX + "/identity/connect/authorize";
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER = "Bearer ";
@@ -21,4 +22,5 @@ public class Consts {
     public static final String MANAGE_RESULTS_COMMENT = "manage-result-comment";
     public static final String MANAGE_RESULTS_EXPLOITABILITY = "manage-result-exploitability";
     public static final String RESPONSE_TYPE_KEY = "response_type";
+
 }
