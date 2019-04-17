@@ -16,16 +16,26 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.ssl.SSLContexts;
+import org.apache.http.ssl.TrustStrategy;
 import org.apache.log4j.Logger;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +61,10 @@ public class CxServerImpl implements ICxServer {
     }
 
     private void setClient(){
-        client = HttpClientBuilder.create().setDefaultHeaders(headers).build();
+        HttpClientBuilder builder = HttpClientBuilder.create().setDefaultHeaders(headers);
+        setSSLTls(builder, "TLSv1.2");
+        disableCertificateValidation(builder);
+        client = builder.build();
     }
 
     public String getServerURL() {
@@ -114,7 +127,10 @@ public class CxServerImpl implements ICxServer {
         try {
             headers.add(new BasicHeader(Consts.AUTHORIZATION_HEADER, Consts.BEARER + accessToken));
             headers.add(new BasicHeader("Content-Length", "0"));
-            client = HttpClientBuilder.create().setDefaultHeaders(headers).build();
+            HttpClientBuilder builder = HttpClientBuilder.create();
+            setSSLTls(builder, "TLSv1.2");
+            disableCertificateValidation(builder);
+            client = builder.setDefaultHeaders(headers).build();
             postRequest = RequestBuilder.post()
                     .setUri(userInfoURL)
                     .build();
@@ -175,5 +191,31 @@ public class CxServerImpl implements ICxServer {
         }
 
         return result;
+    }
+
+    private HttpClientBuilder disableCertificateValidation(HttpClientBuilder builder) {
+        try {
+            SSLContext disabledSSLContext = SSLContexts.custom().loadTrustMaterial(new TrustStrategy() {
+                public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+                    return true;
+                }
+            }).build();
+            builder.setSslcontext(disabledSSLContext);
+            builder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
+        } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+            logger.warn("Failed to disable certificate verification: " + e.getMessage());
+        }
+
+        return builder;
+    }
+
+    private void setSSLTls(HttpClientBuilder builder, String protocol) {
+        try {
+            final SSLContext sslContext = SSLContext.getInstance(protocol);
+            sslContext.init(null, null, null);
+            HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            logger.warn("Failed to set SSL TLS : " + e.getMessage());
+        }
     }
 }
