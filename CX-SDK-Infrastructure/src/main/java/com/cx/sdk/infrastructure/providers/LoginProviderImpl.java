@@ -45,10 +45,6 @@ public class LoginProviderImpl implements LoginProvider {
 
     @Override
     public Session login() throws SdkException {
-        if (!isCxWebServiceAvailable()) {
-            throw new SdkException(SERVER_CONNECTIVITY_FAILURE + sdkConfigurationProvider.getCxServerUrl().toString());
-        }
-
         LoginData loginData = null;
         try {
             loginData = cxOIDCLoginClient.login();
@@ -118,7 +114,8 @@ public class LoginProviderImpl implements LoginProvider {
                 permissions.isManageResultsComment());
     }
 
-    private boolean isCxWebServiceAvailable() {
+    @Override
+    public boolean isCxWebServiceAvailable() {
         int responseCode;
         try {
             URL urlAddress = new URL(sdkConfigurationProvider.getCxServerUrl(), CX_SDK_WEB_SERVICE_URL);

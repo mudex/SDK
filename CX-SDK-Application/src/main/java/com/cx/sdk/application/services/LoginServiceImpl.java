@@ -53,6 +53,10 @@ public class LoginServiceImpl implements LoginService {
         return loginProvider.getAccessTokenFromRefreshToken(refreshToken);
     }
 
-    ;
+    @Override
+    public boolean isCxWebServiceAvailable() {
+        return loginProvider.isCxWebServiceAvailable();
+    }
+
 
 }

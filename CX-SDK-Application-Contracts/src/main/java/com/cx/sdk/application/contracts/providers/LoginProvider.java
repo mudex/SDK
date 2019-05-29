@@ -10,4 +10,5 @@ public interface LoginProvider {
     Session login() throws SdkException;
     boolean isTokenExpired(Long expirationTime);
     Session getAccessTokenFromRefreshToken(String refreshToken) throws SdkException;
+    boolean isCxWebServiceAvailable();
 }

@@ -23,4 +23,6 @@ public interface CxClient {
     boolean isTokenExpired(Long expirationTime);
 
     SessionDTO getAccessTokenFromRefreshToken(String refreshToken);
+
+    boolean isCxWebServiceAvailable();
 }

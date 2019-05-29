@@ -76,4 +76,10 @@ public class CxClientImpl implements CxClient {
         return modelMapper.map(singletonSession, SessionDTO.class);
     }
 
+    @Override
+    public boolean isCxWebServiceAvailable() {
+        return loginService.isCxWebServiceAvailable();
+    }
+
+
 }
