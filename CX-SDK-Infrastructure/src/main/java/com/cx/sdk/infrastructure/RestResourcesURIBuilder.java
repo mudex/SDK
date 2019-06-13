@@ -1,9 +1,9 @@
 package com.cx.sdk.infrastructure;
 
-import com.cx.sdk.oidcLogin.constants.Consts;
-
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static com.cx.sdk.oidcLogin.constants.Consts.APPLICATION_NAME;
 
 /**
  * Created by ehuds on 2/28/2017.
@@ -16,7 +16,7 @@ public class RestResourcesURIBuilder {
 
     protected URL buildLoginURL(URL serverUrl) {
         try {
-            return new URL(serverUrl, Consts.APPLICATION_NAME + AUTH_LOGIN);
+            return new URL(serverUrl, APPLICATION_NAME + AUTH_LOGIN);
         } catch (MalformedURLException e) {
             return serverUrl;
         }
@@ -24,7 +24,7 @@ public class RestResourcesURIBuilder {
 
     protected URL buildSsoLoginURL(URL serverUrl) {
         try {
-            return new URL(serverUrl, Consts.APPLICATION_NAME + AUTH_SSOLOGIN);
+            return new URL(serverUrl, APPLICATION_NAME + AUTH_SSOLOGIN);
         } catch (MalformedURLException e) {
             return serverUrl;
         }
@@ -32,7 +32,7 @@ public class RestResourcesURIBuilder {
 
     public static URL getAccessTokenURL(URL serverUrl) {
         try {
-            return new URL(serverUrl, Consts.APPLICATION_NAME + "/" + IDENTITY_CONNECT_RESOURCE + "/" + TOKEN_LOGIN_RESOURCE);
+            return new URL(serverUrl, APPLICATION_NAME + "/" + IDENTITY_CONNECT_RESOURCE + "/" + TOKEN_LOGIN_RESOURCE);
         } catch (MalformedURLException e) {
             return serverUrl;
         }
