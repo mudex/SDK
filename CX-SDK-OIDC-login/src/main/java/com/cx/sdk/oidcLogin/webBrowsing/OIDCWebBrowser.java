@@ -10,7 +10,6 @@ import com.teamdev.jxbrowser.chromium.events.LoadAdapter;
 import com.teamdev.jxbrowser.chromium.internal.Environment;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 import com.teamdev.jxbrowser.chromium.swing.DefaultNetworkDelegate;
-import org.apache.http.message.BasicNameValuePair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser  {
+public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser {
 
     private String clientName;
     private JPanel contentPane;
@@ -32,17 +31,11 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser  {
     private Map<String, String> urlParamsMap;
     private String serverUrl;
 
-
-    static {
-        System.setProperty("jxbrowser.ipc.external", "true");
-        System.setProperty("java.ipc.external", "true");
-    }
-
     @Override
     public AuthenticationData browseAuthenticationData(String serverUrl, String clientName) throws Exception {
         this.clientName = clientName;
         this.serverUrl = serverUrl;
-        String authorizationEndpointUrl = serverUrl +  Consts.AUTHORIZATION_ENDPOINT;
+        String authorizationEndpointUrl = serverUrl + Consts.AUTHORIZATION_ENDPOINT;
         initBrowser(authorizationEndpointUrl);
         waitForAuthentication();
         if (hasErrors()) {
@@ -54,6 +47,9 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser  {
 
     private void initBrowser(String restUrl) {
         if (Environment.isMac()) {
+            System.setProperty("java.ipc.external", "true");
+            System.setProperty("jxbrowser.ipc.external", "true");
+
             if (!BrowserCore.isInitialized()) {
                 BrowserCore.initialize();
             }
@@ -69,7 +65,7 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser  {
             }
         });
         browser = new Browser(browserContext);
-        String postData  = getPostData();
+        String postData = getPostData();
         LoadURLParams urlParams = new LoadURLParams(restUrl, postData);
         String pathToImage = "/checkmarxIcon.jpg";
         setIconImage(new ImageIcon(getClass().getResource(pathToImage), "checkmarx icon").getImage());
@@ -108,12 +104,12 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser  {
         sb.append("&");
         sb.append(Consts.SCOPE_KEY + "=" + Consts.SCOPE_VALUE);
         sb.append("&");
-        sb.append(Consts.RESPONSE_TYPE_KEY + "="+ Consts.RESPONSE_TYPE_VALUE);
+        sb.append(Consts.RESPONSE_TYPE_KEY + "=" + Consts.RESPONSE_TYPE_VALUE);
         sb.append("&");
-        if(serverUrl.endsWith("/")){
-            sb.append(Consts.REDIRECT_URI_KEY + "="+ serverUrl);
+        if (serverUrl.endsWith("/")) {
+            sb.append(Consts.REDIRECT_URI_KEY + "=" + serverUrl);
         } else {
-            sb.append(Consts.REDIRECT_URI_KEY + "="+ serverUrl + "/");
+            sb.append(Consts.REDIRECT_URI_KEY + "=" + serverUrl + "/");
         }
         return sb.toString();
     }
