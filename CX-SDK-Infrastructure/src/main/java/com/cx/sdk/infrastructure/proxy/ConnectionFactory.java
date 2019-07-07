@@ -5,6 +5,7 @@ import com.cx.sdk.domain.entities.ProxyParams;
 import com.sun.jersey.client.urlconnection.HttpURLConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.inject.Inject;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -20,6 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 public class ConnectionFactory implements HttpURLConnectionFactory {
+
     private final SDKConfigurationProvider sdkConfigurationProvider;
     private SSLContext sslContext;
     private static final Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
@@ -34,14 +36,14 @@ public class ConnectionFactory implements HttpURLConnectionFactory {
         Proxy proxy = null;
         Proxy.Type proxyType = null;
         ProxyParams proxyParams = sdkConfigurationProvider.getProxyParams();
-        if (proxyParams.getType() != null){
+        if (proxyParams.getType() != null) {
             logger.debug("Setting proxy for URL connection");
-            if (proxyParams.getType().equals("HTTPS")){
-                proxyType =Proxy.Type.HTTP;
+            if (proxyParams.getType().equals("HTTPS")) {
+                proxyType = Proxy.Type.HTTP;
                 logger.debug("Proxy type is HTTPS");
             } else {
                 proxyType = Proxy.Type.valueOf(proxyParams.getType());
-                logger.debug("Proxy type is: "+ proxyParams.getType());
+                logger.debug("Proxy type is: " + proxyParams.getType());
             }
             proxy = new Proxy(proxyType, new InetSocketAddress(proxyParams.getServer(), proxyParams.getPort()));
         } else {

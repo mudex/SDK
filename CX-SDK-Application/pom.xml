@@ -14,12 +14,12 @@
         <dependency>
             <groupId>com.cx.sdk</groupId>
             <artifactId>CX-SDK-Domain</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.cx.sdk</groupId>
             <artifactId>CX-SDK-Application-Contracts</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>

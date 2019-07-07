@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.lang.model.element.Element;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +37,7 @@ public class PresetProviderImpl implements PresetProvider {
             for (com.checkmarx.v7.Preset preset : response.getPresetList().getPreset()) {
                 presets.add(new Preset(Long.toString(preset.getID()), preset.getPresetName()));
             }
-        }
-        catch(NotAuthorizedException unauthorizedException) {
+        } catch (NotAuthorizedException unauthorizedException) {
             throw unauthorizedException;
         } catch (Exception e) {
             logger.error("[SDK][PresetProviderImpl] Failed to get presets", e);

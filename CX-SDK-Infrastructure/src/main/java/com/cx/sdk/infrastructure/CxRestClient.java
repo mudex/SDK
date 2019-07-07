@@ -1,12 +1,14 @@
 package com.cx.sdk.infrastructure;
 
-import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
+import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.domain.enums.LoginType;
 import com.cx.sdk.domain.exceptions.SdkException;
 import com.cx.sdk.infrastructure.authentication.kerberos.WindowsAuthenticator;
 import com.cx.sdk.infrastructure.proxy.ConnectionFactory;
-import com.sun.jersey.api.client.*;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
@@ -21,11 +23,12 @@ import java.util.Map;
  * Created by ehuds on 2/28/2017.
  */
 public class CxRestClient {
+
     private final SDKConfigurationProvider sdkConfigurationProvider;
     private final RestResourcesURIBuilder restResourcesURIBuilder = new RestResourcesURIBuilder();
     private ConnectionFactory connectionFactory = null;
     private final Client client;
-    public static final String AUTH_TYPE_NEGOTIATE = "Negotiate";
+    private static final String AUTH_TYPE_NEGOTIATE = "Negotiate";
     private URL url = null;
 
     public CxRestClient(SDKConfigurationProvider sdkConfigurationProvider) {
@@ -45,9 +48,9 @@ public class CxRestClient {
 
     private void setUrlByLoginType() {
         LoginType loginType = sdkConfigurationProvider.getLoginType();
-        if (loginType.equals(LoginType.SSO)){
+        if (loginType.equals(LoginType.SSO)) {
             url = restResourcesURIBuilder.buildSsoLoginURL(sdkConfigurationProvider.getCxServerUrl());
-        } else if (loginType.equals(LoginType.CREDENTIALS)){
+        } else if (loginType.equals(LoginType.CREDENTIALS)) {
             url = restResourcesURIBuilder.buildLoginURL(sdkConfigurationProvider.getCxServerUrl());
         }
     }
@@ -91,8 +94,7 @@ public class CxRestClient {
     private void validateResponse(ClientResponse response) throws Exception {
         if (response.getStatus() == 401) {
             throw new NotAuthorizedException();
-        }
-        else if (response.getStatus() >= 400) {
+        } else if (response.getStatus() >= 400) {
             throw new SdkException("Failed : HTTP error code : "
                     + response.getStatus());
         }
