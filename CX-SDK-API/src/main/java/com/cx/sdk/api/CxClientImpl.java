@@ -1,16 +1,9 @@
 package com.cx.sdk.api;
 
-import com.cx.sdk.api.dtos.EngineConfigurationDTO;
-import com.cx.sdk.api.dtos.PresetDTO;
 import com.cx.sdk.api.dtos.SessionDTO;
-import com.cx.sdk.api.dtos.TeamDTO;
-import com.cx.sdk.application.contracts.exceptions.NotAuthorizedException;
-import com.cx.sdk.application.contracts.providers.*;
+import com.cx.sdk.application.contracts.providers.SDKConfigurationProvider;
 import com.cx.sdk.application.services.LoginService;
 import com.cx.sdk.domain.Session;
-import com.cx.sdk.domain.entities.EngineConfiguration;
-import com.cx.sdk.domain.entities.Preset;
-import com.cx.sdk.domain.entities.Team;
 import com.cx.sdk.domain.exceptions.SdkException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -18,8 +11,6 @@ import org.modelmapper.ModelMapper;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -72,7 +63,7 @@ public class CxClientImpl implements CxClient {
 
     @Override
     public SessionDTO getAccessTokenFromRefreshToken(String refreshToken) {
-        singletonSession  = loginService.getAccessTokenFromRefreshToken(refreshToken);
+        singletonSession = loginService.getAccessTokenFromRefreshToken(refreshToken);
         return modelMapper.map(singletonSession, SessionDTO.class);
     }
 
@@ -81,5 +72,8 @@ public class CxClientImpl implements CxClient {
         return loginService.isCxWebServiceAvailable();
     }
 
+    public void logout() {
+        loginService.logout();
+    }
 
 }

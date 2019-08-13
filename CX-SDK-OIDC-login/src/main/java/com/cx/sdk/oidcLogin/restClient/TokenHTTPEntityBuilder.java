@@ -17,14 +17,10 @@ public class TokenHTTPEntityBuilder {
     private static final String ERROR_MESSAGE_PREFIX = "Failed to create body entity, due to: ";
 
     public static StringEntity createGetAccessTokenFromCodeParamsEntity(String code, String serverURL) throws CxRestClientException {
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(Consts.GRANT_TYPE_KEY, Consts.AUTHORIZATION_CODE_GRANT_TYPE));
         urlParameters.add(new BasicNameValuePair(Consts.CLIENT_ID_KEY, Consts.CLIENT_VALUE));
-        if(serverURL.endsWith("/")){
-            urlParameters.add(new BasicNameValuePair(Consts.REDIRECT_URI_KEY, serverURL));
-        } else {
-            urlParameters.add(new BasicNameValuePair(Consts.REDIRECT_URI_KEY, serverURL + "/"));
-        }
+        urlParameters.add(new BasicNameValuePair(Consts.REDIRECT_URI_KEY, serverURL.endsWith("/") ? serverURL : (serverURL + "/")));
         urlParameters.add(new BasicNameValuePair(Consts.CODE_KEY, code));
 
         try {

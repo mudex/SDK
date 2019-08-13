@@ -16,7 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by ehuds on 2/25/2017.
@@ -29,6 +30,8 @@ public class LoginProviderImpl implements LoginProvider {
     private final Logger logger = LoggerFactory.getLogger(LoginProviderImpl.class);
     private final ConnectionFactory connectionFactory;
     private final CxOIDCLoginClient cxOIDCLoginClient;
+    private LoginData loginData = null;
+
 
     public static final String SERVER_CONNECTIVITY_FAILURE = "Failed to validate server connectivity for server: ";
     public static final String CX_SDK_WEB_SERVICE_URL = "/cxwebinterface/sdk/cxsdkwebservice.asmx";
@@ -42,10 +45,8 @@ public class LoginProviderImpl implements LoginProvider {
     }
 
 
-
     @Override
     public Session login() throws SdkException {
-        LoginData loginData = null;
         try {
             loginData = cxOIDCLoginClient.login();
         } catch (Exception e) {
@@ -55,7 +56,7 @@ public class LoginProviderImpl implements LoginProvider {
             throw new SdkException(errorMessage, e);
         }
 
-        if (loginData.wasCanceled() )
+        if (loginData.wasCanceled())
             return null;
 
         Permissions permissions = getPermissions(loginData.getAccessToken());
@@ -66,6 +67,19 @@ public class LoginProviderImpl implements LoginProvider {
                 permissions.isSaveSastScan(),
                 permissions.isManageResultsExploitability(),
                 permissions.isManageResultsComment());
+    }
+
+    @Override
+    public void logout() {
+        try {
+            cxOIDCLoginClient.logout();
+        } catch (CxRestClientException e) {
+            e.printStackTrace();
+            String errorMessage = String.format("Failed to logging out of server: %s",
+                    sdkConfigurationProvider.getCxServerUrl().toString());
+            logger.error(errorMessage, e);
+            throw new SdkException(errorMessage, e);
+        }
     }
 
     private Permissions getPermissions(String accessToken) {
@@ -85,7 +99,7 @@ public class LoginProviderImpl implements LoginProvider {
         return cxOIDCLoginClient.isTokenExpired(expirationTime);
     }
 
-    public Session getAccessTokenFromRefreshToken(String refreshToken) throws SdkException{
+    public Session getAccessTokenFromRefreshToken(String refreshToken) throws SdkException {
         LoginData loginData;
         try {
             loginData = cxOIDCLoginClient.getAccessTokenFromRefreshToken(refreshToken);

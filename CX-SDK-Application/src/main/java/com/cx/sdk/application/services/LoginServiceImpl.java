@@ -42,9 +42,13 @@ public class LoginServiceImpl implements LoginService {
         return session;
     }
 
+    @Override
+    public void logout() {
+        loginProvider.logout();
+    }
 
     @Override
-    public boolean isTokenExpired(Long expirationTime){
+    public boolean isTokenExpired(Long expirationTime) {
         return loginProvider.isTokenExpired(expirationTime);
     }
 
@@ -57,6 +61,4 @@ public class LoginServiceImpl implements LoginService {
     public boolean isCxWebServiceAvailable() {
         return loginProvider.isCxWebServiceAvailable();
     }
-
-
 }

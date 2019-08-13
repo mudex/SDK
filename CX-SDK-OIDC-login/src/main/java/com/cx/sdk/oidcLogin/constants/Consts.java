@@ -15,6 +15,8 @@ public class Consts {
     public static final String APPLICATION_NAME = "CxRestAPI";
     public static final String SAST_PREFIX = "/" + APPLICATION_NAME + "/auth";
     public static final String AUTHORIZATION_ENDPOINT = SAST_PREFIX + "/identity/connect/authorize";
+    public static final String END_SESSION_ENDPOINT = SAST_PREFIX + "/identity/connect/endsession";
+    public static final String LOGOUT_ENDPOINT = SAST_PREFIX + "/identity/logout";
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER = "Bearer ";
     public static final String USER_INFO_ENDPOINT = SAST_PREFIX + "/identity/connect/userinfo";
@@ -23,4 +25,7 @@ public class Consts {
     public static final String MANAGE_RESULTS_EXPLOITABILITY = "manage-result-exploitability";
     public static final String RESPONSE_TYPE_KEY = "response_type";
 
+    public static final String LOGOUT_REDIRECT = "post_logout_redirect_uri";
+    public static final String TOKEN_HINT = "id_token_hint";
+    public static final String LOGOUT_ID = "logoutId";
 }

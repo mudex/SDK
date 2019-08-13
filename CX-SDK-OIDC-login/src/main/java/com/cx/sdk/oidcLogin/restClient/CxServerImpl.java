@@ -39,28 +39,37 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.cx.sdk.oidcLogin.constants.Consts.END_SESSION_ENDPOINT;
+import static com.cx.sdk.oidcLogin.constants.Consts.LOGOUT_ENDPOINT;
+
 public class CxServerImpl implements ICxServer {
 
     private String serverURL;
     private String tokenEndpointURL;
     private String userInfoURL;
+    private final String sessionEndURL;
+    private final String logoutURL;
+
     private HttpClient client;
-    private List<Header> headers = new ArrayList<Header>();
+    private List<Header> headers = new ArrayList<>();
     private String tokenEndpoint = Consts.SAST_PREFIX + "/identity/connect/token";
+
     private String userInfoEndpoint = Consts.USER_INFO_ENDPOINT;
     private static final String FAIL_TO_VALIDATE_TOKEN_RESPONSE_ERROR = " User authentication failed";
     private static final String FAIL_TO_VALIDATE_USER_INFO_RESPONSE_ERROR = "User info failed";
     private final Logger logger = Logger.getLogger("com.checkmarx.plugin.common.CxServerImpl");
 
 
-    public CxServerImpl(String serverURL){
+    public CxServerImpl(String serverURL) {
         this.serverURL = serverURL;
         this.tokenEndpointURL = serverURL + tokenEndpoint;
         this.userInfoURL = serverURL + userInfoEndpoint;
+        this.sessionEndURL = serverURL + END_SESSION_ENDPOINT;
+        this.logoutURL = serverURL + LOGOUT_ENDPOINT;
         setClient();
     }
 
-    private void setClient(){
+    private void setClient() {
         HttpClientBuilder builder = HttpClientBuilder.create().setDefaultHeaders(headers);
         setSSLTls(builder, "TLSv1.2");
         disableCertificateValidation(builder);
@@ -86,7 +95,7 @@ public class CxServerImpl implements ICxServer {
             validateResponse(loginResponse, 200, FAIL_TO_VALIDATE_TOKEN_RESPONSE_ERROR);
             AccessTokenDTO jsonResponse = parseJsonFromResponse(loginResponse, AccessTokenDTO.class);
             Long accessTokenExpirationInMilli = getAccessTokenExpirationInMilli(jsonResponse.getExpiresIn());
-            return new LoginData(jsonResponse.getAccessToken(), jsonResponse.getRefreshToken(), accessTokenExpirationInMilli);
+            return new LoginData(jsonResponse.getAccessToken(), jsonResponse.getRefreshToken(), accessTokenExpirationInMilli, jsonResponse.getIdToken());
         } catch (IOException e) {
             throw new CxRestLoginException("Failed to login: " + e.getMessage());
         } finally {
@@ -96,7 +105,7 @@ public class CxServerImpl implements ICxServer {
 
 
     @Override
-    public LoginData getAccessTokenFromRefreshToken(String refreshToken) throws CxRestClientException, CxRestLoginException, CxValidateResponseException{
+    public LoginData getAccessTokenFromRefreshToken(String refreshToken) throws CxRestClientException, CxRestLoginException, CxValidateResponseException {
         HttpUriRequest postRequest;
         HttpResponse loginResponse = null;
         try {
@@ -111,7 +120,7 @@ public class CxServerImpl implements ICxServer {
             validateResponse(loginResponse, 200, FAIL_TO_VALIDATE_TOKEN_RESPONSE_ERROR);
             AccessTokenDTO jsonResponse = parseJsonFromResponse(loginResponse, AccessTokenDTO.class);
             Long accessTokenExpirationInMilli = getAccessTokenExpirationInMilli(jsonResponse.getExpiresIn());
-            return new LoginData(jsonResponse.getAccessToken(), jsonResponse.getRefreshToken(), accessTokenExpirationInMilli);
+            return new LoginData(jsonResponse.getAccessToken(), jsonResponse.getRefreshToken(), accessTokenExpirationInMilli, jsonResponse.getIdToken());
         } catch (IOException e) {
             throw new CxRestLoginException("Failed to get new access token from refresh token: " + e.getMessage());
         } finally {

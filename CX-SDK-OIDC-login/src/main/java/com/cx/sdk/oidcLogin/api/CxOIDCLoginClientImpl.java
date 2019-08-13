@@ -1,4 +1,5 @@
 package com.cx.sdk.oidcLogin.api;
+
 import com.cx.sdk.oidcLogin.CxOIDCConnector;
 import com.cx.sdk.oidcLogin.exceptions.CxRestClientException;
 import com.cx.sdk.oidcLogin.exceptions.CxRestLoginException;
@@ -16,7 +17,8 @@ public class CxOIDCLoginClientImpl implements CxOIDCLoginClient {
 
     private String clientName;
     private ICxServer server;
-
+    private IOIDCWebBrowser webBrowser;
+    private LoginData loginData;
 
     public CxOIDCLoginClientImpl(URL serverUrl, String clientName) {
         this.clientName = clientName;
@@ -25,18 +27,24 @@ public class CxOIDCLoginClientImpl implements CxOIDCLoginClient {
 
 
     public LoginData login() throws Exception {
-        IOIDCWebBrowser webBrowser = new OIDCWebBrowser();
+        webBrowser = new OIDCWebBrowser();
         CxOIDCConnector connector = new CxOIDCConnector(server, webBrowser, clientName);
-        return connector.connect();
+        loginData = connector.connect();
+
+        return loginData;
+    }
+
+    public void logout() {
+        webBrowser.logout(loginData.getIdToken());
     }
 
     @Override
     public boolean isTokenExpired(Long expirationTime) {
         boolean isTokenExpired;
-        if(expirationTime == null){
+        if (expirationTime == null) {
             isTokenExpired = true;
         } else {
-            isTokenExpired =  (expirationTime.compareTo(System.currentTimeMillis()) < 0 ) ? true : false;
+            isTokenExpired = expirationTime.compareTo(System.currentTimeMillis()) < 0;
         }
         return isTokenExpired;
     }
@@ -47,5 +55,10 @@ public class CxOIDCLoginClientImpl implements CxOIDCLoginClient {
 
     public Permissions getPermissions(String accessToken) throws CxValidateResponseException {
         return server.getPermissionsFromUserInfo(accessToken);
+    }
+
+    @Override
+    public void dispose() {
+        webBrowser.disposeBrowser();
     }
 }

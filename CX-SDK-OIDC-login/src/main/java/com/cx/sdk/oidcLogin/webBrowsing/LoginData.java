@@ -5,13 +5,15 @@ public class LoginData {
     private boolean wasCanceled;
     private String accessToken;
     private String refreshToken;
+    private String idToken;
 
     private Long accessTokenExpirationInMillis;
 
-    public LoginData(String accessToken, String refreshToken, Long accessTokenExpirationInMillis) {
+    public LoginData(String accessToken, String refreshToken, Long accessTokenExpirationInMillis, String idToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.accessTokenExpirationInMillis = accessTokenExpirationInMillis;
+        this.idToken = idToken;
     }
 
     public LoginData(boolean wasCanceled) {
@@ -24,6 +26,10 @@ public class LoginData {
 
     public String getRefreshToken() {
         return refreshToken;
+    }
+
+    public String getIdToken() {
+        return idToken;
     }
 
     public boolean wasCanceled() {

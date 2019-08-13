@@ -7,11 +7,9 @@ import com.cx.sdk.oidcLogin.webBrowsing.IOIDCWebBrowser;
 import com.cx.sdk.oidcLogin.webBrowsing.LoginData;
 
 public class CxOIDCConnector {
-
-
-    ICxServer cxServer;
-    String clientName;
-    IOIDCWebBrowser webBrowser;
+    private ICxServer cxServer;
+    private String clientName;
+    private IOIDCWebBrowser webBrowser;
 
     public CxOIDCConnector(ICxServer cxServer, IOIDCWebBrowser webBrowser, String clientName) {
         this.cxServer = cxServer;
@@ -22,7 +20,7 @@ public class CxOIDCConnector {
     public LoginData connect() throws Exception {
         AuthenticationData authenticationData = webBrowser.browseAuthenticationData(cxServer.getServerURL(), clientName);
 
-        if (((AuthenticationData) authenticationData).wasCanceled) {
+        if (authenticationData.wasCanceled) {
             return new LoginData(true);
         }
 

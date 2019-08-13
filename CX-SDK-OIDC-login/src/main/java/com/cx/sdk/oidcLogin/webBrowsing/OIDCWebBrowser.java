@@ -30,12 +30,14 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser {
     private final Object lock = new Object();
     private Map<String, String> urlParamsMap;
     private String serverUrl;
+    private String endSessionEndPoint;
 
     @Override
     public AuthenticationData browseAuthenticationData(String serverUrl, String clientName) throws Exception {
         this.clientName = clientName;
         this.serverUrl = serverUrl;
         String authorizationEndpointUrl = serverUrl + Consts.AUTHORIZATION_ENDPOINT;
+        endSessionEndPoint = serverUrl + Consts.END_SESSION_ENDPOINT;
         initBrowser(authorizationEndpointUrl);
         waitForAuthentication();
         if (hasErrors()) {
@@ -55,8 +57,10 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser {
             }
         }
 
+        BrowserPreferences.setChromiumSwitches("--disable-google-traffic");
         contentPane = new JPanel(new GridLayout(1, 1));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
         BrowserContext browserContext = BrowserContext.defaultContext();
         browserContext.getNetworkService().setNetworkDelegate(new DefaultNetworkDelegate() {
             @Override
@@ -88,6 +92,14 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser {
         setVisible(true);
     }
 
+    @Override
+    public void logout(String idToken) {
+        BrowserContext browserContext = BrowserContext.defaultContext();
+        browser = new Browser(browserContext);
+        browser.loadURL(endSessionEndPoint + String.format("?id_token_hint=%s&post_logout_redirect_uri=%s",
+                idToken, serverUrl + "/cxwebclient/"));
+    }
+
     private void waitForAuthentication() {
         synchronized (lock) {
             try {
@@ -100,17 +112,19 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser {
 
     private String getPostData() {
         StringBuilder sb = new StringBuilder();
-        sb.append(Consts.CLIENT_ID_KEY + "=" + Consts.CLIENT_VALUE);
+        sb.append(Consts.CLIENT_ID_KEY);
+        sb.append("=");
+        sb.append(Consts.CLIENT_VALUE);
         sb.append("&");
-        sb.append(Consts.SCOPE_KEY + "=" + Consts.SCOPE_VALUE);
+        sb.append(Consts.SCOPE_KEY);
+        sb.append("=");
+        sb.append(Consts.SCOPE_VALUE);
         sb.append("&");
-        sb.append(Consts.RESPONSE_TYPE_KEY + "=" + Consts.RESPONSE_TYPE_VALUE);
+        sb.append(Consts.RESPONSE_TYPE_KEY);
+        sb.append("=");
+        sb.append(Consts.RESPONSE_TYPE_VALUE);
         sb.append("&");
-        if (serverUrl.endsWith("/")) {
-            sb.append(Consts.REDIRECT_URI_KEY + "=" + serverUrl);
-        } else {
-            sb.append(Consts.REDIRECT_URI_KEY + "=" + serverUrl + "/");
-        }
+        sb.append(serverUrl.endsWith("/") ? Consts.REDIRECT_URI_KEY + "=" + serverUrl : Consts.REDIRECT_URI_KEY + "=" + serverUrl + "/");
         return sb.toString();
     }
 
@@ -230,4 +244,10 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser {
     private void closePopup() {
         dispatchEvent(new WindowEvent(OIDCWebBrowser.this, WindowEvent.WINDOW_CLOSING));
     }
+
+    @Override
+    public void disposeBrowser() {
+        browser.dispose();
+    }
+
 }
