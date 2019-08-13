@@ -7,6 +7,7 @@ import com.teamdev.jxbrowser.chromium.*;
 import com.teamdev.jxbrowser.chromium.dom.DOMDocument;
 import com.teamdev.jxbrowser.chromium.events.FinishLoadingEvent;
 import com.teamdev.jxbrowser.chromium.events.LoadAdapter;
+import com.teamdev.jxbrowser.chromium.events.LoadListener;
 import com.teamdev.jxbrowser.chromium.internal.Environment;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 import com.teamdev.jxbrowser.chromium.swing.DefaultNetworkDelegate;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser {
 
+    public static final String END_SESSION_FORMAT = "?id_token_hint=%s&post_logout_redirect_uri=%s";
     private String clientName;
     private JPanel contentPane;
     private String error;
@@ -96,8 +98,17 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser {
     public void logout(String idToken) {
         BrowserContext browserContext = BrowserContext.defaultContext();
         browser = new Browser(browserContext);
-        browser.loadURL(endSessionEndPoint + String.format("?id_token_hint=%s&post_logout_redirect_uri=%s",
-                idToken, serverUrl + "/cxwebclient/"));
+        browser.loadURL(endSessionEndPoint + String.format(END_SESSION_FORMAT, idToken, serverUrl + "/cxwebclient/"));
+        browser.addLoadListener(disposeOnLoadDone());
+    }
+
+    private LoadListener disposeOnLoadDone() {
+        return new LoadAdapter() {
+            @Override
+            public void onFinishLoadingFrame(FinishLoadingEvent event) {
+                browser.dispose();
+            }
+        };
     }
 
     private void waitForAuthentication() {
