@@ -16,6 +16,7 @@ public class Consts {
     public static final String SAST_PREFIX = "/" + APPLICATION_NAME + "/auth";
     public static final String AUTHORIZATION_ENDPOINT = SAST_PREFIX + "/identity/connect/authorize";
     public static final String END_SESSION_ENDPOINT = SAST_PREFIX + "/identity/connect/endsession";
+    public static final String VERSION_END_POINT = "/" + APPLICATION_NAME + "/system/version";
     public static final String LOGOUT_ENDPOINT = SAST_PREFIX + "/identity/logout";
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER = "Bearer ";

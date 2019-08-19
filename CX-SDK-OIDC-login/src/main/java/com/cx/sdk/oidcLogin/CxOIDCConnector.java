@@ -1,6 +1,7 @@
 package com.cx.sdk.oidcLogin;
 
 
+import com.cx.sdk.oidcLogin.exceptions.CxRestLoginException;
 import com.cx.sdk.oidcLogin.restClient.ICxServer;
 import com.cx.sdk.oidcLogin.webBrowsing.AuthenticationData;
 import com.cx.sdk.oidcLogin.webBrowsing.IOIDCWebBrowser;
@@ -18,6 +19,10 @@ public class CxOIDCConnector {
     }
 
     public LoginData connect() throws Exception {
+        if (cxServer.getCxVersion().equals("Pre 9.0")) {
+            throw new CxRestLoginException("The Cx version is either older than 9.0 or the server can't be reached");
+        }
+
         AuthenticationData authenticationData = webBrowser.browseAuthenticationData(cxServer.getServerURL(), clientName);
 
         if (authenticationData.wasCanceled) {

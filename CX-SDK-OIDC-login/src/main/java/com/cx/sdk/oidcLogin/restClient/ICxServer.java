@@ -16,4 +16,6 @@ public interface ICxServer {
     LoginData getAccessTokenFromRefreshToken(String refreshToken) throws CxRestLoginException, CxValidateResponseException, CxRestClientException;
 
     Permissions getPermissionsFromUserInfo(String accessToken) throws CxValidateResponseException;
+
+    String getCxVersion();
 }

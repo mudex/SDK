@@ -50,8 +50,8 @@ public class LoginProviderImpl implements LoginProvider {
         try {
             loginData = cxOIDCLoginClient.login();
         } catch (Exception e) {
-            String errorMessage = String.format("Failed to perform login to server: %s",
-                    sdkConfigurationProvider.getCxServerUrl().toString());
+            String errorMessage = String.format("Failed to perform login to server: [%s]\nError: %s",
+                    sdkConfigurationProvider.getCxServerUrl().toString(), e.getMessage());
             logger.error(errorMessage, e);
             throw new SdkException(errorMessage, e);
         }

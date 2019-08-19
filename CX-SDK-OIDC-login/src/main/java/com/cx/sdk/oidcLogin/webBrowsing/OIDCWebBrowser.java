@@ -97,7 +97,7 @@ public class OIDCWebBrowser extends JFrame implements IOIDCWebBrowser {
     @Override
     public void logout(String idToken) {
         BrowserContext browserContext = BrowserContext.defaultContext();
-        browser = new Browser(browserContext);
+        browser = new Browser(BrowserType.LIGHTWEIGHT, browserContext);
         browser.loadURL(endSessionEndPoint + String.format(END_SESSION_FORMAT, idToken, serverUrl + "/cxwebclient/"));
         browser.addLoadListener(disposeOnLoadDone());
     }

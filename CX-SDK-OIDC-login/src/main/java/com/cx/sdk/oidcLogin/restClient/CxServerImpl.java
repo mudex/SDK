@@ -18,6 +18,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
@@ -39,8 +40,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.cx.sdk.oidcLogin.constants.Consts.END_SESSION_ENDPOINT;
-import static com.cx.sdk.oidcLogin.constants.Consts.LOGOUT_ENDPOINT;
+import static com.cx.sdk.oidcLogin.constants.Consts.*;
 
 public class CxServerImpl implements ICxServer {
 
@@ -49,14 +49,17 @@ public class CxServerImpl implements ICxServer {
     private String userInfoURL;
     private final String sessionEndURL;
     private final String logoutURL;
+    private final String versionURL;
 
     private HttpClient client;
     private List<Header> headers = new ArrayList<>();
     private String tokenEndpoint = Consts.SAST_PREFIX + "/identity/connect/token";
 
     private String userInfoEndpoint = Consts.USER_INFO_ENDPOINT;
-    private static final String FAIL_TO_VALIDATE_TOKEN_RESPONSE_ERROR = " User authentication failed";
-    private static final String FAIL_TO_VALIDATE_USER_INFO_RESPONSE_ERROR = "User info failed";
+    public static final String GET_VERSION_ERROR = "Get Version API not found, server not found or version is older than 9.0";
+    private static final String AUTHENTICATION_FAILED = " User authentication failed";
+    private static final String INFO_FAILED = "User info failed";
+
     private final Logger logger = Logger.getLogger("com.checkmarx.plugin.common.CxServerImpl");
 
 
@@ -66,6 +69,7 @@ public class CxServerImpl implements ICxServer {
         this.userInfoURL = serverURL + userInfoEndpoint;
         this.sessionEndURL = serverURL + END_SESSION_ENDPOINT;
         this.logoutURL = serverURL + LOGOUT_ENDPOINT;
+        this.versionURL = serverURL + VERSION_END_POINT;
         setClient();
     }
 
@@ -80,6 +84,26 @@ public class CxServerImpl implements ICxServer {
         return serverURL;
     }
 
+    public String getCxVersion() {
+        HttpResponse response;
+        HttpUriRequest request;
+        String version;
+        try {
+            request = RequestBuilder
+                    .get()
+                    .setUri(versionURL)
+                    .setHeader(HTTP.CONTENT_TYPE, ContentType.APPLICATION_FORM_URLENCODED.toString())
+                    .build();
+            response = client.execute(request);
+            validateResponse(response, 200, GET_VERSION_ERROR);
+            version = new BasicResponseHandler().handleResponse(response);
+        } catch (IOException | CxValidateResponseException e) {
+            version = "Pre 9.0";
+        }
+
+        return version;
+    }
+
     public LoginData login(String code) throws CxRestLoginException, CxValidateResponseException, CxRestClientException {
         HttpUriRequest postRequest;
         HttpResponse loginResponse = null;
@@ -92,7 +116,7 @@ public class CxServerImpl implements ICxServer {
                     .setEntity(TokenHTTPEntityBuilder.createGetAccessTokenFromCodeParamsEntity(code, serverURL))
                     .build();
             loginResponse = client.execute(postRequest);
-            validateResponse(loginResponse, 200, FAIL_TO_VALIDATE_TOKEN_RESPONSE_ERROR);
+            validateResponse(loginResponse, 200, AUTHENTICATION_FAILED);
             AccessTokenDTO jsonResponse = parseJsonFromResponse(loginResponse, AccessTokenDTO.class);
             Long accessTokenExpirationInMilli = getAccessTokenExpirationInMilli(jsonResponse.getExpiresIn());
             return new LoginData(jsonResponse.getAccessToken(), jsonResponse.getRefreshToken(), accessTokenExpirationInMilli, jsonResponse.getIdToken());
@@ -117,7 +141,7 @@ public class CxServerImpl implements ICxServer {
                     .setEntity(TokenHTTPEntityBuilder.createGetAccessTokenFromRefreshTokenParamsEntity(refreshToken))
                     .build();
             loginResponse = client.execute(postRequest);
-            validateResponse(loginResponse, 200, FAIL_TO_VALIDATE_TOKEN_RESPONSE_ERROR);
+            validateResponse(loginResponse, 200, AUTHENTICATION_FAILED);
             AccessTokenDTO jsonResponse = parseJsonFromResponse(loginResponse, AccessTokenDTO.class);
             Long accessTokenExpirationInMilli = getAccessTokenExpirationInMilli(jsonResponse.getExpiresIn());
             return new LoginData(jsonResponse.getAccessToken(), jsonResponse.getRefreshToken(), accessTokenExpirationInMilli, jsonResponse.getIdToken());
@@ -144,7 +168,7 @@ public class CxServerImpl implements ICxServer {
                     .setUri(userInfoURL)
                     .build();
             userInfoResponse = client.execute(postRequest);
-            validateResponse(userInfoResponse, 200, FAIL_TO_VALIDATE_USER_INFO_RESPONSE_ERROR);
+            validateResponse(userInfoResponse, 200, INFO_FAILED);
             UserInfoDTO jsonResponse = parseJsonFromResponse(userInfoResponse, UserInfoDTO.class);
             permissions = getPermissions(jsonResponse);
         } catch (IOException e) {
