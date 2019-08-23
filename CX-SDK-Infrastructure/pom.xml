@@ -89,8 +89,6 @@
                                     <extraargs>
                                         <extraarg>-p</extraarg>
                                         <extraarg>com.checkmarx.v7</extraarg>
-                                        <extraarg>-client</extraarg>
-                                        <extraarg>-mark-generated</extraarg>
                                     </extraargs>
                                 </wsdlOption>
                             </wsdlOptions>
