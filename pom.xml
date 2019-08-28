@@ -43,6 +43,7 @@
     </dependencies>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>4.12</junit.version>
         <jersey.version>1.19.3</jersey.version>
     </properties>
