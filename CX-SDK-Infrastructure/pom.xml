@@ -2,17 +2,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>CX-SDK-Infrastructure</artifactId>
+
     <parent>
         <artifactId>checkmarx-sdk</artifactId>
         <groupId>com.cx.sdk</groupId>
         <version>2.0</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>CX-SDK-Infrastructure</artifactId>
+
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jersey.version>1.19.3</jersey.version>
         <cxf.version>3.1.18</cxf.version>
     </properties>
+    
     <dependencies>
         <dependency>
             <groupId>com.cx.sdk</groupId>
@@ -39,11 +43,11 @@
             <artifactId>jersey-json</artifactId>
             <version>${jersey.version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework</groupId>-->
-<!--            <artifactId>spring-context</artifactId>-->
-<!--            <version>4.1.9.RELEASE</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework</groupId>-->
+        <!--            <artifactId>spring-context</artifactId>-->
+        <!--            <version>4.1.9.RELEASE</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>com.github.dblock.waffle</groupId>
             <artifactId>waffle-jna</artifactId>
@@ -60,6 +64,7 @@
             <version>${cxf.version}</version>
         </dependency>
     </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -69,6 +74,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -96,4 +102,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

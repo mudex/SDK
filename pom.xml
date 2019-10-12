@@ -3,11 +3,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.cx.sdk</groupId>
     <artifactId>checkmarx-sdk</artifactId>
     <packaging>pom</packaging>
     <version>2.0</version>
+
     <modules>
         <module>CX-SDK-API</module>
         <module>CX-SDK-Application</module>
@@ -16,6 +16,12 @@
         <module>CX-SDK-Application-Contracts</module>
         <module>CX-SDK-OIDC-login</module>
     </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>4.12</junit.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -40,9 +46,7 @@
             <version>1.7.24</version>
         </dependency>
     </dependencies>
-    <properties>
-        <junit.version>4.12</junit.version>
-    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -57,6 +61,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -76,4 +81,5 @@
             </resource>
         </resources>
     </build>
+
 </project>
