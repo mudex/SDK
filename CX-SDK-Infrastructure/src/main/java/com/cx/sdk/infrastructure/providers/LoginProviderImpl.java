@@ -133,7 +133,7 @@ public class LoginProviderImpl implements LoginProvider {
         int responseCode;
         try {
             URL urlAddress = new URL(sdkConfigurationProvider.getCxServerUrl(), CX_SDK_WEB_SERVICE_URL);
-            HttpURLConnection httpConnection = connectionFactory.getHttpURLConnection(urlAddress);
+            HttpURLConnection httpConnection = connectionFactory.getConnection(urlAddress);
             httpConnection.setRequestMethod("GET");
             httpConnection.setRequestProperty("User-Agent", "Mozilla/5.0");
             httpConnection.setReadTimeout(60000);
