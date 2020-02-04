@@ -31,20 +31,10 @@ public class CxRestClient {
 
     public CxRestClient(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
-        /*URLConnectionClientHandler connection = getConnection();
-        ClientConfig clientConfig = new DefaultClientConfig();
-        clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-        client = new Client(connection, clientConfig);*/
         ClientConfig clientConfig = new ClientConfig(getConnectionProvider());
         client = ClientBuilder.newClient( clientConfig);
     }
 
-    /*private URLConnectionClientHandler getConnection() {
-        setUrlByLoginType();
-        URLConnectionClientHandler urlConnectionClientHandler = new URLConnectionClientHandler(new ConnectionFactory(sdkConfigurationProvider));
-        return urlConnectionClientHandler;
-
-    }*/
 
     private HttpUrlConnectorProvider getConnectionProvider(){
         setUrlByLoginType();
@@ -84,20 +74,6 @@ public class CxRestClient {
 
         return extractCxCookies(response);
     }
-
-    /*private WebResource.Builder baseRequest(URL resourceUrl) {
-
-        WebResource webResource = client
-                .target(resourceUrl.toString());
-
-        WebResource.Builder requestBuilder = webResource.header("CxOrigin", sdkConfigurationProvider.getCxOriginName());
-
-        if (sdkConfigurationProvider.useKerberosAuthentication()) {
-            requestBuilder = requestBuilder.header("Authorization", AUTH_TYPE_NEGOTIATE + " " + WindowsAuthenticator.getKrbToken(resourceUrl.getAuthority()));
-        }
-
-        return requestBuilder;
-    }*/
 
     private Invocation.Builder baseRequest(URL resourceUrl) {
         WebTarget target = client.target(resourceUrl.toString());
