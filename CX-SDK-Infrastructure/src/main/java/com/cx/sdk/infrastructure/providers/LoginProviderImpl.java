@@ -147,7 +147,7 @@ public class LoginProviderImpl implements LoginProvider {
         try {
             logger.debug("Check is CxWebServiceAvailable..");
             URL urlAddress = new URL(sdkConfigurationProvider.getCxServerUrl(), CX_SDK_WEB_SERVICE_URL);
-            HttpURLConnection httpConnection = connectionFactory.getHttpURLConnection(urlAddress);
+            HttpURLConnection httpConnection = connectionFactory.getConnection(urlAddress);
             httpConnection.setRequestMethod("GET");
             httpConnection.setDoInput(true);
             httpConnection.setInstanceFollowRedirects(true);

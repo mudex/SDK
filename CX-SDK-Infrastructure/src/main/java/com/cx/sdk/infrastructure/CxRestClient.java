@@ -6,15 +6,13 @@ import com.cx.sdk.domain.enums.LoginType;
 import com.cx.sdk.domain.exceptions.SdkException;
 import com.cx.sdk.infrastructure.authentication.kerberos.WindowsAuthenticator;
 import com.cx.sdk.infrastructure.proxy.ConnectionFactory;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
-import com.sun.jersey.client.urlconnection.URLConnectionClientHandler;
-
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientResponse;
+import org.glassfish.jersey.client.HttpUrlConnectorProvider;
+import javax.ws.rs.client.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
+import javax.ws.rs.core.Response;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,17 +31,27 @@ public class CxRestClient {
 
     public CxRestClient(SDKConfigurationProvider sdkConfigurationProvider) {
         this.sdkConfigurationProvider = sdkConfigurationProvider;
-        URLConnectionClientHandler connection = getConnection();
+        /*URLConnectionClientHandler connection = getConnection();
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-        client = new Client(connection, clientConfig);
+        client = new Client(connection, clientConfig);*/
+        ClientConfig clientConfig = new ClientConfig(getConnectionProvider());
+        client = ClientBuilder.newClient( clientConfig);
     }
 
-    private URLConnectionClientHandler getConnection() {
+    /*private URLConnectionClientHandler getConnection() {
         setUrlByLoginType();
         URLConnectionClientHandler urlConnectionClientHandler = new URLConnectionClientHandler(new ConnectionFactory(sdkConfigurationProvider));
         return urlConnectionClientHandler;
 
+    }*/
+
+    private HttpUrlConnectorProvider getConnectionProvider(){
+        setUrlByLoginType();
+        HttpUrlConnectorProvider httpUrlConnectorProvider = new HttpUrlConnectorProvider();
+        httpUrlConnectorProvider.connectionFactory(new ConnectionFactory(sdkConfigurationProvider));
+
+        return httpUrlConnectorProvider;
     }
 
     private void setUrlByLoginType() {
@@ -57,7 +65,7 @@ public class CxRestClient {
 
     public Map<String, String> ssoLogin() throws Exception {
 
-        ClientResponse response = baseRequest(url).post(ClientResponse.class, " ");
+        Response response = baseRequest(url).post(Entity.text(" "));
 
         validateResponse(response);
 
@@ -66,21 +74,21 @@ public class CxRestClient {
 
     public Map<String, String> login(String userName, String password) throws Exception {
 
-        HashMap<String, Object> params = new HashMap();
-        params.put("UserName", userName);
-        params.put("Password", password);
-        ClientResponse response = baseRequest(url)
-                .type("application/json").accept("application/json")
-                .post(ClientResponse.class, params);
+        String request = "{\"userName\":\"%s\", \"password\":\"%s\"}";
+
+        Response response = baseRequest(url)
+                .accept("application/json")
+                    .post(Entity.entity(String.format(request,userName,password), MediaType.APPLICATION_JSON));
 
         validateResponse(response);
 
         return extractCxCookies(response);
     }
 
-    private WebResource.Builder baseRequest(URL resourceUrl) {
+    /*private WebResource.Builder baseRequest(URL resourceUrl) {
+
         WebResource webResource = client
-                .resource(resourceUrl.toString());
+                .target(resourceUrl.toString());
 
         WebResource.Builder requestBuilder = webResource.header("CxOrigin", sdkConfigurationProvider.getCxOriginName());
 
@@ -89,9 +97,21 @@ public class CxRestClient {
         }
 
         return requestBuilder;
+    }*/
+
+    private Invocation.Builder baseRequest(URL resourceUrl) {
+        WebTarget target = client.target(resourceUrl.toString());
+
+        Invocation.Builder requestBuilder = target.request().header("CxOrigin", sdkConfigurationProvider.getCxOriginName());
+
+        if (sdkConfigurationProvider.useKerberosAuthentication()) {
+            requestBuilder.header("Authorization", AUTH_TYPE_NEGOTIATE + " " + WindowsAuthenticator.getKrbToken(resourceUrl.getAuthority()));
+        }
+
+        return requestBuilder;
     }
 
-    private void validateResponse(ClientResponse response) throws Exception {
+    private void validateResponse(Response response) throws Exception {
         if (response.getStatus() == 401) {
             throw new NotAuthorizedException();
         } else if (response.getStatus() >= 400) {
@@ -100,9 +120,9 @@ public class CxRestClient {
         }
     }
 
-    private Map<String, String> extractCxCookies(ClientResponse response) {
+    private Map<String, String> extractCxCookies(Response response) {
         HashMap<String, String> coockies = new HashMap<>();
-        for (NewCookie cookie : response.getCookies()) {
+        for (NewCookie cookie : response.getCookies().values()) {
             if ("cxCookie".equals(cookie.getName()) || "CXCSRFToken".equals(cookie.getName()))
                 coockies.put(cookie.getName(), cookie.getValue());
         }
